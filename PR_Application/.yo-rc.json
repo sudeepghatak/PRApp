@@ -1,0 +1,16 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "version": "1.15.0",
+    "libraryName": "pr-application",
+    "libraryId": "bdbe703e-3252-4641-915e-8b345d95c09e",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "pr-application",
+    "solutionShortDescription": "pr-application description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
