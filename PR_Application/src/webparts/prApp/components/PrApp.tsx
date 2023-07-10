@@ -11,6 +11,9 @@ import { getSP } from './pnpjsConfig';
 import { Accordion } from "@pnp/spfx-controls-react/lib/Accordion";
 import { ComboBoxListItemPicker } from '@pnp/spfx-controls-react/lib/ListItemPicker';
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
+import { SPHttpClient } from '@microsoft/sp-http';
+import { WebPartContext } from '@microsoft/sp-webpart-base';
+import { FieldPicker } from "@pnp/spfx-controls-react/lib/FieldPicker";
 export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}> {
 
   private _sp: SPFI;
@@ -62,8 +65,19 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     return (
       <section className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ''}`}>
         <div className={styles.welcome}>
-          <h1>People Picker</h1>
-          <PeoplePicker
+          
+          <h1>ComboBox</h1>
+          <ComboBoxListItemPicker listId='Cities'
+            columnInternalName='Title'
+            orderBy='Title asc'
+            keyColumnInternalName='Id'
+            onSelectedItem={this.onSelectedItem}
+            webUrl={this.props.context.pageContext.web.absoluteUrl}
+            spHttpClient={this.props.context.spHttpClient as any} />
+            <h1>
+People Picker
+            </h1>
+            <PeoplePicker
             context={this.props.context as any}
             titleText="People Picker"
             personSelectionLimit={3}
@@ -74,14 +88,6 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
             showHiddenInUI={false}
             principalTypes={[PrincipalType.User]}
             resolveDelay={1000} />
-          <h1>ComboBox</h1>
-          <ComboBoxListItemPicker listId='Cities'
-            columnInternalName='Title'
-            orderBy='Title asc'
-            keyColumnInternalName='Id'
-            onSelectedItem={this.onSelectedItem}
-            webUrl={this.props.context.pageContext.web.absoluteUrl}
-            spHttpClient={this.props.context.spHttpClient as any} />
           <h1>Accordian</h1>
           {
             this.state.ListItems.map((item, index) => (
@@ -93,6 +99,8 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
               </Accordion>
             ))
           }
+
+          
         </div>
       </section>
     );
