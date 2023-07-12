@@ -11,9 +11,18 @@ import { getSP } from './pnpjsConfig';
 import { Accordion } from "@pnp/spfx-controls-react/lib/Accordion";
 import { ComboBoxListItemPicker } from '@pnp/spfx-controls-react/lib/ListItemPicker';
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
+import SecondComponent from './Middle/SecondComponent';
+import FirstComponent from './Middle/FirstComponent';
 import { SPHttpClient } from '@microsoft/sp-http';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { FieldPicker } from "@pnp/spfx-controls-react/lib/FieldPicker";
+import { Checkbox } from '@fluentui/react/lib/Checkbox';
+import { IPersonaProps } from '@fluentui/react/lib/Persona';
+import {IBasePickerSuggestionsProps,NormalPeoplePicker,ValidationState} from '@fluentui/react/lib/Pickers';
+import ThirdComponent from './Middle/ThirdComponent';
+import TypeOfPurchase_Table from './Middle/LineItemTableFormat';
+
+
 export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}> {
 
   private _sp: SPFI;
@@ -25,25 +34,25 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     this._sp = getSP();
   }
 
-  private async GetItems() {
-    try {
-      debugger;
-      const spCache = spfi(this._sp);
-      const response: any[] = await spCache.web.lists
-        .getByTitle("Cities")
-        .items
-        .select("Title", "Country")();
-      console.log(response);
-      this.setState({ ListItems: response });
+  // private async GetItems() {
+  //   try {
+  //     debugger;
+  //     const spCache = spfi(this._sp);
+  //     const response: any[] = await spCache.web.lists
+  //       .getByTitle("Cities")
+  //       .items
+  //       .select("Tnitle", "Coutry")();
+  //     console.log(response);
+  //     this.setState({ ListItems: response });
 
-    } catch (error) {
-      console.log("Error in GetItem : " + error);
-    }
-  }
+  //   } catch (error) {
+  //     console.log("Error in GetItem : " + error);
+  //   }
+  // }
 
 
   public componentDidMount(): void {
-    this.GetItems();
+    // this.GetItems();
 
   }
 
@@ -62,20 +71,50 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
       userDisplayName
     } = this.props;
 
+     const suggestionProps: IBasePickerSuggestionsProps = {
+        suggestionsHeaderText: 'Suggested People',
+        mostRecentlyUsedHeaderText: 'Suggested Contacts',
+        noResultsFoundText: 'No results found',
+        loadingText: 'Loading',
+        showRemoveButtons: true,
+        suggestionsAvailableAlertText: 'People Picker Suggestions available',
+        suggestionsContainerAriaLabel: 'Suggested contacts',
+      };
+      
+
+    function onFilterChanged(filter: string, selectedItems?: IPersonaProps[]): IPersonaProps[] | PromiseLike<IPersonaProps[]> {
+      throw new Error('Function not implemented.');
+    }
+
+    function returnMostRecentlyUsed(selectedItems?: IPersonaProps[]): IPersonaProps[] | PromiseLike<IPersonaProps[]> {
+      throw new Error('Function not implemented.');
+    }
+
+    function getTextFromItem(item: IPersonaProps, currentValue?: string): string {
+      throw new Error('Function not implemented.');
+    }
+
+    function onRemoveSuggestion(item: IPersonaProps): void {
+      throw new Error('Function not implemented.');
+    }
+
+    function validateInput(input: string): ValidationState {
+      throw new Error('Function not implemented.');
+    }
+
     return (
       <section className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ''}`}>
-        <div className={styles.welcome}>
-          
-          <h1>ComboBox</h1>
+        <div className={styles.welcome}>     
+         {/* <h1>ComboBox</h1>
           <ComboBoxListItemPicker listId='Cities'
-            columnInternalName='Title'
-            orderBy='Title asc'
+            columnInternalName='Country'
+            orderBy='Country asc'
             keyColumnInternalName='Id'
             onSelectedItem={this.onSelectedItem}
             webUrl={this.props.context.pageContext.web.absoluteUrl}
-            spHttpClient={this.props.context.spHttpClient as any} />
-            <h1>
-People Picker
+            spHttpClient={this.props.context.spHttpClient as any} /> */}
+            {/*<h1>
+ People Picker
             </h1>
             <PeoplePicker
             context={this.props.context as any}
@@ -97,10 +136,15 @@ People Picker
                   <div className={"itemIndex"}>{`Langue :  ${item.Country}`}</div>
                 </div>
               </Accordion>
-            ))
-          }
-
-          
+            )
+           )
+          }  */}
+          {/* <MainPage/>  */}
+          {/* <FirstComponent/>
+         <SecondComponent/> */}
+         <ThirdComponent/>
+         {/* <TypeOfPurchase_Table/> */}
+    
         </div>
       </section>
     );
