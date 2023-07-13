@@ -19,7 +19,7 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { FieldPicker } from "@pnp/spfx-controls-react/lib/FieldPicker";
 import { Checkbox } from '@fluentui/react/lib/Checkbox';
 import { IPersonaProps } from '@fluentui/react/lib/Persona';
-import {IBasePickerSuggestionsProps,NormalPeoplePicker,ValidationState} from '@fluentui/react/lib/Pickers';
+import { IBasePickerSuggestionsProps, NormalPeoplePicker, ValidationState } from '@fluentui/react/lib/Pickers';
 import ThirdComponent from './Middle/ThirdComponent';
 import TypeOfPurchase_Table from './Middle/LineItemTableFormat';
 
@@ -30,7 +30,10 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
 
   public constructor(props) {
     super(props);
-    this.state = { ListItems: [] };
+    this.state = {
+      ListItems: [],
+      LoggedInUser: this.props.context.pageContext.legacyPageContext.userDisplayName
+    };
     this.context = this.props.context;
     this._sp = getSP();
   }
@@ -53,7 +56,7 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
 
 
   public componentDidMount(): void {
-     this.GetItems();
+    this.GetItems();
 
   }
 
@@ -72,16 +75,16 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
       userDisplayName
     } = this.props;
 
-     const suggestionProps: IBasePickerSuggestionsProps = {
-        suggestionsHeaderText: 'Suggested People',
-        mostRecentlyUsedHeaderText: 'Suggested Contacts',
-        noResultsFoundText: 'No results found',
-        loadingText: 'Loading',
-        showRemoveButtons: true,
-        suggestionsAvailableAlertText: 'People Picker Suggestions available',
-        suggestionsContainerAriaLabel: 'Suggested contacts',
-      };
-      
+    const suggestionProps: IBasePickerSuggestionsProps = {
+      suggestionsHeaderText: 'Suggested People',
+      mostRecentlyUsedHeaderText: 'Suggested Contacts',
+      noResultsFoundText: 'No results found',
+      loadingText: 'Loading',
+      showRemoveButtons: true,
+      suggestionsAvailableAlertText: 'People Picker Suggestions available',
+      suggestionsContainerAriaLabel: 'Suggested contacts',
+    };
+
 
     function onFilterChanged(filter: string, selectedItems?: IPersonaProps[]): IPersonaProps[] | PromiseLike<IPersonaProps[]> {
       throw new Error('Function not implemented.');
@@ -105,8 +108,8 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
 
     return (
       <section className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ''}`}>
-        <div className={styles.welcome}>     
-         {/* <h1>ComboBox</h1>
+        <div className={styles.welcome}>
+          {/* <h1>ComboBox</h1>
           <ComboBoxListItemPicker listId='Cities'
             columnInternalName='Country'
             orderBy='Country asc'
@@ -114,7 +117,7 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
             onSelectedItem={this.onSelectedItem}
             webUrl={this.props.context.pageContext.web.absoluteUrl}
             spHttpClient={this.props.context.spHttpClient as any} /> */}
-            {/*<h1>
+          {/*<h1>
  People Picker
             </h1>
             <PeoplePicker
@@ -140,12 +143,12 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
             )
            )
           }  
-           <MainPage/> */} 
-           <FirstComponent/>
-       {/*}  <SecondComponent/> 
+           <MainPage/> */}
+          <FirstComponent />
+          {/*}  <SecondComponent/> 
          <ThirdComponent/>
           <TypeOfPurchase_Table/> */}
-    
+
         </div>
       </section>
     );
