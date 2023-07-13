@@ -6,6 +6,7 @@ import { IPrAppState } from './IPrAppState';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
+import "@pnp/sp/items/get-all";
 import { SPFI, spfi } from '@pnp/sp';
 import { getSP } from './pnpjsConfig';
 import { Accordion } from "@pnp/spfx-controls-react/lib/Accordion";
@@ -34,25 +35,25 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     this._sp = getSP();
   }
 
-  // private async GetItems() {
-  //   try {
-  //     debugger;
-  //     const spCache = spfi(this._sp);
-  //     const response: any[] = await spCache.web.lists
-  //       .getByTitle("Cities")
-  //       .items
-  //       .select("Tnitle", "Coutry")();
-  //     console.log(response);
-  //     this.setState({ ListItems: response });
+  private async GetItems() {
+    try {
+      debugger;
+      const spCache = spfi(this._sp);
+      const response: any[] = await spCache.web.lists
+        .getByTitle("PR_All_Requests")
+        .items
+        .getAll();
+      console.log(response);
+      this.setState({ ListItems: response });
 
-  //   } catch (error) {
-  //     console.log("Error in GetItem : " + error);
-  //   }
-  // }
+    } catch (error) {
+      console.log("Error in GetItem : " + error);
+    }
+  }
 
 
   public componentDidMount(): void {
-    // this.GetItems();
+     this.GetItems();
 
   }
 
@@ -138,12 +139,12 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
               </Accordion>
             )
            )
-          }  */}
-          {/* <MainPage/>  */}
-          {/* <FirstComponent/>
-         <SecondComponent/> */}
+          }  
+           <MainPage/> */} 
+           <FirstComponent/>
+       {/*}  <SecondComponent/> 
          <ThirdComponent/>
-         {/* <TypeOfPurchase_Table/> */}
+          <TypeOfPurchase_Table/> */}
     
         </div>
       </section>

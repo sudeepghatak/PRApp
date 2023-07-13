@@ -27,9 +27,9 @@ const FirstComponent = () => {
       // debugger;
       const spCache = spfi(sp);
       const response: any[] = await spCache.web.lists
-        .getByTitle("Cities")
+        .getByTitle("PR_All_Requests")
         .items
-        .select("Title", "Country")();
+        .getAll();
       console.log(response);
       console.log("-----------")
       // setState({ ListItems: response });
