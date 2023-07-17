@@ -2,35 +2,33 @@ export interface IPRItem {
   ActCostCenter: number,
   AesyntPRType: string,
   AllApproversId: number,
-
   AllApproversStringId: number,
 
 
   AllManagersId
   :
-  null
+  number
   AllManagersStringId
   :
   null
   ApprovalInstance
   :
-  3
+  number,
   Attachments
   :
-  false
+  boolean,
   AuthorId
   :
-  12
+  number,
   CCDescription
   :
-  "Finance"
+  string,
   CFOId
   :
-  12
+  number,
   CFOStringId
   :
-  "12"
-  CIP_Number
+  string, CIP_Number
   :
   null
   Comments
@@ -38,43 +36,38 @@ export interface IPRItem {
   null
   Company
   :
-  "hsri"
-  CompanyCode
+  string, CompanyCode
   :
-  "CO234"
-  ComplianceAssetId
+  string, ComplianceAssetId
   :
   null
   ContentTypeId
   :
-  "0x010017849948E9E8F64B9FA27CED4A3849C7006C9BDB98B077894BA71FD84D8F0FBCE2"
+  string,
   ConvertedDollerAmount
   :
   null
   Cost_Center
   :
-  1234345
+  number,
   CountryKey
   :
   null
   CreateDate
   :
-  "07-13-2023"
-  Created
+  string, Created
   :
-  "2023-07-13T02:46:06Z"
-  CurrentApprovalStep
+  string, CurrentApprovalStep
   :
-  "Finance"
-  EHDelegationCount
+  string, EHDelegationCount
   :
   null
   EHS
   :
-  true
+  boolean,
   EditorId
   :
-  12
+  number,
   ExchangeRate
   :
   null
@@ -92,7 +85,7 @@ export interface IPRItem {
   null
   FileSystemObjectType
   :
-  0
+  number,
   FinalApprovalDate
   :
   null
@@ -104,7 +97,7 @@ export interface IPRItem {
   null
   GUID
   :
-  "7562bf9b-6adb-4427-be1c-915aa2e3ff6a"
+  string,
   HRADCompanyCode
   :
   null
@@ -113,26 +106,25 @@ export interface IPRItem {
   null
   ID
   :
-  1
+  number,
   Id
   :
-  1
+  number,
   IsCFOApproved
   :
-  true
+  boolean,
   IsCompleted
   :
-  true
+  boolean,
   IsITVPApproved
   :
-  true
+  boolean,
   IsOtherCC
   :
-  true
+  boolean,
   IsProjectPR
   :
-  "Yes"
-  JLReminderCount
+  boolean, JLReminderCount
   :
   null
   LastStatus
@@ -143,8 +135,7 @@ export interface IPRItem {
   null
   Location
   :
-  "India"
-  Manager1Id
+  string, Manager1Id
   :
   null
   Manager1StringId
@@ -170,14 +161,13 @@ export interface IPRItem {
   null
   Modified
   :
-  "2023-07-13T02:46:06Z"
+  string,
   OData__ColorTag
   :
   null
   OData__UIVersionString
   :
-  "1.0"
-  OldReqId
+  number, OldReqId
   :
   null
   Order_Amount
@@ -185,47 +175,42 @@ export interface IPRItem {
   null
   PONumber
   :
-  "PO12242"
-  PRID
+  string, PRID
   :
-  1
+  number,
   PR_Created_For_Self
   :
-  true
+  boolean,
   PrepaidOrCapitalEquipment
   :
   null
   ProjectCode
   :
-  "PO2231"
+  string,
   ProjectDepartment
   :
-  "This is a test project"
+  string,
   ProjectNumber
   :
-  "PR 12232"
-  QuickbookPO
+  string, QuickbookPO
   :
   null
   RequestForId
   :
-  12
+  number,
   RequestForStringId
   :
-  "12"
-  RequesterCurrency
+  number, RequesterCurrency
   :
   null
   SAPPOBalance
   :
-  "3232"
-  SAPPOEmailCount
+  number, SAPPOEmailCount
   :
   null
   SAPPONO
   :
-  "453"
-  SAPPRId
+  number, SAPPRId
   :
   null
   SFADate
@@ -236,7 +221,7 @@ export interface IPRItem {
   null
   ServerRedirectedEmbedUrl
   :
-  ""
+  null,
   Shipping_ContactPhone
   :
   null
@@ -263,29 +248,21 @@ export interface IPRItem {
   null
   Status
   :
-  "Draft"
-  Supplier_Account_Number
+  string, Supplier_Account_Number
   :
-  "2312312"
-  Supplier_Address
+  string, Supplier_Address
   :
-  "Choice 3"
-  Supplier_City
+  string, Supplier_City
   :
-  "Delhi"
-  Supplier_Country
+  string, Supplier_Country
   :
-  "India"
-  Supplier_Name
+  string, Supplier_Name
   :
-  "Supplier 1"
-  Supplier_State
+  string, Supplier_State
   :
-  "ND"
-  Supplier_Zip
+  string, Supplier_Zip
   :
-  "713103"
-  TaskCreatedForId
+  number, TaskCreatedForId
   :
   null
   TaskCreatedForStringId
@@ -296,14 +273,12 @@ export interface IPRItem {
   null
   Title
   :
-  "PR 1"
-  ToCurrency
+  string, ToCurrency
   :
   null
   Type_Of_Buy
   :
-  "NPI Buy"
-  Type_Of_Order
+  string, Type_Of_Order
   :
   null
   UFID
@@ -311,5 +286,5 @@ export interface IPRItem {
   null
   submit_requestors_cost_center
   :
-  "Department"
+  string
 }

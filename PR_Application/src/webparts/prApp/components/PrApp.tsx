@@ -31,14 +31,15 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
   public constructor(props) {
     super(props);
     this.state = {
-      ListItems: [],
+      PRAllListItems: [],
+      PRListItem: null,
       LoggedInUser: this.props.context.pageContext.legacyPageContext.userDisplayName
     };
     this.context = this.props.context;
     this._sp = getSP();
   }
 
-  private async GetItems() {
+  private async GetPRAllItems() {
     try {
       debugger;
       const spCache = spfi(this._sp);
@@ -47,17 +48,156 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
         .items
         .getAll();
       console.log(response);
-      this.setState({ ListItems: response });
+      this.setState({ PRAllListItems: response });
+
+    } catch (error) {
+      console.log("Error in GetItem : " + error);
+    }
+  }
+  private async GetPRItemById(id: number) {
+    try {
+      debugger;
+      const spCache = spfi(this._sp);
+      const item: any = await spCache.web.lists.getByTitle("PR_All_Requests").items.getById(id)();
+      console.log(item);
+
+      this.setState({ PRListItem: item });
 
     } catch (error) {
       console.log("Error in GetItem : " + error);
     }
   }
 
+  private async AddPRItem() {
+    try {
+      debugger;
+      const spCache = spfi(this._sp);
+      const item: any = await spCache.web.lists.getByTitle("PR_All_Requests").items.add({
+        
+         Title: "PR 2",
+         ActCostCenter: 12334,
+         AesyntPRType: "340B",
+        // AllApproversId: null,
+        // AllApproversStringId: null,
+        // AllManagersId: null,
+        // AllManagersStringId: null,
+         ApprovalInstance: 3,
+         Attachments: false,
+         AuthorId: 12,
+        CCDescription: "Finance",
+        CFOId: 12,
+        CFOStringId: "12",
+        // CIP_Number: null,
+        // Comments: null,
+         Company: "HSRI",
+         CompanyCode: "CO234",
+        // ComplianceAssetId: null,
+        // ContentTypeId: "0x010017849948E9E8F64B9FA27CED4A3849C7006C9BDB98B077894BA71FD84D8F0FBCE2",
+        // ConvertedDollerAmount: null,
+         Cost_Center: 456789,
+        // CountryKey: null,
+         CreateDate: "07-13-2023",
+         Created: "2023-07-13T02:46:06Z",
+         CurrentApprovalStep: "Finance",
+        // EHDelegationCount: null,
+        // EHS: true,
+        // EditorId: 12,
+        // ExchangeRate: null,
+        // ExchangeRateDate: null,
+        // ExchangeRateV:null,
+        // FIDelegationCount: null,
+        // FIReminderCount: null,
+        // FileSystemObjectType: 0,
+        // FinalApprovalDate: null,
+        // FromCurrency: null,
+        // GL_Account: null,
+        // GUID: "7562bf9b-6adb-4427-be1c-915aa2e3ff6a",
+        // HRADCompanyCode: null,
+        // HSRIPO: null,
+        // ID: 2,
+        // Id: 2,
+        IsCFOApproved: true,
+        IsCompleted: true,
+        IsITVPApproved: true,
+        IsOtherCC: true,
+        IsProjectPR: "Yes",
+        // JLReminderCount: null,
+        // LastStatus: null,
+        // LastWorkflowRun: null,
+         Location: "India",
+        // Manager1Id: null,
+        // Manager1StringId: null,
+        // Manager2Id: null,
+        // Manager2StringId:null,
+        // Manager3: null,
+        // ManagerId: null,
+        // ManagerLevel: null,
+        // ManagerStringId: null,
+        // Modified: "2023-07-13T02:46:06Z",
+        // OData__ColorTag: null,
+        // OData__UIVersionString: "1.0",
+        // OldReqId: null,
+        // Order_Amount: null,
+         PONumber: "PO12242",
+         PRID: 2,
+         PR_Created_For_Self: true,
+        // PrepaidOrCapitalEquipment: null,
+        ProjectCode: "PO2231",
+        ProjectDepartment: "This is a test project",
+        ProjectNumber: "PR 12237",
+        // QuickbookPO:null,
+        // RequestForId: 12,
+        // RequestForStringId: 12,
+        // RequesterCurrency:null,
+        // SAPPOBalance: "7777",
+        // SAPPOEmailCount: null,
+        // SAPPONO: "167",
+        // SAPPRId: null,
+        // SFADate: null,
+        // ServerRedirectedEmbedUri: null,
+        // ServerRedirectedEmbedUrl: "",
+        // Shipping_ContactPhone:null,
+        // Shipping_Country: null,
+        // Shipping_Location: null,
+        // Shipping_Name: null,
+        // Shipping_Postal_Code: null,
+        // Shipping_Region:null,
+        // Shipping_Street: null,
+        // Special_Instructions: null,
+           Status: "Draft",
+            Supplier_Account_Number: "6753367",
+            Supplier_Address: "Choice 3",
+            Supplier_City: "Kolkata",
+            Supplier_Country: "India",
+            Supplier_Name: "Supplier 1",
+            Supplier_State: "West Bengal",
+            //Supplier_Zip: 713103,
+        // TaskCreatedForId: null,
+        // TaskCreatedForStringId: null,
+        // ThreeFortyBPO: null,
+           
+        // ToCurrency: null,
+          // Type_Of_Buy: "NPI Buy",
+        // Type_Of_Order: null,
+        // UFID: null,
+           submit_requestors_cost_center: "Department"
+
+
+      });
+
+      console.log("Item added successfully:", item);
+
+      this.setState({ PRListItem: item });
+
+    } catch (error) {
+      console.log("Error in GetItem : " + error);
+    }
+  }
 
   public componentDidMount(): void {
-    this.GetItems();
-
+    // this.GetPRAllItems();
+    //this.GetPRItemById(1);
+    this.AddPRItem();
   }
 
   private onSelectedItem(items: []) {
@@ -144,8 +284,8 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
            )
           }  
            <MainPage/> */}
-          <FirstComponent />
-          {/*}  <SecondComponent/> 
+          {/*}  <FirstComponent />
+            <SecondComponent/> 
          <ThirdComponent/>
           <TypeOfPurchase_Table/> */}
 

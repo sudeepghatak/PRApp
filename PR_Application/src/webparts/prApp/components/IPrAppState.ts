@@ -3,6 +3,7 @@ import{SPHttpClient} from "@microsoft/sp-http";
 import { IPRItem } from "./IPRItem";
 
 export interface IPrAppState {
-  ListItems:IPRItem[];
+  PRAllListItems:IPRItem[];
+  PRListItem: IPRItem;
   LoggedInUser:any;
 }
