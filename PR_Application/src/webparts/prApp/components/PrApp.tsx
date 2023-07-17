@@ -200,8 +200,16 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     const spCache = spfi(this._sp);
       const addedItem: any = await spCache.web.lists.getByTitle("PR_All_Requests").items.add({
         
+        //Set the values from the object that is passed to the function
          Title: item.Title,
          ActCostCenter: item.ActCostCenter,
+         
+         
+         
+         
+         
+         
+         
          AesyntPRType: "340B",
         // AllApproversId: null,
         // AllApproversStringId: null,
