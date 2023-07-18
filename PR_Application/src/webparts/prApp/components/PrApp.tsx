@@ -42,6 +42,9 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     this.context = this.props.context;
     this._sp = getSP();
     this.AddNewPRItem = this.AddNewPRItem.bind(this);
+    this.UpdatePRItem = this.UpdatePRItem.bind(this);
+    this.deletePRItem = this.deletePRItem.bind(this);
+
     this.OnSubmitButtonClick = this.OnSubmitButtonClick.bind(this);
   }
 
@@ -310,6 +313,14 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     });
   }
 
+  public async deletePRItem(PRId: number) {
+    const spCache = spfi(this._sp);
+    const addedItem: any = await spCache.web.lists.getByTitle("PR_All_Requests").items.getById(PRId).delete();
+
+       console.log ("Item deleted successfully");
+  }
+
+
   public async AddNewPRItem(item: IPRItem) {
     const spCache = spfi(this._sp);
     const addedItem: any = await spCache.web.lists.getByTitle("PR_All_Requests").items.add({
@@ -443,6 +454,11 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     this.UpdatePRItem(item,16)
   }
 
+  public async OnDeleteButtonClick() {
+    
+     this.deletePRItem(17);
+  }
+
   private onSelectedItem(items: []) {
     console.log("selected items:", items);
   }
@@ -501,6 +517,18 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
                 <Stack horizontal>
                   <span style={{ marginRight: 10 }}><Icon iconName="CompassNW" /></span>
                   <span>Add/Update item</span>
+                </Stack>
+              </DefaultButton>
+
+            </Stack.Item>
+          </Stack>
+
+          <Stack >
+            <Stack.Item align="end">
+              <DefaultButton style={{ background: DefaultPalette.green, color: DefaultPalette.white }} onClick={this.OnDeleteButtonClick}>
+                <Stack horizontal>
+                  <span style={{ marginRight: 10 }}><Icon iconName="CompassNW" /></span>
+                  <span>Delete item</span>
                 </Stack>
               </DefaultButton>
 
