@@ -1,290 +1,211 @@
-export interface IPRItem {
-  ActCostCenter: number,
-  AesyntPRType: string,
-  AllApproversId: number,
-  AllApproversStringId: number,
+export class IPRItem {
+  ActCostCenter: number;
+  AesyntPRType="";
+  AllApproversId: number;
+  AllApproversStringId: number;
+  AllManagersId: number;
+  AllManagersStringId: number;
+  ApprovalInstance: number;
+  Attachments: boolean;
+  AuthorId: number;
+  CCDescription="";
+  CFOId: number;
+  CFOStringId="";
+  CIP_Number: number;
+  Comments="";
+  Company="";
+  CompanyCode="";
+  ComplianceAssetId: number;
+  ContentTypeId="";
+  ConvertedDollerAmount: number;
+  Cost_Center: number;
+  CountryKey="";
+  CreateDate: Date;
+  Created="";
+  CurrentApprovalStep="";
+  EHDelegationCount: number;
+  EHS: boolean;
+  EditorId: number;
+  ExchangeRate: number;
+  ExchangeRateDate: Date;
+  ExchangeRateV: number;
+  FIDelegationCount: number;
+  FIReminderCount: number;
+  FileSystemObjectType: number;
+  FinalApprovalDate: Date;
+  FromCurrency="";
+  GL_Account="";
+  GUID="";
+  HRADCompanyCode="";
+  HSRIPO="";
+  ID: number;
+  IsCFOApproved: boolean;
+  IsCompleted: boolean;
+  IsITVPApproved: boolean;
+  IsOtherCC: boolean;
+  IsProjectPR: boolean;
+  JLReminderCount: number;
+  LastStatus="";
+  LastWorkflowRun: Date;
+  Location="";
+  Manager1Id: number;
+  Manager1StringId="";
+  Manager2Id: number;
+  Manager2StringId="";
+  Manager3: any;
+  ManagerId: number;
+  ManagerLevel="";
+  ManagerStringId="";
+  Modified: Date;
+  OldReqId: number;
+  Order_Amount:  number;
+  PONumber="";
+  PRID: number;
+  PR_Created_For_Self: boolean;
+  PrepaidOrCapitalEquipment="";
+  ProjectCode="";
+  ProjectDepartment="";
+  ProjectNumber="";
+  QuickbookPO="";
+  RequestForId: number;
+  RequestForStringId="";
+  RequesterCurrency="";
+  SAPPOBalance: number;
+  SAPPOEmailCount: number;
+  SAPPONO: number;
+  SAPPRId: number;
+  SFADate: Date;
+  Shipping_ContactPhone="";
+  Shipping_Country="";
+  Shipping_Location="";
+  Shipping_Name="";
+  Shipping_Postal_Code="";
+  Shipping_Region=""
+  Shipping_Street=""
+  Special_Instructions="";
+  Status="";
+  Supplier_Account_Number="";
+  Supplier_Address="";
+  Supplier_City="";
+  Supplier_Country="";
+  Supplier_Name="";
+  Supplier_State="";
+  Supplier_Zip="";
+  TaskCreatedForId: number;
+  TaskCreatedForStringId="";
+  ThreeFortyBPO: string;
+  Title="";
+  ToCurrency="";
+  Type_Of_Buy="";
+  Type_Of_Order="";
+  UFID: number;
+  submit_requestors_cost_center="";
 
 
-  AllManagersId
-  :
-  number
-  AllManagersStringId
-  :
-  null
-  ApprovalInstance
-  :
-  number,
-  Attachments
-  :
-  boolean,
-  AuthorId
-  :
-  number,
-  CCDescription
-  :
-  string,
-  CFOId
-  :
-  number,
-  CFOStringId
-  :
-  string, CIP_Number
-  :
-  null
-  Comments
-  :
-  null
-  Company
-  :
-  string, CompanyCode
-  :
-  string, ComplianceAssetId
-  :
-  null
-  ContentTypeId
-  :
-  string,
-  ConvertedDollerAmount
-  :
-  null
-  Cost_Center
-  :
-  number,
-  CountryKey
-  :
-  null
-  CreateDate
-  :
-  string, Created
-  :
-  string, CurrentApprovalStep
-  :
-  string, EHDelegationCount
-  :
-  null
-  EHS
-  :
-  boolean,
-  EditorId
-  :
-  number,
-  ExchangeRate
-  :
-  null
-  ExchangeRateDate
-  :
-  null
-  ExchangeRateV
-  :
-  null
-  FIDelegationCount
-  :
-  null
-  FIReminderCount
-  :
-  null
-  FileSystemObjectType
-  :
-  number,
-  FinalApprovalDate
-  :
-  null
-  FromCurrency
-  :
-  null
-  GL_Account
-  :
-  null
-  GUID
-  :
-  string,
-  HRADCompanyCode
-  :
-  null
-  HSRIPO
-  :
-  null
-  ID
-  :
-  number,
-  Id
-  :
-  number,
-  IsCFOApproved
-  :
-  boolean,
-  IsCompleted
-  :
-  boolean,
-  IsITVPApproved
-  :
-  boolean,
-  IsOtherCC
-  :
-  boolean,
-  IsProjectPR
-  :
-  boolean, JLReminderCount
-  :
-  null
-  LastStatus
-  :
-  null
-  LastWorkflowRun
-  :
-  null
-  Location
-  :
-  string, Manager1Id
-  :
-  null
-  Manager1StringId
-  :
-  null
-  Manager2Id
-  :
-  null
-  Manager2StringId
-  :
-  null
-  Manager3
-  :
-  null
-  ManagerId
-  :
-  null
-  ManagerLevel
-  :
-  null
-  ManagerStringId
-  :
-  null
-  Modified
-  :
-  string,
-  OData__ColorTag
-  :
-  null
-  OData__UIVersionString
-  :
-  number, OldReqId
-  :
-  null
-  Order_Amount
-  :
-  null
-  PONumber
-  :
-  string, PRID
-  :
-  number,
-  PR_Created_For_Self
-  :
-  boolean,
-  PrepaidOrCapitalEquipment
-  :
-  null
-  ProjectCode
-  :
-  string,
-  ProjectDepartment
-  :
-  string,
-  ProjectNumber
-  :
-  string, QuickbookPO
-  :
-  null
-  RequestForId
-  :
-  number,
-  RequestForStringId
-  :
-  number, RequesterCurrency
-  :
-  null
-  SAPPOBalance
-  :
-  number, SAPPOEmailCount
-  :
-  null
-  SAPPONO
-  :
-  number, SAPPRId
-  :
-  null
-  SFADate
-  :
-  null
-  ServerRedirectedEmbedUri
-  :
-  null
-  ServerRedirectedEmbedUrl
-  :
-  null,
-  Shipping_ContactPhone
-  :
-  null
-  Shipping_Country
-  :
-  null
-  Shipping_Location
-  :
-  null
-  Shipping_Name
-  :
-  null
-  Shipping_Postal_Code
-  :
-  null
-  Shipping_Region
-  :
-  null
-  Shipping_Street
-  :
-  null
-  Special_Instructions
-  :
-  null
-  Status
-  :
-  string, Supplier_Account_Number
-  :
-  string, Supplier_Address
-  :
-  string, Supplier_City
-  :
-  string, Supplier_Country
-  :
-  string, Supplier_Name
-  :
-  string, Supplier_State
-  :
-  string, Supplier_Zip
-  :
-  number, TaskCreatedForId
-  :
-  null
-  TaskCreatedForStringId
-  :
-  null
-  ThreeFortyBPO
-  :
-  null
-  Title
-  :
-  string, ToCurrency
-  :
-  null
-  Type_Of_Buy
-  :
-  string, Type_Of_Order
-  :
-  null
-  UFID
-  :
-  null
-  submit_requestors_cost_center
-  :
-  string
+
+constructor (){
+  this.ActCostCenter=0;
+  this.AesyntPRType="";
+  this.AllApproversId=0;
+  this.AllApproversStringId=0;
+  this.AllManagersId=0;
+  this.AllManagersStringId=0;
+  this.ApprovalInstance=0;
+  this.Attachments= true;
+  this.AuthorId=0;
+  this.CCDescription="";
+  this.CFOId=0;
+  this.CFOStringId="";
+  this.CIP_Number=0;
+  this.Comments="";
+  this.Company="";
+  this.CompanyCode="";
+  this.ComplianceAssetId=0;
+  this.ContentTypeId="";
+  this.ConvertedDollerAmount=0;
+  this.Cost_Center=0;
+  this.CountryKey="";
+  this.CreateDate= new Date();
+  this.Created="";
+  this.CurrentApprovalStep="";
+  this.EHDelegationCount=0;
+  this.EHS= true;
+  this.EditorId=0;
+  this.ExchangeRate=0;
+  this.ExchangeRateDate= new Date();
+  this.ExchangeRateV=0;
+  this.FIDelegationCount=0;
+  this.FIReminderCount=0;
+  this.FileSystemObjectType=0;
+  this.FinalApprovalDate= new Date();
+  this.FromCurrency="";
+  this.GL_Account="";
+  this.GUID="";
+  this.HRADCompanyCode="";
+  this.HSRIPO="";
+  this.IsCFOApproved= true;
+  this.IsCompleted= true;
+  this.IsITVPApproved= true;
+  this.IsOtherCC= true;
+  this.IsProjectPR= true;
+  this.JLReminderCount=0;
+  this.LastStatus="";
+  this.LastWorkflowRun= new Date();
+  this.Location="";
+  this.Manager1Id=0;
+  this.Manager1StringId="";
+  this.Manager2Id=0;
+  this.Manager2StringId="";
+  this.Manager3= null;
+  this.ManagerId=0;
+  this.ManagerLevel="";
+  this.ManagerStringId="";
+  this.Modified= new Date();
+  this.OldReqId=0;
+  this.Order_Amount=0;
+  this.PONumber="";
+  this.PRID=0;
+  this.PR_Created_For_Self= true;
+  this.PrepaidOrCapitalEquipment="";
+  this.ProjectCode="";
+  this.ProjectDepartment="";
+  this.ProjectNumber="";
+  this.QuickbookPO="";
+  this.RequestForId=0;
+  this.RequestForStringId="";
+  this.RequesterCurrency="";
+  this.SAPPOBalance=0;
+  this.SAPPOEmailCount=0;
+  this.SAPPONO=0;
+  this.SAPPRId=0;
+  this.SFADate= new Date();
+  this.Shipping_ContactPhone="";
+  this.Shipping_Country="";
+  this.Shipping_Location="";
+  this.Shipping_Name="";
+  this.Shipping_Postal_Code="";
+  this.Shipping_Region=""
+  this.Shipping_Street=""
+  this.Special_Instructions="";
+  this.Status="";
+  this.Supplier_Account_Number="";
+  this.Supplier_Address="";
+  this.Supplier_City="";
+  this.Supplier_Country="";
+  this.Supplier_Name="";
+  this.Supplier_State="";
+  this.Supplier_Zip="";
+  this.TaskCreatedForId=0;
+  this.TaskCreatedForStringId="";
+  this.ThreeFortyBPO = "";
+  this.Title="";
+  this.ToCurrency="";
+  this.Type_Of_Buy="";
+  this.Type_Of_Order = "";
+  this.UFID=0;
+  this.submit_requestors_cost_center = "";
+
+}
+
+
 }

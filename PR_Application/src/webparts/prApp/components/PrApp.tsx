@@ -40,6 +40,8 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     };
     this.context = this.props.context;
     this._sp = getSP();
+    this.AddNewPRItem = this.AddNewPRItem.bind(this);
+    this.OnSubmitButtonClick = this.OnSubmitButtonClick.bind(this);
   }
 
   private async GetPRAllItems() {
@@ -198,7 +200,7 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
   }
 
 
-  private async AddNewPRItem(item:IPRItem){
+  public async AddNewPRItem(item:IPRItem){
     const spCache = spfi(this._sp);
       const addedItem: any = await spCache.web.lists.getByTitle("PR_All_Requests").items.add({
         
@@ -225,6 +227,14 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     // this.GetPRAllItems();
     //this.GetPRItemById(1);
     
+  }
+
+  public async OnSubmitButtonClick() {
+
+    let item:IPRItem = new IPRItem()
+  item.Title="Something";
+  item.ActCostCenter = 12345;
+  this.AddNewPRItem(item);
   }
 
   private onSelectedItem(items: []) {
@@ -273,18 +283,12 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
       throw new Error('Function not implemented.');
     }
 
-    function OnButtonClick() {
-
-      let item:IPRItem ;
-    item.Title="Something";
-    item.ActCostCenter = 12345;
-    this.AddNewPRItem(item);
-    }
+    
 
     return (
       <section className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ''}`}>
         <div className={styles.welcome}>
-<DefaultButton onClick={OnButtonClick}></DefaultButton>
+<DefaultButton onClick={this.OnSubmitButtonClick}></DefaultButton>
           {/* <h1>ComboBox</h1>
           <ComboBoxListItemPicker listId='Cities'
             columnInternalName='Country'
