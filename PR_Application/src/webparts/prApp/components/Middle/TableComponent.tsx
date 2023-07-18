@@ -5,11 +5,52 @@ import { Icon } from '@fluentui/react/lib/Icon';
 const TableComponent = () => {
 
   const columns: IColumn[] = [
-    { key: 'column1', name: 'File Name', fieldName: 'column1', minWidth: 50, maxWidth: 100},
-    { key: 'column2', name: 'Document Type', fieldName: 'column2', minWidth: 100, maxWidth: 200 },
-    { key: 'column3', name: 'Modified By', fieldName: 'column3', minWidth: 150, maxWidth: 200 },
-    { key: 'column4', name: 'Modified Date', fieldName: 'column4', minWidth: 100, maxWidth: 200 },
-    { key: 'column5', name: 'Delete', fieldName: 'column5', minWidth: 100, maxWidth: 200 },
+    { key: 'column1', name: 'File Name', fieldName: 'column1', minWidth: 50, maxWidth: 100,
+    styles: {
+        root: {
+          backgroundColor: 'green', // Replace with your desired color
+          color: 'white',
+          borderRightColor: 'white', // Set the right border color to white
+          borderRightWidth: '1px', // Optional: Adjust the border width if needed
+          borderRightStyle: 'solid'  // Replace with your desired text color
+        },
+      }},
+    { key: 'column2', name: 'Document Type', fieldName: 'column2', minWidth: 100, maxWidth: 200,styles: {
+        root: {
+          backgroundColor: 'green', // Replace with your desired color
+          color: 'white',
+          borderRightColor: 'white', // Set the right border color to white
+          borderRightWidth: '1px', // Optional: Adjust the border width if needed
+          borderRightStyle: 'solid'  // Replace with your desired text color
+        },
+      } },
+    { key: 'column3', name: 'Modified By', fieldName: 'column3', minWidth: 150, maxWidth: 200,    styles: {
+        root: {
+          backgroundColor: 'green', // Replace with your desired color
+          color: 'white',
+          borderRightColor: 'white', // Set the right border color to white
+          borderRightWidth: '1px', // Optional: Adjust the border width if needed
+          borderRightStyle: 'solid'  // Replace with your desired text color
+        },
+      } },
+    { key: 'column4', name: 'Modified Date', fieldName: 'column4', minWidth: 100, maxWidth: 200,    styles: {
+        root: {
+          backgroundColor: 'green', // Replace with your desired color
+          color: 'white',
+          borderRightColor: 'white', // Set the right border color to white
+          borderRightWidth: '1px', // Optional: Adjust the border width if needed
+          borderRightStyle: 'solid'  // Replace with your desired text color
+        },
+      } },
+    { key: 'column5', name: 'Delete', fieldName: 'column5', minWidth: 100, maxWidth: 200,    styles: {
+        root: {
+          backgroundColor: 'green', // Replace with your desired color
+          color: 'white',
+          borderRightColor: 'white', // Set the right border color to white
+          borderRightWidth: '1px', // Optional: Adjust the border width if needed
+          borderRightStyle: 'solid'  // Replace with your desired text color
+        },
+      } },
 
   ];
 

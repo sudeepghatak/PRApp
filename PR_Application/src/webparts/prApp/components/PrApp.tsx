@@ -12,20 +12,17 @@ import { getSP } from './pnpjsConfig';
 import { Accordion } from "@pnp/spfx-controls-react/lib/Accordion";
 import { ComboBoxListItemPicker } from '@pnp/spfx-controls-react/lib/ListItemPicker';
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
-import SecondComponent from './Middle/SecondComponent';
-import FirstComponent from './Middle/FirstComponent';
 import { SPHttpClient } from '@microsoft/sp-http';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { FieldPicker } from "@pnp/spfx-controls-react/lib/FieldPicker";
 import { Checkbox } from '@fluentui/react/lib/Checkbox';
 import { IPersonaProps } from '@fluentui/react/lib/Persona';
 import { IBasePickerSuggestionsProps, NormalPeoplePicker, ValidationState } from '@fluentui/react/lib/Pickers';
-import ThirdComponent from './Middle/ThirdComponent';
-import TypeOfPurchase_Table from './Middle/LineItemTableFormat';
 import { IPRItem } from './IPRItem';
 import { ButtonType, DefaultPalette, Icon } from 'office-ui-fabric-react';
 import { DefaultButton } from '@fluentui/react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
+import { MainPage } from './Middle/MainPage';
 
 
 export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}> {
@@ -495,17 +492,17 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
       <section className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ''}`}>
         <div className={styles.welcome}>
 
-          <Stack >
-            <Stack.Item align="end">
-              <DefaultButton style={{ background: DefaultPalette.green, color: DefaultPalette.white }} onClick={this.OnSubmitButtonClick}>
-                <Stack horizontal>
-                  <span style={{ marginRight: 10 }}><Icon iconName="CompassNW" /></span>
-                  <span>Add/Update item</span>
-                </Stack>
-              </DefaultButton>
+      {/* //     <Stack >
+      //       <Stack.Item align="end">
+      //         <DefaultButton style={{ background: DefaultPalette.green, color: DefaultPalette.white }} onClick={this.OnSubmitButtonClick}>
+      //           <Stack horizontal>
+      //             <span style={{ marginRight: 10 }}><Icon iconName="CompassNW" /></span>
+      //             <span>Add/Update item</span>
+      //           </Stack>
+      //         </DefaultButton>
 
-            </Stack.Item>
-          </Stack>
+      //       </Stack.Item>
+      //     </Stack> */}
           {/* <h1>ComboBox</h1>
           <ComboBoxListItemPicker listId='Cities'
             columnInternalName='Country'
@@ -539,8 +536,9 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
               </Accordion>
             )
            )
-          }  
-           <MainPage/> */}
+          }  */}
+           <MainPage/> 
+           
           {/*}  <FirstComponent />
             <SecondComponent/> 
          <ThirdComponent/>
