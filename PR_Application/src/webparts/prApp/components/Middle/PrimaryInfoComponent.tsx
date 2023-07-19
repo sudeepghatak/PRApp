@@ -37,12 +37,12 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     setisModalOpen(!isModalOpen);
   };
 
-  React.useEffect(()=>{
-    console.log("hello");
+  // React.useEffect(()=>{
+  //   console.log("hello");
     
-    setTableCreate({});
+  //   setTableCreate({});
 
-  },[])
+  // },[])
   //Project Code Modal Design Here ...........................
   const [openProjectCode, setopenProjectCode] = useState<boolean>(false);
   const showProjectCodeModal = () => {
