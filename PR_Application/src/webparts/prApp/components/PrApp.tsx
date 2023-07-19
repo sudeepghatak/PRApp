@@ -76,7 +76,7 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
 
 
 
-  public async UpdatePRItem(item: IPRItem, PRId:number) {
+  public async UpdatePRItem(item: IPRItem, PRId: number) {
     const spCache = spfi(this._sp);
     const addedItem: any = await spCache.web.lists.getByTitle("PR_All_Requests").items.getById(PRId).update({
 
@@ -190,7 +190,7 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     const spCache = spfi(this._sp);
     const addedItem: any = await spCache.web.lists.getByTitle("PR_All_Requests").items.getById(PRId).delete();
 
-       console.log ("Item deleted successfully");
+    console.log("Item deleted successfully");
   }
 
 
@@ -324,12 +324,12 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     item.Title = "Ashish";
     item.ActCostCenter = 77777777;
     //this.AddNewPRItem(item);
-    this.UpdatePRItem(item,16)
+    this.UpdatePRItem(item, 16)
   }
 
   public async OnDeleteButtonClick() {
-    
-     this.deletePRItem(17);
+
+    this.deletePRItem(17);
   }
 
   private onSelectedItem(items: []) {
@@ -384,34 +384,7 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
       <section className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ''}`}>
         <div className={styles.welcome}>
 
-      {/* //     <Stack >
-      //       <Stack.Item align="end">
-      //         <DefaultButton style={{ background: DefaultPalette.green, color: DefaultPalette.white }} onClick={this.OnSubmitButtonClick}>
-      //           <Stack horizontal>
-      //             <span style={{ marginRight: 10 }}><Icon iconName="CompassNW" /></span>
-      //             <span>Add/Update item</span>
-      //           </Stack>
-      //         </DefaultButton>
 
-<<<<<<< HEAD
-      //       </Stack.Item>
-      //     </Stack> */}
-=======
-            </Stack.Item>
-          </Stack>
-
-          <Stack >
-            <Stack.Item align="end">
-              <DefaultButton style={{ background: DefaultPalette.green, color: DefaultPalette.white }} onClick={this.OnDeleteButtonClick}>
-                <Stack horizontal>
-                  <span style={{ marginRight: 10 }}><Icon iconName="CompassNW" /></span>
-                  <span>Delete item</span>
-                </Stack>
-              </DefaultButton>
-
-            </Stack.Item>
-          </Stack>
->>>>>>> 320342a772f55043b8cca7db4b59460bf6545220
           {/* <h1>ComboBox</h1>
           <ComboBoxListItemPicker listId='Cities'
             columnInternalName='Country'
@@ -446,8 +419,8 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
             )
            )
           }  */}
-           <MainPage/> 
-           
+          <MainPage />
+
           {/*}  <FirstComponent />
             <SecondComponent/> 
          <ThirdComponent/>

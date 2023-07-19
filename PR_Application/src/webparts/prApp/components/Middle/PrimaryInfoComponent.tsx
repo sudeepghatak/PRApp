@@ -194,16 +194,18 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   });
 
   const companyCodeOption: IDropdownOption[] = [
-    { key: "apple", text: "Apple" },
-    { key: "banana", text: "Banana" },
+    { key: "1", text: "OM01" },
+    { key: "2", text: "OM06" },
+    { key: "3", text: "OM31" },
   ];
   const selectDepartmentOption: IDropdownOption[] = [
     { key: "engineering", text: "Engineering" },
     { key: "marketing", text: "Marketing" },
   ];
   const projectCodeOption: IDropdownOption[] = [
-    { key: "apple", text: "Apple" },
-    { key: "banana", text: "Banana" },
+    { key: "1", text: "ACP.ICV" },
+    { key: "2", text: "ACP.DAP" },
+    { key: "3", text: "ACP.OCP" },
   ];
 
   const PrOption: IDropdownOption[] = [
