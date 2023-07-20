@@ -67,30 +67,37 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   };
   //ship Address
   const shipAddress: IDropdownOption[] = [
-    { key: "apple", text: "Apple" },
-    { key: "banana", text: "Banana" },
+    { key: "1", text: "US,- Strongsville, OH (STV) plant" },
+    { key: "2", text: "US, Cranberry" },
+    { key: "3", text: "US, Field Persons" },
+    { key: "4", text: "US, HQ-Mountain View, CA (MTV)" },
     { key: "otherlocation", text: "Other Shipping Location" },
   ];
 
   //region Options ...
   const regionOptions: IDropdownOption[] = [
-    { key: "apple", text: "Apple" },
-    { key: "banana", text: "Banana" },
-    { key: "otherlocation", text: "Other Shipping Location" },
+    { key: "1", text: "Tennessee" },
+    { key: "2", text: "Texas" },
+    { key: "3", text: "Aargau" },
+    { key: "4", text: "Aberdeenshire" },
+    { key: "5", text: "Adana" },
   ];
 
   //Country options...
   const countryOptions: IDropdownOption[] = [
-    { key: "apple", text: "Apple" },
-    { key: "banana", text: "Banana" },
-    { key: "otherlocation", text: "Other Shipping Location" },
+    { key: "1", text: "Australia" },
+    { key: "2", text: "China" },
+    { key: "3", text: "France" },
+    { key: "4", text: "France" },
   ];
   //where are you based....
 
   const basedOptions: IDropdownOption[] = [
-    { key: "apple", text: "Apple" },
-    { key: "banana", text: "Banana" },
-    { key: "otherlocation", text: "Other Shipping Location" },
+    { key: "1", text: "US,- Strongsville, OH (STV) plant" },
+    { key: "2", text: "US, Cranberry" },
+    { key: "3", text: "US, Field Persons" },
+    { key: "4", text: "US, HQ-Mountain View, CA (MTV)" },
+    { key: "5", text: "US, Milpitas, (MIL) Plant" },
   ];
 
   const dropdownStyles: Partial<IDropdownStyles> = {

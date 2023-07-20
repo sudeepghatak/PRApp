@@ -23,6 +23,8 @@ import { ButtonType, DefaultPalette, Icon } from 'office-ui-fabric-react';
 import { DefaultButton } from '@fluentui/react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { MainPage } from './Middle/MainPage';
+import { IPRMarketProjectCode } from './Middle/IPrMarketProjectCode';
+import { ConnectPr } from '../Api/api';
 
 
 export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}> {
@@ -33,6 +35,10 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     super(props);
     this.state = {
       PRAllListItems: [],
+      PrMarketProjectCode:[],
+      PrEngineerProjectCode:[],
+      PREngineerProCodeNeedHelp:[],
+      PRMarketProCodeNeedHelp:[],
       PRListItem: null,
       LoggedInUser: this.props.context.pageContext.legacyPageContext.userDisplayName
     };
@@ -60,6 +66,25 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
       console.log("Error in GetItem : " + error);
     }
   }
+  // // PRMarketingProjectCode
+  // private async GetPRMarketProjectCode() {
+  //   try {
+  //     // debugger;
+  //     const spCache = spfi(this._sp);
+  //     const response: IPRMarketProjectCode[] = await spCache.web.lists
+  //       .getByTitle("PR_Mkt_Project_Codes")
+  //       .items
+  //       .select("Title")();
+  //     console.log(response);
+  //     this.setState({ PrMarketProjectCode: response });
+
+  //   } catch (error) {
+  //     console.log("Error in GetItem : " + error);
+  //   }
+  // }
+
+
+
   private async GetPRItemById(id: number) {
     try {
       debugger;
@@ -315,14 +340,15 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
   public componentDidMount(): void {
     // this.GetPRAllItems();
     //this.GetPRItemById(1);
+    //  this.GetPRMarketProjectCode();
 
   }
 
   public async OnSubmitButtonClick() {
 
     let item: IPRItem = new IPRItem()
-    item.Title = "Ashish";
-    item.ActCostCenter = 77777777;
+    item.Title = "Abc";
+    item.ActCostCenter = 7;
     //this.AddNewPRItem(item);
     this.UpdatePRItem(item,16)
   }
@@ -383,35 +409,8 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     return (
       <section className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ''}`}>
         <div className={styles.welcome}>
-
-      {/* //     <Stack >
-      //       <Stack.Item align="end">
-      //         <DefaultButton style={{ background: DefaultPalette.green, color: DefaultPalette.white }} onClick={this.OnSubmitButtonClick}>
-      //           <Stack horizontal>
-      //             <span style={{ marginRight: 10 }}><Icon iconName="CompassNW" /></span>
-      //             <span>Add/Update item</span>
-      //           </Stack>
-      //         </DefaultButton>
-
-<<<<<<< HEAD
-      //       </Stack.Item>
-      //     </Stack> */}
-=======
-            </Stack.Item>
-          </Stack>
-
-          <Stack >
-            <Stack.Item align="end">
-              <DefaultButton style={{ background: DefaultPalette.green, color: DefaultPalette.white }} onClick={this.OnDeleteButtonClick}>
-                <Stack horizontal>
-                  <span style={{ marginRight: 10 }}><Icon iconName="CompassNW" /></span>
-                  <span>Delete item</span>
-                </Stack>
-              </DefaultButton>
-
-            </Stack.Item>
-          </Stack>
->>>>>>> 320342a772f55043b8cca7db4b59460bf6545220
+        {/* <button onClick={()=>this.GetPRMarketProjectCode()}>Save</button> */}
+      
           {/* <h1>ComboBox</h1>
           <ComboBoxListItemPicker listId='Cities'
             columnInternalName='Country'
@@ -420,21 +419,21 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
             onSelectedItem={this.onSelectedItem}
             webUrl={this.props.context.pageContext.web.absoluteUrl}
             spHttpClient={this.props.context.spHttpClient as any} /> */}
-          {/*<h1>
- People Picker
+         {/* <h1>
+  People Picker
             </h1>
             <PeoplePicker
             context={this.props.context as any}
             titleText="People Picker"
-            personSelectionLimit={3}
+            personSelectionLimit={1}
             showtooltip={true}
             required={true}
             disabled={false}
             onChange={this._getPeoplePickerItems}
             showHiddenInUI={false}
             principalTypes={[PrincipalType.User]}
-            resolveDelay={1000} />
-          <h1>Accordian</h1>
+            resolveDelay={1000} /> */}
+          {/* <h1>Accordian</h1>
           {
             this.state.ListItems.map((item, index) => (
               <Accordion title={item.Title} defaultCollapsed={true} className={"itemCell"} key={index}>
@@ -446,13 +445,15 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
             )
            )
           }  */}
-           <MainPage/> 
+           <MainPage context={this.props.context as any}/> 
            
           {/*}  <FirstComponent />
             <SecondComponent/> 
          <ThirdComponent/>
           <TypeOfPurchase_Table/> */}
-
+          {/* <button onClick={()=>ConnectPr.getInstance().GetPREnggProCodeNeedHelp()}> Engg</button>
+          <button onClick={()=>ConnectPr.getInstance().GetPRMarketProCodeNeedHelp()}> Mark</button> */}
+      
         </div>
       </section>
     );

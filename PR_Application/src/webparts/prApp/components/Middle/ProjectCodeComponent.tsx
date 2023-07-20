@@ -7,6 +7,7 @@ import {
   Stack,
 } from "@fluentui/react";
 import * as React from "react";
+import { ConnectPr } from "../../Api/api";
 
 interface IPProjectCode {
   isProjectCodeOpen: boolean;
@@ -18,13 +19,56 @@ const ProjectCodeComponent: React.FunctionComponent<IPProjectCode> = (
   props
 ) => {
   const { isProjectCodeOpen, showProjectCode, ProjectCode_title } = props;
-  const items = [
-    {
-      key: 1,
-      project_code: "ACP.DAP",
-      description: "Omnicell Device Platform ",
-    },
-  ];
+  const [items,setitems]=React.useState([])
+  React.useEffect(()=>{
+    if(ProjectCode_title ==="Engineering"){
+      let eng=[]
+      ConnectPr.getInstance().GetPREnggProCodeNeedHelp().then((engValue)=>{
+        for(let i=0;i<engValue.length;i++){
+          let newItem={
+            key:i,
+            project_code:engValue[i].Title,
+            description:engValue[i].ProjDesc
+          }
+          eng.push(newItem)
+
+        }
+          setitems([...eng])
+
+
+      })
+
+    }
+   else if(ProjectCode_title ==="Marketing"){
+    ConnectPr.getInstance().GetPRMarketProCodeNeedHelp().then((mrkvalue)=>{
+      console.log("Marketing values");
+      let mar=[]
+      for(let i=0;i<mrkvalue.length;i++){
+        let newmrkItem={
+            key:i,
+            project_code:mrkvalue[i].Title,
+            description:mrkvalue[i].ProjectDesc
+          }
+          mar.push(newmrkItem)
+          
+          
+        
+      }
+          setitems([...mar])
+
+    })
+
+   }
+
+
+  },[])
+  // const items = [
+  //   {
+  //     key: 1,
+  //     project_code: "ACP.DAP",
+  //     description: "Omnicell Device Platform ",
+  //   },
+  // ];
   const columns = [
     {
       key: "column1",

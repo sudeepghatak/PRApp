@@ -9,6 +9,7 @@ import { escape } from "@microsoft/sp-lodash-subset";
 import PrimaryInfoComponent from "./PrimaryInfoComponent";
 import VendorandShippingComponent from "./VendorandShippingComponent";
 import LineItemComponent from "./LineItemComponent";
+import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 export interface ITableBuildProps {
   name: string;
@@ -25,7 +26,12 @@ export const tableBuildContext = createContext<ITableBuildProps[] | undefined>(
 export const tableDeleteContext = createContext<
   IPDeleteTableContent | undefined
 >(undefined);
-export const MainPage = () => {
+
+interface IPMainComponent{
+  context:WebPartContext
+}
+export const MainPage:React.FunctionComponent<IPMainComponent> = (props) => {
+  const {context}=props;
   let userDisplayName: string = " Blank";
 
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -37,10 +43,15 @@ export const MainPage = () => {
   };
 
   const deleteTableContent = (index: number) => {
+    console.log(index);
+    
     let copytableCreate = [...tableCreate];
     settableCreate(
       copytableCreate.filter((item, item_index) => item_index != index)
     );
+
+    console.log(tableCreate);
+    
   };
   
 
@@ -161,6 +172,7 @@ export const MainPage = () => {
               <PrimaryInfoComponent
                 buttonContxtSave={buttonContxtSave}
                 setTableCreate={setTableCreate}
+                context={context}
               />
             ) : null}
             {pageNumber === 2 ? (

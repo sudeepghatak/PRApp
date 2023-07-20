@@ -24,13 +24,20 @@ import { FilePickModal } from "./FilePickModal";
 import { ITableBuildProps } from "./MainPage";
 import ProjectCodeComponent from "./ProjectCodeComponent";
 import { any } from "prop-types";
+import { SPFI, spfi } from "@pnp/sp";
+import { getSP } from "../pnpjsConfig";
+import { IPRMarketProjectCode } from "./IPrMarketProjectCode";
+import { ConnectPr } from "../../Api/api";
+import { WebPartContext } from "@microsoft/sp-webpart-base";
+import PeopleComponent from "./PeopleComponent";
 interface IFirstProps {
   buttonContxtSave: () => void;
   setTableCreate: (value: ITableBuildProps) => void;
+  context:WebPartContext;
 }
 
 const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
-  const { buttonContxtSave, setTableCreate } = props;
+  const { buttonContxtSave, setTableCreate,context } = props;
   //use for Modal Show ...........
   const [isModalOpen, setisModalOpen] = useState<boolean>(false);
   const showModal = () => {
@@ -80,6 +87,8 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   const [isPrProject, setisPrProject] = useState<boolean>(false);
 
   const [isBlanketPrSelect, setisBlanketPrSelect] = useState<boolean>(false);
+
+  const [isPRsubmit, setisPRsubmit] = useState<boolean>(false);
 
   const [isAlternetCostcenterSelect, setisAlternetCostcenterSelect] =
     useState<boolean>(false);
@@ -157,6 +166,16 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     console.log(selectRadioItems);
   };
 
+
+  // const 
+  // useEffect(()=>{
+    
+
+
+
+  // },[])
+
+
   useEffect(() => {
     if (selectRadioItems.constCenterRadio.text == "Alternate Cost Center") {
       setisAlternetCostcenterSelect(true);
@@ -169,9 +188,18 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       setisBlanketPrSelect(false);
     }
     if (selectRadioItems.prProjectRadio.text == "Yes") {
+      
+      // GetPREnggProjectCodeItems()
       setisPrProject(true);
+
     } else {
       setisPrProject(false);
+    }
+
+    if (selectRadioItems.prRadio.text == "No") {
+      setisPRsubmit(true);
+    } else {
+      setisPRsubmit(false);
     }
 
     if (
@@ -194,22 +222,38 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   });
 
   const companyCodeOption: IDropdownOption[] = [
-    { key: "apple", text: "Apple" },
-    { key: "banana", text: "Banana" },
+    { key: "1", text: "OM01" },
+    { key: "2", text: "OM06" },
+    { key: "3", text: "OM31" },
+    { key: "4", text: "OM32" },
+  ];
+  const selectCostCenterOption: IDropdownOption[] = [
+    { key: "1", text: "COPA PRODUCT COST HS" },
+    { key: "2", text: "MANUFACTURING AESYNT" },
+    { key: "3", text: "AESYNT-IV SOLUTIONS-" },
+    { key: "4", text: "SUSTAININGPROD IT IT" },
   ];
   const selectDepartmentOption: IDropdownOption[] = [
     { key: "engineering", text: "Engineering" },
     { key: "marketing", text: "Marketing" },
+    
   ];
-  const projectCodeOption: IDropdownOption[] = [
-    { key: "apple", text: "Apple" },
-    { key: "banana", text: "Banana" },
-  ];
+
+  // const [selectDepartmentOption,setselectDepartmentOption]=useState<IDropdownOption[]>(
+  //   {
+
+  //   }
+  // );
+
+  const [projectCodeOption,setprojectCodeOption]=useState([])
+
+  // const projectCodeOption: IDropdownOption[] = [
+  // ];
 
   const PrOption: IDropdownOption[] = [
     { key: "sap", text: "SAP(Omnicell)" },
     { key: "hsri", text: "HSRI" },
-    { key: "3408", text: "3408" },
+    { key: "340B", text: "340B" },
   ];
 
   const dropdownStyles: Partial<IDropdownStyles> = {
@@ -237,6 +281,51 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       setshowDialog(true);
     }
   };
+  //------------------------------------------
+
+  useEffect(()=>{
+    console.log(selectedItems.selectDepartment)
+    console.log("-------------------------------")
+    
+      if(selectedItems.selectDepartment.text=="Marketing"){
+        console.log("Enter Into Marketing ")
+        let marketing=[];
+      ConnectPr.getInstance().GetPRMarketProjectCode().then((PrValue)=>{
+      console.log("I ewant this Value")
+      console.log(PrValue)
+      for(let i=0;i<PrValue.length;i++){
+        if(PrValue[i].IsActive){
+        let newOption={
+          key:PrValue[i].Title.toLowerCase(),text:PrValue[i].Title
+        }
+        marketing.push(newOption)}
+      }
+        setprojectCodeOption([...marketing])
+
+    })
+
+      }
+      else if(selectedItems.selectDepartment.text=="Engineering"){
+        console.log("Enter Into Engineering ")
+
+        let engineering=[];
+        ConnectPr.getInstance().GetPREnggProjectCodeItems().then((PrValue)=>{
+        console.log(PrValue)
+        for(let i=0;i<PrValue.length;i++){
+          if(PrValue[i].IsActive){
+        let newOption={
+          key:PrValue[i].Title.toLowerCase(),text:PrValue[i].Title
+        }
+         engineering.push(newOption)}
+        
+      }
+      setprojectCodeOption([...engineering])
+    })
+      }
+
+    
+
+  },[selectedItems])
 
   //......................................
 
@@ -305,7 +394,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       width: "70%",
     },
   };
-  const [] = useState<boolean>();
+  
 
   const linkClickEvent = () => {
     // showModal();
@@ -392,6 +481,26 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           </Stack.Item>
 
           {/* ----------------------------------- */}
+         
+{isPRsubmit ? (
+            <>
+              <Stack.Item grow={12}>
+                <Stack horizontal horizontalAlign="baseline">
+                  <Stack.Item styles={col1Style}>
+                    <div>Requesting for: </div>
+                  </Stack.Item>
+                  <Stack.Item styles={col2Style}>
+                    <div style={{ width: 250 }}>
+                      <PeopleComponent context={context} />
+                    </div>
+                  </Stack.Item>
+                </Stack>
+              </Stack.Item>
+            </>
+          ) : null}
+
+
+          {/* //yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy */}
 
           <Stack.Item grow={12}>
             <Stack horizontal horizontalAlign="baseline">
@@ -431,7 +540,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                   />
                   <Link
                     style={{ color: "blue", marginLeft: 15, marginTop: 10 }}
-                    onClick={linkClickEvent}
+                    onClick={()=>console.log("Hii")}
                   >
                     View All Cost Center Details
                   </Link>
@@ -455,7 +564,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                       // onChange={changeDropdownOption}
                       // style={{ width: "150px" }}
                       // selectedKey={selectedItems["selectDepartment"]?.key}
-                      options={selectDepartmentOption}
+                      options={selectCostCenterOption}
                       styles={dropdownStyles}
                     />
                   </Stack.Item>
@@ -501,6 +610,8 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                       <Dropdown
                         placeholder="Select an option"
                         id="selectDepartment"
+                        
+                        // defaultValue={"Enginnering"}
                         onChange={changeDropdownOption}
                         style={{ width: "150px" }}
                         selectedKey={selectedItems["selectDepartment"]?.key}

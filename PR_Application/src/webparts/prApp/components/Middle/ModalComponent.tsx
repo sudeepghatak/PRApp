@@ -43,10 +43,9 @@ export const ModalComponent: React.FunctionComponent<IModalProps> = (props) => {
             />
           </span>
         </Stack>
-        <div style={{ paddingLeft: 15, paddingRight: 15 }}>
+        <div style={{ paddingLeft: 15, paddingRight: 15 ,color:"red"}}>
           <p>
-            Lorem ipsum dolor sit amet, cons amet, vulputate in leo. Maecenas
-            vulputa
+            Sorry, Requestor can't create PR as no Company Code found!
           </p>
         </div>
       </Modal>
