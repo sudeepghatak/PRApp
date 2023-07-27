@@ -6,4 +6,7 @@ export class IPREngineerProCodeNeedHelp {
   Title: string;
   ProjDesc:string;
   IsActive:boolean;
+  IsValidSAPCompanyCode: any;
+  MappedCompanyCode: any;
+  Details: any;
 }

@@ -13,6 +13,9 @@ import {
   IDropdownStyles,
 } from "@fluentui/react/lib/Dropdown";
 import { Link } from "@fluentui/react";
+import { SupplierModal } from "./SupplierModal";
+import { VendorDetails } from "../../Model/vendor_details";
+// import SupplierModal from "./SupplierModal";
 interface ISecondprops {
   buttonContxtSave: () => void;
   buttonContxtBack: () => void;
@@ -33,10 +36,22 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   });
 
   const [selectshipAddress, setselectshipAddress] = useState<boolean>(false);
-  // const [selectexistAddress, setselectexistAddress] = useState<boolean>(false);
-  // const showExistAddressList = () => {
-  //   setselectexistAddress(!selectexistAddress);
-  // };
+
+  const [openSupplierSearch, setopenSupplierSearch] = useState<boolean>(false);
+  const showSupplierSearchModal = () => {
+    setopenSupplierSearch(!openSupplierSearch);
+  };
+
+  const [vendorItem, setvendorItem] = useState<VendorDetails>(
+    new VendorDetails(0, " ", " ", " ", " ", " ", " ", " ", " ")
+  );
+
+  const venderItemDatapick = (vendor: VendorDetails) => {
+    console.log(vendor);
+    console.log(vendor.vendorNumber);
+    setvendorItem(vendor);
+  };
+
   const changeshipDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
     option?: IDropdownOption | undefined,
@@ -179,12 +194,23 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                 </Stack.Item>
                 <Stack.Item styles={col2Style}>
                   <Stack horizontal tokens={{ childrenGap: 5 }}>
-                    <TextField id="suppliername" onChange={textContext} />
+                    <TextField
+                      id="suppliername"
+                      value={vendorItem.vendorName}
+                      onChange={textContext}
+                    />
                     <DefaultButton
                       style={{ minWidth: 0 }}
-                      onClick={() => console.log("Hello")}
+                      onClick={() => showSupplierSearchModal()}
                     >
                       <Icon iconName="Search" style={{ color: "blue" }} />
+                      {openSupplierSearch ? (
+                        <SupplierModal
+                          isModalOpen={openSupplierSearch}
+                          showModal={showSupplierSearchModal}
+                          venderItemDatapick={venderItemDatapick}
+                        />
+                      ) : null}
                     </DefaultButton>
                   </Stack>
                 </Stack.Item>
@@ -203,7 +229,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                 </Stack.Item>
                 <Stack.Item styles={col2Style}>
                   <Stack horizontal tokens={{ childrenGap: 5 }}>
-                    <TextField id="suppliernumber " onChange={textContext} />
+                    <TextField
+                      id="suppliernumber "
+                      value={vendorItem.vendorNumber}
+                      onChange={textContext}
+                    />
                     {/* (buttonState)? */}
                     {buttonState ? (
                       <DefaultButton
@@ -238,7 +268,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                     </Stack.Item>
                     <Stack.Item styles={col2Style}>
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <TextField disabled styles={textFieldStyles} />
+                        <TextField
+                          disabled
+                          value={vendorItem.vendorAddress}
+                          styles={textFieldStyles}
+                        />
                       </Stack>
                     </Stack.Item>
                   </Stack>
@@ -250,7 +284,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                     </Stack.Item>
                     <Stack.Item styles={col2Style}>
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <TextField disabled styles={textFieldStyles} />
+                        <TextField
+                          disabled
+                          value={vendorItem.vendorCity}
+                          styles={textFieldStyles}
+                        />
                       </Stack>
                     </Stack.Item>
                   </Stack>
@@ -262,7 +300,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                     </Stack.Item>
                     <Stack.Item styles={col2Style}>
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <TextField disabled styles={textFieldStyles} />
+                        <TextField
+                          disabled
+                          value={vendorItem.vendorState}
+                          styles={textFieldStyles}
+                        />
                       </Stack>
                     </Stack.Item>
                   </Stack>
@@ -274,7 +316,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                     </Stack.Item>
                     <Stack.Item styles={col2Style}>
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <TextField disabled styles={textFieldStyles} />
+                        <TextField
+                          disabled
+                          value={vendorItem.vendorZip}
+                          styles={textFieldStyles}
+                        />
                       </Stack>
                     </Stack.Item>
                   </Stack>
@@ -286,7 +332,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                     </Stack.Item>
                     <Stack.Item styles={col2Style}>
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <TextField disabled styles={textFieldStyles} />
+                        <TextField
+                          disabled
+                          value={vendorItem.vendorCountry}
+                          styles={textFieldStyles}
+                        />
                       </Stack>
                     </Stack.Item>
                   </Stack>
@@ -366,7 +416,6 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
 
             {selectshipAddress ? (
               <>
-                (
                 <Stack.Item grow={12}>
                   <Stack horizontal horizontalAlign="baseline">
                     <Stack.Item styles={col1Style}>

@@ -1,7 +1,6 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Stack, IStackTokens, IStackStyles } from "@fluentui/react/lib/Stack";
-
 import { DefaultButton, IconButton } from "@fluentui/react/lib/Button";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { DefaultPalette } from "@fluentui/react/lib/Styling";
@@ -30,6 +29,8 @@ import { IPRMarketProjectCode } from "./IPrMarketProjectCode";
 import { ConnectPr } from "../../Api/api";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import PeopleComponent from "./PeopleComponent";
+
+
 interface IFirstProps {
   buttonContxtSave: () => void;
   setTableCreate: (value: ITableBuildProps) => void;
@@ -44,12 +45,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     setisModalOpen(!isModalOpen);
   };
 
-  // React.useEffect(()=>{
-  //   console.log("hello");
-    
-  //   setTableCreate({});
-
-  // },[])
   //Project Code Modal Design Here ...........................
   const [openProjectCode, setopenProjectCode] = useState<boolean>(false);
   const showProjectCodeModal = () => {
@@ -66,9 +61,53 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
   const sectionStackTokens: IStackTokens = { childrenGap: 15 };
 
-  useEffect(() => {
+// Company Code Get ..................................................
+const [companyCodeOption,setCompanyCodeOption]=useState([])
+
+useEffect(() => {
+   ConnectPr.getInstance().GetPRCompanyCode().then((PrCompanyValue)=>{
+    
+    let listData=[]
+      for(let i=0;i<PrCompanyValue.length;i++){
+        if(PrCompanyValue[i].IsValidSAPCompanyCode){
+        let newObj={
+          key:PrCompanyValue[i],text:PrCompanyValue[i].MappedCompanyCode
+        }
+        listData.push(newObj)
+      }
+      setCompanyCodeOption(listData)
+    }})
     setshowDialog(true);
   }, []);
+
+
+
+
+    // For HSRI Call..............................................
+// const [costCenterOption,setCostCenterOption]=useState([])
+
+// useEffect(() => {
+//    ConnectPr.getInstance().GetPRCostCenterSap().then((Prcostcenter)=>{
+  
+//     let listDataCostCenter=[]
+//       for(let i=0;i<Prcostcenter.length;i++){
+//         let newObjCostCenter={
+//           key: Prcostcenter[i] ,
+//           text: Prcostcenter[i].Title+"("+Prcostcenter[i].Details+")"
+//         }
+//         listDataCostCenter.push(newObjCostCenter)
+//       }
+//       setCostCenterOption(listDataCostCenter)
+//     })
+//     setshowDialog(true);
+//   }, []);
+
+// .....................................................................
+
+
+
+
+
   //this is for all radio option
   const [selectRadioItems, setSelectRadioItems] = useState<{
     [key: string]: IChoiceGroupOption;
@@ -98,10 +137,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     { key: "no", text: "No" },
   ];
 
-  const constCenterOption: IChoiceGroupOption[] = [
-    { key: "department", text: "Department" },
-    { key: "alternatecostcenter", text: "Alternate Cost Center" },
-  ];
+  
 
   const prProjectOption: IChoiceGroupOption[] = [
     { key: "yes", text: "Yes" },
@@ -167,15 +203,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   };
 
 
-  // const 
-  // useEffect(()=>{
-    
-
-
-
-  // },[])
-
-
   useEffect(() => {
     if (selectRadioItems.constCenterRadio.text == "Alternate Cost Center") {
       setisAlternetCostcenterSelect(true);
@@ -221,17 +248,18 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     projectCode: { key: "", text: "" },
   });
 
-  const companyCodeOption: IDropdownOption[] = [
-    { key: "1", text: "OM01" },
-    { key: "2", text: "OM06" },
-    { key: "3", text: "OM31" },
-    { key: "4", text: "OM32" },
-  ];
-  const selectCostCenterOption: IDropdownOption[] = [
-    { key: "1", text: "COPA PRODUCT COST HS" },
-    { key: "2", text: "MANUFACTURING AESYNT" },
-    { key: "3", text: "AESYNT-IV SOLUTIONS-" },
-    { key: "4", text: "SUSTAININGPROD IT IT" },
+  // const companyCodeOption: IDropdownOption[] = [
+  //   { key: "1", text: "OM01" },
+  //   { key: "2", text: "OM06" },
+  //   { key: "3", text: "OM31" },
+  //   { key: "4", text: "OM32" },
+  // ];
+
+
+  const selectCostCenterOption: IChoiceGroupOption[] = [
+    { key: "1", text: "Department" },
+    { key: "2", text: "Alternate Cost Center" },
+    
   ];
   const selectDepartmentOption: IDropdownOption[] = [
     { key: "engineering", text: "Engineering" },
@@ -239,16 +267,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     
   ];
 
-  // const [selectDepartmentOption,setselectDepartmentOption]=useState<IDropdownOption[]>(
-  //   {
-
-  //   }
-  // );
-
   const [projectCodeOption,setprojectCodeOption]=useState([])
-
-  // const projectCodeOption: IDropdownOption[] = [
-  // ];
 
   const PrOption: IDropdownOption[] = [
     { key: "sap", text: "SAP(Omnicell)" },
@@ -283,15 +302,69 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   };
   //------------------------------------------
 
-  useEffect(()=>{
-    console.log(selectedItems.selectDepartment)
-    console.log("-------------------------------")
+// Cost Center Code Get UseState ..................................................
+
+const [costCenterOption,setCostCenterOption]=useState([])
+
+
+useMemo(()=>{
+    // Select Other Cost Center Options ----------------------------------
+ 
+  if(selectedItems.prOption.text==="SAP(Omnicell)")
+    {
+      ConnectPr.getInstance().GetPRCostCenterSap().then((Prcostcenter)=>{
+  
+    let listDataCostCenterSap=[]
+      for(let i=0;i<Prcostcenter.length;i++){
+        let newObjCostCenter={
+          key: Prcostcenter[i] ,
+          text: Prcostcenter[i].Title+"("+Prcostcenter[i].Details+")"
+        }
+        listDataCostCenterSap.push(newObjCostCenter)
+      }
+      setCostCenterOption([...listDataCostCenterSap])
+    })
+   }
+   else if(selectedItems.prOption.text==="HSRI")
+   {
+    ConnectPr.getInstance().GetPRCostCenterHSRI().then((PrcostcenterHSRI)=>{
+  
+    let listDataCostCenterHSRI=[]
+      for(let i=0;i<PrcostcenterHSRI.length;i++){
+        let newObjCostCenterHSRI={
+          key: PrcostcenterHSRI[i] ,
+          text: PrcostcenterHSRI[i].HSRICC+"("+PrcostcenterHSRI[i].Title+")"
+        }
+        listDataCostCenterHSRI.push(newObjCostCenterHSRI)
+      }
+      setCostCenterOption([...listDataCostCenterHSRI])
+    })
     
+   }
+   else if(selectedItems.prOption.text==="340B")
+   {
+    ConnectPr.getInstance().GetPRCostCenterThreeFortyB().then((PrcostcenterThreeFortyB)=>{
+  
+    let listDataCostCenterThreeFortyB=[]
+      for(let i=0;i<PrcostcenterThreeFortyB.length;i++){
+        let newObjCostCenterThreeFortyB={
+          key: PrcostcenterThreeFortyB[i] ,
+          text: PrcostcenterThreeFortyB[i].ThreeFortyBCC+"("+PrcostcenterThreeFortyB[i].Title+")"
+        }
+        listDataCostCenterThreeFortyB.push(newObjCostCenterThreeFortyB)
+      }
+      setCostCenterOption([...listDataCostCenterThreeFortyB])
+    })
+    
+   }
+
+  // Select Department and Project Code Options------------------ 
+
       if(selectedItems.selectDepartment.text=="Marketing"){
         console.log("Enter Into Marketing ")
         let marketing=[];
       ConnectPr.getInstance().GetPRMarketProjectCode().then((PrValue)=>{
-      console.log("I ewant this Value")
+
       console.log(PrValue)
       for(let i=0;i<PrValue.length;i++){
         if(PrValue[i].IsActive){
@@ -509,11 +582,12 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               </Stack.Item>
               <Stack.Item styles={col2Style}>
                 <Dropdown
-                  placeholder="Select an option"
+                  placeholder="Select Company Code"
                   id="companyCode"
                   onChange={changeDropdownOption}
                   selectedKey={selectedItems["companyCode"]?.key}
-                  style={{ width: "200px" }}
+                  // defaultSelectedKey={[0]}
+                   style={{ width: "200px" }}
                   options={companyCodeOption}
                   styles={dropdownStyles}
                 />
@@ -532,7 +606,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 <Stack horizontal tokens={{ childrenGap: 10 }}>
                   <ChoiceGroup
                     name="constCenterRadio"
-                    options={constCenterOption}
+                    options={selectCostCenterOption}
                     onChange={radioOnChange}
                     selectedKey={selectRadioItems["constCenterRadio"]?.key}
                     required={true}
@@ -564,7 +638,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                       // onChange={changeDropdownOption}
                       // style={{ width: "150px" }}
                       // selectedKey={selectedItems["selectDepartment"]?.key}
-                      options={selectCostCenterOption}
+                      options={costCenterOption}
                       styles={dropdownStyles}
                     />
                   </Stack.Item>

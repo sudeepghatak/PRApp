@@ -25,6 +25,7 @@ import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { MainPage } from './Middle/MainPage';
 import { IPRMarketProjectCode } from './Middle/IPrMarketProjectCode';
 import { ConnectPr } from '../Api/api';
+import Sample from './Middle/Sample';
 
 
 export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}> {
@@ -446,6 +447,7 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
            )
           }  */}
            <MainPage context={this.props.context as any}/> 
+           {/* <Sample/> */}
            
           {/*}  <FirstComponent />
             <SecondComponent/> 
