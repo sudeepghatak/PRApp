@@ -4,7 +4,7 @@ import { DefaultButton } from "@fluentui/react/lib/Button";
 import { DefaultPalette } from "@fluentui/react/lib/Styling";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { ITextFieldStyles, TextField } from "@fluentui/react/lib/TextField";
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useMemo } from "react";
 
 // import styles from "../Style/style.scss";
 import {
@@ -15,6 +15,7 @@ import {
 import { Link } from "@fluentui/react";
 import { SupplierModal } from "./SupplierModal";
 import { VendorDetails } from "../../Model/vendor_details";
+import { ConnectPr } from "../../Api/api";
 // import SupplierModal from "./SupplierModal";
 interface ISecondprops {
   buttonContxtSave: () => void;
@@ -59,6 +60,26 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   ) => {
     setnewshipAddress(option as IDropdownOption);
   };
+
+  const [shipAddress,setshipAddress]=useState([]);
+
+  useMemo(() => {
+
+    ConnectPr.getInstance().GetPRSupplierAddress().then((PrSupplierAdd)=>{
+  
+    let listDataSupplierAdd=[]
+      for(let i=0;i<PrSupplierAdd.length;i++){
+        let newObjSupplierAdd={
+          key: PrSupplierAdd[i] ,
+          text: PrSupplierAdd[i].Title
+        }
+        listDataSupplierAdd.push(newObjSupplierAdd)
+      }
+      setshipAddress([...listDataSupplierAdd])
+    })
+
+  },[])
+
   useEffect(() => {
     if (newshipAddress.text === "Other Shipping Location") {
       setselectshipAddress(() => true);
@@ -81,13 +102,13 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     console.log(id);
   };
   //ship Address
-  const shipAddress: IDropdownOption[] = [
-    { key: "1", text: "US,- Strongsville, OH (STV) plant" },
-    { key: "2", text: "US, Cranberry" },
-    { key: "3", text: "US, Field Persons" },
-    { key: "4", text: "US, HQ-Mountain View, CA (MTV)" },
-    { key: "otherlocation", text: "Other Shipping Location" },
-  ];
+  // const shipAddress: IDropdownOption[] = [
+  //   { key: "1", text: "US,- Strongsville, OH (STV) plant" },
+  //   { key: "2", text: "US, Cranberry" },
+  //   { key: "3", text: "US, Field Persons" },
+  //   { key: "4", text: "US, HQ-Mountain View, CA (MTV)" },
+  //   { key: "otherlocation", text: "Other Shipping Location" },
+  // ];
 
   //region Options ...
   const regionOptions: IDropdownOption[] = [
@@ -105,7 +126,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     { key: "3", text: "France" },
     { key: "4", text: "France" },
   ];
-  //where are you based....
+  // where are you based....
 
   const basedOptions: IDropdownOption[] = [
     { key: "1", text: "US,- Strongsville, OH (STV) plant" },
@@ -230,6 +251,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                 <Stack.Item styles={col2Style}>
                   <Stack horizontal tokens={{ childrenGap: 5 }}>
                     <TextField
+                      disabled
                       id="suppliernumber "
                       value={vendorItem.vendorNumber}
                       onChange={textContext}
@@ -366,7 +388,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
               </Stack>
             </Stack.Item>
 
-            {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
+            {/* -------------------------------------------------------- */}
             <Stack.Item grow={12}>
               <Stack horizontal horizontalAlign="baseline">
                 <Stack.Item

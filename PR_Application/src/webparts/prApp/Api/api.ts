@@ -4,6 +4,8 @@ import { IPRItem } from "../components/IPRItem";
 import { IPRMarketProCodeNeedHelp, IPRMarketProjectCode } from "../components/Middle/IPrMarketProjectCode";
 import { IPREngineerProCodeNeedHelp, IPREngineerProjectCode } from "../components/Middle/IPrEngineerProjectCode";
 import { IPRCostCenterHSRI, IPRCostCenterSap, IPRCostCenterThreeFortyB } from "../components/Middle/IPrCostCenter";
+import { IPRSupplierAddress, IPRSupplierAddressCompanyCode } from "../components/Middle/IPrSupplierAddress";
+
 
 export class ConnectPr{
     private static instance:ConnectPr;
@@ -162,5 +164,36 @@ public async GetPRCostCenterSap() {
   }
 // ------------------------------------------------------------------------
 
+ public async GetPRSupplierAddress() {
+    try {
+      const spCache = spfi(ConnectPr.sp);
+      const response:  IPRSupplierAddress [] = await spCache.web.lists
+        .getByTitle("PR_Plant_Locations")
+        .items
+        .select("Title","PlantNumber")();
+      console.log(response);
+      return response;
+
+    } catch (error) {
+      console.log("Error in GetItem : " + error);
+    }
+  }
+
+   public async GetPRSupplierAddressCompanyCode() {
+    try {
+      const spCache = spfi(ConnectPr.sp);
+      const response: IPRSupplierAddressCompanyCode [] = await spCache.web.lists
+        .getByTitle("PR_Company_Plant_Mapping")
+        .items
+        .select("Title","Plant")();
+      console.log(response);
+      return response;
+
+    } catch (error) {
+      console.log("Error in GetItem : " + error);
+    }
+  }
+
+// ------------------------------------------------------------------------
 
 }
