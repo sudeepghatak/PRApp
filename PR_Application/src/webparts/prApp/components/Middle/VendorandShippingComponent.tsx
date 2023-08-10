@@ -5,7 +5,6 @@ import { DefaultPalette } from "@fluentui/react/lib/Styling";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { ITextFieldStyles, TextField } from "@fluentui/react/lib/TextField";
 import { useState, useEffect ,useMemo } from "react";
-
 // import styles from "../Style/style.scss";
 import {
   Dropdown,
@@ -16,6 +15,9 @@ import { Link } from "@fluentui/react";
 import { SupplierModal } from "./SupplierModal";
 import { VendorDetails } from "../../Model/vendor_details";
 import { ConnectPr } from "../../Api/api";
+import { ShipAddressChecking } from "../../Utils/ShipAddressChecking";
+import OtherShippingAddComponent from "./OtherShippingAddComponent";
+import { IPROtherShippingLoc } from "./IPrOtherShippingLoc";
 // import SupplierModal from "./SupplierModal";
 interface ISecondprops {
   buttonContxtSave: () => void;
@@ -31,17 +33,21 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     downpayment: " ",
   });
 
-  const [newshipAddress, setnewshipAddress] = useState<IDropdownOption>({
-    key: " ",
-    text: " ",
-  });
-
   const [selectshipAddress, setselectshipAddress] = useState<boolean>(false);
 
   const [openSupplierSearch, setopenSupplierSearch] = useState<boolean>(false);
   const showSupplierSearchModal = () => {
     setopenSupplierSearch(!openSupplierSearch);
   };
+
+
+  //Other Shipping Location Modal Design Here ...........................
+  const [openOtherShipping, setopenOtherShipping] = useState<boolean>(false);
+  const showOtherShipping = () => {
+    setopenOtherShipping(!openOtherShipping);
+  };
+
+
 
   const [vendorItem, setvendorItem] = useState<VendorDetails>(
     new VendorDetails(0, " ", " ", " ", " ", " ", " ", " ", " ")
@@ -53,6 +59,30 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     setvendorItem(vendor);
   };
 
+ const [shippingItem, setShippingItem] = useState<IPROtherShippingLoc>(
+    new IPROtherShippingLoc(" "," ",0," ")
+  );
+
+  const ShippingDataPick =(otheradd:IPROtherShippingLoc)=>{
+      console.log(otheradd);
+      setShippingItem(otheradd);
+      
+      
+  }
+
+    //this is for all dropdown option....................
+  const [selectedItemsvendor, setSelectedItemsvendor] = useState<{
+    [key: string]: IDropdownOption;
+  }>({
+    VendorPlantMatch: { key: "", text: "" }
+    
+  });
+
+  const [newshipAddress, setnewshipAddress] = useState<IDropdownOption>({
+    key: " ",
+    text: " ",
+  });
+
   const changeshipDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
     option?: IDropdownOption | undefined,
@@ -62,23 +92,62 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   };
 
   const [shipAddress,setshipAddress]=useState([]);
+ const [countryOptions,setCountryOptions]=useState([]);
+ const [regionOptions,setRegionOptions]=useState([]);
 
-  useMemo(() => {
+  useEffect(()=>{
 
-    ConnectPr.getInstance().GetPRSupplierAddress().then((PrSupplierAdd)=>{
+  //Ship Address Company Code Compare------------------------------------------------------
+    
+  let listDataSupplierAdd=[]
+  ShipAddressChecking.shipToAddressCheck("OM01").then((shipAddressValue)=>{
+
+    for(let i:number=0;i<shipAddressValue.length;i++){
+          let newObjSupplierAdd={
+          key: shipAddressValue[i].toLowerCase(),
+          text: shipAddressValue[i]
+          }
+          listDataSupplierAdd.push(newObjSupplierAdd)
+    }
+    setshipAddress([...listDataSupplierAdd])
+
+  })
+
+  //Shipping country ----------------------------------------------
+
+   ConnectPr.getInstance().GetPRCountry().then((PrCountry)=>{
   
-    let listDataSupplierAdd=[]
-      for(let i=0;i<PrSupplierAdd.length;i++){
-        let newObjSupplierAdd={
-          key: PrSupplierAdd[i] ,
-          text: PrSupplierAdd[i].Title
+    let listDataCountry=[]
+      for(let i=0;i<PrCountry.length;i++){
+        if(PrCountry[i].IsActive==true){
+          let newObjCountry={
+          key: PrCountry[i] ,
+          text: PrCountry[i].Title
+          }
+          listDataCountry.push(newObjCountry)
         }
-        listDataSupplierAdd.push(newObjSupplierAdd)
       }
-      setshipAddress([...listDataSupplierAdd])
+      setCountryOptions([...listDataCountry])
+    })
+
+//Shipping Region ----------------------------------------------
+
+   ConnectPr.getInstance().GetPRRegion().then((PrRegion)=>{
+  
+    let listDataRegion=[]
+      for(let i=0;i<PrRegion.length;i++){
+        let newObjRegion={
+          key: PrRegion[i] ,
+          text: PrRegion[i].Title+ "(" + PrRegion[i].CountryKey + ")"
+        }
+        listDataRegion.push(newObjRegion)
+      }
+      setRegionOptions([...listDataRegion])
     })
 
   },[])
+
+  
 
   useEffect(() => {
     if (newshipAddress.text === "Other Shipping Location") {
@@ -101,31 +170,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     }));
     console.log(id);
   };
-  //ship Address
-  // const shipAddress: IDropdownOption[] = [
-  //   { key: "1", text: "US,- Strongsville, OH (STV) plant" },
-  //   { key: "2", text: "US, Cranberry" },
-  //   { key: "3", text: "US, Field Persons" },
-  //   { key: "4", text: "US, HQ-Mountain View, CA (MTV)" },
-  //   { key: "otherlocation", text: "Other Shipping Location" },
-  // ];
 
-  //region Options ...
-  const regionOptions: IDropdownOption[] = [
-    { key: "1", text: "Tennessee" },
-    { key: "2", text: "Texas" },
-    { key: "3", text: "Aargau" },
-    { key: "4", text: "Aberdeenshire" },
-    { key: "5", text: "Adana" },
-  ];
-
-  //Country options...
-  const countryOptions: IDropdownOption[] = [
-    { key: "1", text: "Australia" },
-    { key: "2", text: "China" },
-    { key: "3", text: "France" },
-    { key: "4", text: "France" },
-  ];
   // where are you based....
 
   const basedOptions: IDropdownOption[] = [
@@ -281,6 +326,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
             </Stack.Item>
 
             {/* ______________________________________________________ */}
+
             {buttonState ? (
               <>
                 <Stack.Item grow={12}>
@@ -388,7 +434,8 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
               </Stack>
             </Stack.Item>
 
-            {/* -------------------------------------------------------- */}
+           {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
+
             <Stack.Item grow={12}>
               <Stack horizontal horizontalAlign="baseline">
                 <Stack.Item
@@ -426,11 +473,22 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                       options={shipAddress}
                       styles={dropdownStyles}
                     />
+                    {selectshipAddress ? (
                     <div>
-                      <Link style={{ color: "blue", marginLeft: 10 }}>
+                      <Link style={{ color: "blue", marginLeft: 10 }} onClick={showOtherShipping}>
                         Select from existing address list
                       </Link>
-                    </div>
+                       {openOtherShipping? (
+                        <>
+                          <OtherShippingAddComponent
+                              isShippingAddOpen={openOtherShipping}
+                              showShippingAdd={showOtherShipping} 
+                              ShippingDataPick={ShippingDataPick}                                                  
+                            
+                          />
+                        </>
+                      ) : null}
+                    </div>):null}
                   </Stack>
                 </Stack.Item>
               </Stack>
@@ -462,6 +520,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <TextField
                           placeholder="House No."
+                          value={shippingItem.HouseNumber}
                           style={{ width: 100 }}
                         />
                         <span style={{ marginTop: 10 }}>/</span>
@@ -568,3 +627,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
 };
 
 export default VendorandShippingComponent;
+function listDataSupplierComCode(): any {
+  throw new Error("Function not implemented.");
+}
+

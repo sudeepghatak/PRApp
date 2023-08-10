@@ -264,7 +264,6 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
     vendorNamestring = filteredValue;
     let result = [];
     if (vendorNumber.length === 0) {
-      console.log("Enter Second Time  yyyyyyyyyyyyyyyyy");
       console.log(vendorNumber);
       console.log(vendorName);
       result = Allitems.filter((item) => {
@@ -318,7 +317,6 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
     vendorNumberstring = filteredValue;
     let result = [];
     if (vendorName.length === 0) {
-      console.log("I am Enter Here --- >> ");
 
       result = Allitems.filter((item) => {
         const vendorNumber = item.vendorNumber; // Access the vendorName property
@@ -328,7 +326,6 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
         );
       });
     } else {
-      console.log("I am Enter Here --- >>>>>>>>>>>>>> ");
 
       result = vendorName.filter((item) => {
         const vendorNumber = item.vendorNumber; // Access the vendorName property

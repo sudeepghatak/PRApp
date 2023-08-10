@@ -26,7 +26,7 @@ import { MainPage } from './Middle/MainPage';
 import { IPRMarketProjectCode } from './Middle/IPrMarketProjectCode';
 import { ConnectPr } from '../Api/api';
 import Sample from './Middle/Sample';
-
+// import modal
 
 export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}> {
 
@@ -446,8 +446,11 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
             )
            )
           }  */}
+
+          {/* <Sample/> */}
+
+
            <MainPage context={this.props.context as any}/> 
-           {/* <Sample/> */}
            
           {/*}  <FirstComponent />
             <SecondComponent/> 

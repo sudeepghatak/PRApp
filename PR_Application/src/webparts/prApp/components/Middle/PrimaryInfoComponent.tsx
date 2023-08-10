@@ -29,6 +29,7 @@ import { IPRMarketProjectCode } from "./IPrMarketProjectCode";
 import { ConnectPr } from "../../Api/api";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import PeopleComponent from "./PeopleComponent";
+import { CipModal } from "./CipModal";
 
 
 interface IFirstProps {
@@ -131,6 +132,17 @@ useEffect(() => {
 
   const [isAlternetCostcenterSelect, setisAlternetCostcenterSelect] =
     useState<boolean>(false);
+
+
+  //cip Number pop up --- for capital equipment select
+
+  const [openCipNumberModal, setopenCipNumberModal] = useState<boolean>(false);
+
+  const showCipNumberModal = () => {
+
+    setopenCipNumberModal(!openCipNumberModal);
+
+  };
 
   const prOption: IChoiceGroupOption[] = [
     { key: "yes", text: "Yes" },
@@ -779,7 +791,18 @@ useMemo(()=>{
                       <div style={{ width: 350 }}>
                         <TextField placeholder="Provide a valid CIP number" />
                       </div>
-                      <Link>View All CIP Numbers</Link>
+                     <Link onClick={() => showCipNumberModal()}>
+                         View All CIP Numbers
+                      </Link>
+                      {openCipNumberModal ? (
+                        <>
+                          <CipModal
+                            isModalOpen={openCipNumberModal}
+                            showModal={showCipNumberModal}
+                            companyCode={selectedItems.companyCode.text}
+                          />
+                     </>
+                      ) : null}
                     </Stack>
                   </Stack.Item>
                 </Stack>

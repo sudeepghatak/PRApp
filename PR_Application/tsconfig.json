@@ -34,5 +34,5 @@
 
     "src/**/*.ts",
     "src/**/*.tsx"
-  ]
+, "src/webparts/prApp/components/Middle/sampleModaltsx"  ]
 }
