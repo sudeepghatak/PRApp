@@ -10,7 +10,6 @@ import {
   CheckboxVisibility,
 } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
-import { VendorData } from "../../Api/vendorapi";
 import { VendorDetails } from "../../Model/vendor_details";
 import { CipData } from "../../Api/cip_api";
 import { Label } from "@fluentui/react/lib/Label";
@@ -25,7 +24,7 @@ let completeDatafetch:boolean=false;
 export const CipModal: React.FunctionComponent<IModalProps> = (props) => {
   const { isModalOpen, showModal,companyCode } = props;
   const [items, setitems] = useState<VendorDetails[]>([]);
-  const [dataStatus, setdataStatus] = useState<boolean>(false);
+  // const [dataStatus, setdataStatus] = useState<boolean>(false);
 
 
 
@@ -110,7 +109,6 @@ export const CipModal: React.FunctionComponent<IModalProps> = (props) => {
 
   React.useEffect(() => {
     CipData.fetchCpiDetails(companyCode).then((Allitems) => {
-      console.log(Allitems);
       completeDatafetch=true;
       setitems(Allitems);
 
@@ -155,11 +153,10 @@ export const CipModal: React.FunctionComponent<IModalProps> = (props) => {
           <Stack>
             {! completeDatafetch ? (
               <div>
-              
-                <Spinner label="Please wait" />
+                  <Spinner label="Please wait .." />
               </div>
             ) :
-            (items.length===0)? 
+            (items.length == 0)? 
             ("No Data Found"):(
               <DetailsList
                 items={items}

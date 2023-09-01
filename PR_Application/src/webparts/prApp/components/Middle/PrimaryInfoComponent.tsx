@@ -21,37 +21,50 @@ import { Link } from "@fluentui/react";
 import { ModalComponent } from "./ModalComponent";
 import { FilePickModal } from "./FilePickModal";
 import { ITableBuildProps } from "./MainPage";
-import ProjectCodeComponent from "./ProjectCodeComponent";
+import ProjectCodeComponent from "./TableProjectCodeComponent";
 import { any } from "prop-types";
 import { SPFI, spfi } from "@pnp/sp";
 import { getSP } from "../pnpjsConfig";
-import { IPRMarketProjectCode } from "./IPrMarketProjectCode";
 import { ConnectPr } from "../../Api/api";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import PeopleComponent from "./PeopleComponent";
-import { CipModal } from "./CipModal";
+import { CipModal } from "./TableCipModal";
+import { PeoplePickerComponent } from "./PeoplePickerComponent";
+import {GLAccountComponent} from "./TableGLAccountComponent";
+import { RootState } from "../../../../app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { CheckboxItem, changeCheckbox, setValue } from "../../../../features/reducers/primaryinfoSlice";
+import { setlineitemValue } from "../../../../features/reducers/lineitemSlice";
+import { TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
 
 
 interface IFirstProps {
   buttonContxtSave: () => void;
   setTableCreate: (value: ITableBuildProps) => void;
-  context:WebPartContext;
+  // context:WebPartContext;
 }
-
+let costCenter: string = "";
 const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
-  const { buttonContxtSave, setTableCreate,context } = props;
+  const { buttonContxtSave, setTableCreate } = props;
   //use for Modal Show ...........
   const [isModalOpen, setisModalOpen] = useState<boolean>(false);
   const showModal = () => {
     setisModalOpen(!isModalOpen);
   };
 
-  //Project Code Modal Design Here ...........................
+//Project Code Modal Design Here ...........................
   const [openProjectCode, setopenProjectCode] = useState<boolean>(false);
   const showProjectCodeModal = () => {
     setopenProjectCode(!openProjectCode);
   };
-  //this use state for Dialog is visible or not
+
+//GL Account Modal Design Here ...........................
+  const [openGLAccount, setopenGLAccount] = useState<boolean>(false);
+  const showopenGLAccount = () => {
+    setopenGLAccount(!openGLAccount );
+  };
+
+//this use state for Dialog is visible or not .......................
   const [showDialog, setshowDialog] = useState<boolean>(false);
 
   const showAlertDialog = () => {
@@ -63,7 +76,17 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   const sectionStackTokens: IStackTokens = { childrenGap: 15 };
 
 // Company Code Get ..................................................
-const [companyCodeOption,setCompanyCodeOption]=useState([])
+const [companyCodeOption,setCompanyCodeOption]=useState([
+
+    { key: "1", text: "OM01" },
+
+    { key: "2", text: "OM06" },
+
+    { key: "3", text: "OM31" },
+
+    { key: "4", text: "OM32" },
+
+  ])
 
 useEffect(() => {
    ConnectPr.getInstance().GetPRCompanyCode().then((PrCompanyValue)=>{
@@ -121,8 +144,7 @@ useEffect(() => {
     ehsRadio: { key: "", text: "" },
   });
 
-  const [isPrepaidCapitalbuy, setisPrepaidCapitalbuy] =
-    useState<boolean>(false);
+  const [isPrepaidCapitalbuy, setisPrepaidCapitalbuy] =useState<boolean>(false);
 
   const [isPrProject, setisPrProject] = useState<boolean>(false);
 
@@ -148,8 +170,6 @@ useEffect(() => {
     { key: "yes", text: "Yes" },
     { key: "no", text: "No" },
   ];
-
-  
 
   const prProjectOption: IChoiceGroupOption[] = [
     { key: "yes", text: "Yes" },
@@ -205,7 +225,7 @@ useEffect(() => {
       text: option?.text as string,
     };
     // }
-    console.log(newSelectedItem);
+    // console.log(newSelectedItem);
     setSelectRadioItems((prevSelectRadioItems) => ({
       ...prevSelectRadioItems,
       [name]: newSelectedItem, // Update the specific option state key
@@ -291,6 +311,40 @@ useEffect(() => {
     dropdown: { width: 300 },
   };
 
+  //peoplepicker
+   const companyCodeOptionSet = (newItem) => {
+
+    if (newItem.length !== 0) {
+
+      console.log(newItem[0].companyCode);
+
+      let itemTest = {
+
+        key: newItem[0].EmployeeId,
+
+        text: newItem[0].companyCode,
+
+      };
+
+      costCenter = newItem[0].costCenter;
+      setCompanyCodeOption([itemTest]);
+
+    }
+
+ 
+
+    // console.log(newItem[0].EmployeeId);
+
+ 
+
+    // console.log("QQQQQQQQQQQQQQQQQQ ----- ");
+
+    // console.log(itemTest);
+
+    // console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+
+  };
+  
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
     item: IDropdownOption | undefined,
@@ -318,9 +372,97 @@ useEffect(() => {
 
 const [costCenterOption,setCostCenterOption]=useState([])
 
+//company Code Using Redux
+
+const dispatch = useDispatch();
+
+const primaryinfoData = useSelector((state: RootState) => state.primaryinfo);
+
+useEffect(() => {
+
+    // console.log("This is The main adata   ---- ");
+
+    // console.log(primaryinfoData["radioGroup"]);
+
+    // console.log(primaryinfoData.radioGroup);
+
+    // console.log(Object.keys(primaryinfoData.radioGroup));
+
+    // console.log(Object.keys(primaryinfoData.radioGroup).length);
+
+    for (let i = 0; i < Object.keys(primaryinfoData.optionGroup).length; i++) {
+
+      let newSelectedItem = {
+
+        key: primaryinfoData.optionGroup[
+
+          Object.keys(primaryinfoData.optionGroup)[i]
+
+        ].key,
+
+        text: primaryinfoData.optionGroup[
+
+          Object.keys(primaryinfoData.optionGroup)[i]
+
+        ].text,
+
+      };
+
+      setSelectedItems((prevSelectedItems) => ({
+
+        ...prevSelectedItems,
+
+        [Object.keys(primaryinfoData.optionGroup)[i]]: newSelectedItem,
+
+      }));
+
+    }
+
+ 
+
+    for (let i = 0; i < Object.keys(primaryinfoData.radioGroup).length; i++) {
+
+      let newSelectedItem = {
+
+        key: primaryinfoData.radioGroup[
+
+          Object.keys(primaryinfoData.radioGroup)[i]
+
+        ].key,
+
+        text: primaryinfoData.radioGroup[
+
+          Object.keys(primaryinfoData.radioGroup)[i]
+
+        ].text,
+
+      };
+
+      setSelectRadioItems((prevSelectRadioItems) => ({
+
+        ...prevSelectRadioItems,
+
+        [Object.keys(primaryinfoData.radioGroup)[i]]: newSelectedItem, // Update the specific option state key
+
+      }));
+
+    }
+
+ 
+
+    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+
+    console.log(selectedItems["companyCode"]?.key);
+
+    console.log(selectRadioItems.buyRadio.key);
+
+    setshowDialog(true);
+
+  }, []);
+
 
 useMemo(()=>{
-    // Select Other Cost Center Options ----------------------------------
+// Select Other Cost Center Options ----------------------------------
  
   if(selectedItems.prOption.text==="SAP(Omnicell)")
     {
@@ -416,26 +558,283 @@ useMemo(()=>{
 
   //for file upload .........................
 
-  const SaveandContinue = () => {
-    alert(
-      `${selectRadioItems.prRadio.text} -- ${selectRadioItems.constCenterRadio.text} -- ${selectRadioItems.prProjectRadio.text} ---- ${selectRadioItems.buyRadio.text} ---- ${selectRadioItems.prepaidcapitalRadio.text} and ---- ${selectedItems.prOption.text} -- ${selectedItems.companyCode.text} -- ${selectedItems.selectDepartment.text} ---- ${selectedItems.projectCode.text} ---- `
+interface IoptionSave {
+
+    [key: string]: IDropdownOption;
+
+  }
+
+  interface IradioSave {
+
+    [key: string]: IChoiceGroupOption;
+
+  }
+
+  interface ISaveData {
+
+    radioGroup: IradioSave[];
+
+    optionGroup: IoptionSave[];
+
+  }
+
+
+
+ const SaveandContinue = () => {
+
+    // FakeApi.saveSample();
+
+    let saveRadioGroupData: IradioSave[] = [
+
+      {
+
+        ehsRadio: {
+
+          key: selectRadioItems.ehsRadio.key,
+
+          text: selectRadioItems.ehsRadio.text,
+
+        },
+
+      },
+
+      {
+
+        prepaidcapitalRadio: {
+
+          key: selectRadioItems.prepaidcapitalRadio.key,
+
+          text: selectRadioItems.prepaidcapitalRadio.text,
+
+        },
+
+      },
+
+      {
+
+        constCenterRadio: {
+
+          key: selectRadioItems.constCenterRadio.key,
+
+          text: selectRadioItems.constCenterRadio.text,
+
+        },
+
+      },
+
+      {
+
+        prRadio: {
+
+          key: selectRadioItems.prRadio.key,
+
+          text: selectRadioItems.prRadio.text,
+
+        },
+
+      },
+
+      {
+
+        buyRadio: {
+
+          key: selectRadioItems.buyRadio.key,
+
+          text: selectRadioItems.buyRadio.text,
+
+        },
+
+      },
+
+      {
+
+        prProjectRadio: {
+
+          key: selectRadioItems.prProjectRadio.key,
+
+          text: selectRadioItems.prProjectRadio.text,
+
+        },
+
+      },
+
+    ];
+
+ 
+
+    let saveOptionGroupData: IoptionSave[] = [
+
+      {
+
+        prOption: {
+
+          key: selectedItems.prOption.key,
+
+          text: selectedItems.prOption.text,
+
+        },
+
+      },
+
+      {
+
+        companyCode: {
+
+          key: selectedItems.companyCode.key,
+
+          text: selectedItems.companyCode.text,
+
+        },
+
+      },
+
+      {
+
+        selectDepartment: {
+
+          key: selectedItems.selectDepartment.key,
+
+          text: selectedItems.selectDepartment.text,
+
+        },
+
+      },
+
+      {
+
+        projectCode: {
+
+          key: selectedItems.projectCode.key,
+
+          text: selectedItems.projectCode.text,
+
+        },
+
+      },
+
+    ];
+
+ 
+
+    let saveData: ISaveData = {
+
+      radioGroup: saveRadioGroupData,
+
+      optionGroup: saveOptionGroupData,
+
+    };
+
+ 
+
+    let cheboxList = primaryinfoData.leftCheckbox.filter(
+
+      (checkItem: CheckboxItem) => checkItem.isChecked
+
     );
+
+ 
+
+    console.log("vvvvvvvvvvv");
+
+    console.log(cheboxList);
+
+    console.log(selectedItems["selectDepartment"]?.text);
+
+    console.log(selectedItems["companyCode"]?.text);
+
+    console.log(selectedItems["projectCode"]?.text);
+
+    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkk");
+
+    let ListofTypePurchases: TypeofPurchaseDetail[] = [];
+
+    cheboxList.map((item: CheckboxItem) => {
+
+      let newpurchaseItem: TypeofPurchaseDetail = new TypeofPurchaseDetail(
+
+        item.label
+
+      );
+
+      newpurchaseItem.costCenterList.push(costCenter);
+
+      newpurchaseItem.saveintoProjectCode(
+
+        selectedItems["selectDepartment"]?.text,
+
+        selectedItems["projectCode"]?.text
+
+      );
+
+ 
+
+      // newpurchaseItem.projectCodeList.push(selectedItems["projectCode"]?.text);
+
+      ListofTypePurchases.push(newpurchaseItem);
+
+    });
+
+ 
+
+    // primaryinfoData.leftCheckbox
+
+    //   .filter((checkItem: CheckboxItem) => checkItem.isChecked)
+
+    //   .map((item: CheckboxItem) => item.label);
+
+ 
+
+    // let setlineItemData = {
+
+    //   projectCode: selectedItems.projectCode.text,
+
+    //   constCenter: costCenter,
+
+    //   typePurchase: primaryinfoData.leftCheckbox
+
+    //     .filter((checkItem: CheckboxItem) => checkItem.isChecked)
+
+    //     .map((item: CheckboxItem) => item.label),
+
+    // };
+
+ 
+
+    let setlineItemData = {
+
+      selectDepartment: selectedItems["selectDepartment"]?.text,
+
+      TypeofPurchaseDetailList: ListofTypePurchases,
+
+    };
+
+ 
+
+    dispatch(setlineitemValue(setlineItemData));
+
+ 
+
+    dispatch(setValue(saveData));
+
     buttonContxtSave();
+
   };
   //select checkBox.............
   // const []=useState({
 
   // })
 
-  const changeChakeBox = (
-    ev?: React.FormEvent<HTMLElement | HTMLInputElement> | undefined,
-    checked?: boolean | undefined
-  ) => {
+ const changeChakeBox = (ev?: React.FormEvent<HTMLElement | HTMLInputElement> | undefined,
+    checked?: boolean | undefined ) => {
     const id = (ev?.target as HTMLInputElement).id;
     let newTablename: ITableBuildProps = {
       name: id,
     };
+
+    dispatch(changeCheckbox(id));
+    settypeofPurchases(id);
     setTableCreate(newTablename);
+
   };
 
   //handle file change ....
@@ -480,10 +879,15 @@ useMemo(()=>{
     },
   };
   
-
+//Onclick for ProjectCodeModal
   const linkClickEvent = () => {
     // showModal();
     showProjectCodeModal();
+  };
+
+//Onclick for ProjectCodeModal
+  const linkGLClickEvent = () => {
+    showopenGLAccount();
   };
 
   return (
@@ -576,7 +980,9 @@ useMemo(()=>{
                   </Stack.Item>
                   <Stack.Item styles={col2Style}>
                     <div style={{ width: 250 }}>
-                      <PeopleComponent context={context} />
+                      <PeoplePickerComponent
+                        companyCodeOptionSet={companyCodeOptionSet}/>
+                      {/* <PeopleComponent context={context} /> */}
                     </div>
                   </Stack.Item>
                 </Stack>
@@ -594,14 +1000,21 @@ useMemo(()=>{
               </Stack.Item>
               <Stack.Item styles={col2Style}>
                 <Dropdown
-                  placeholder="Select Company Code"
+
+                  placeholder="Select an option"
+
                   id="companyCode"
+
                   onChange={changeDropdownOption}
+
                   selectedKey={selectedItems["companyCode"]?.key}
-                  // defaultSelectedKey={[0]}
-                   style={{ width: "200px" }}
+
+                  style={{ width: "200px" }}
+
                   options={companyCodeOption}
+
                   styles={dropdownStyles}
+
                 />
               </Stack.Item>
             </Stack>
@@ -823,7 +1236,7 @@ useMemo(()=>{
             </>
           ) : null}
 
-          {/* ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ */}
+  {/* ---------------------------------------------------------------------  */}
 
           <Stack.Item grow={12}>
             <Stack horizontal horizontalAlign="baseline">
@@ -832,7 +1245,7 @@ useMemo(()=>{
               </Stack.Item>
               <Stack.Item style={{ marginTop: 5 }} styles={col2Style}>
                 <Stack horizontal tokens={{ childrenGap: 10 }}>
-                  <Stack.Item align="start">
+                  {/* <Stack.Item align="start">
                     <div className={styles.checkboxgroup}>
                       <Checkbox
                         label="Consulting"
@@ -875,7 +1288,42 @@ useMemo(()=>{
                         onChange={changeChakeBox}
                       />
                     </div>
+                  </Stack.Item> */}
+
+                    <Stack.Item align="start">
+
+                    {primaryinfoData.leftCheckbox.map(
+
+                      (checkBoxItem: CheckboxItem) => {
+
+                        return (
+
+                          <div className={styles.checkboxgroup}>
+
+                            <Checkbox
+
+                              label={checkBoxItem.label}
+
+                              id={checkBoxItem.id}
+
+                              checked={checkBoxItem.isChecked}
+
+                              onChange={changeChakeBox}
+
+                            />
+
+                          </div>
+
+                        );
+
+                      }
+
+                    )}
+
                   </Stack.Item>
+
+
+
                   <Stack.Item align="start">
                     <div className={styles.checkboxgroup}>
                       <Checkbox
@@ -920,9 +1368,20 @@ useMemo(()=>{
                       />
                     </div>
                   </Stack.Item>
-                  <Link style={{ color: "blue" }} onClick={linkClickEvent}>
+                  <Link style={{ color: "blue" }} onClick={linkGLClickEvent}>
                     View All GL Accounts
                   </Link>
+                  {openGLAccount ? (
+                        <>
+                          <GLAccountComponent
+                            isGLAccountOpen={openGLAccount}
+                            // showGLAccount={setopenGLAccount}
+                            showGLAccount={showopenGLAccount}
+                            GLAccountType={selectRadioItems.prepaidcapitalRadio.text}
+                            
+                          />
+                        </>
+                      ) : null}
                 </Stack>
               </Stack.Item>
             </Stack>
@@ -990,3 +1449,7 @@ useMemo(()=>{
 };
 
 export default PrimaryInfoComponent;
+
+function settypeofPurchases(id: string) {
+  throw new Error("Function not implemented.");
+}

@@ -12,21 +12,57 @@ import {
   IDropdownOption,
 } from "@fluentui/react";
 import { map } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../app/store";
+import TypeOfPurchase from "./TypeOfPurchase";
+import { changeCheckbox } from "../../../../features/reducers/primaryinfoSlice";
+import { deletetypePurchases } from "../../../../features/reducers/lineitemSlice";
+import { TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
 // Initialize Fluent UI icons (required)
 interface TableRow {
+  projectCode: string;
+  description: string;
+  costCenter: string;
   qty: string;
   uintprice: string;
   unitpriceper: string;
   total: number;
 }
 interface IThirdProps {
+  tableviewItem: TypeofPurchaseDetail;
   id: number;
   addTotalAmount: (total: any) => void;
 }
 const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
-  const { id, addTotalAmount } = props;
-  const [tableItem, settableItem] = useState<TableRow[]>([]);
+  const dispatch = useDispatch();
+  const { tableviewItem, id, addTotalAmount } = props;
+  const lineinfoData = useSelector((state: RootState) => state.lineiteminfo);
+  console.log("Hello How Are You --------------------------");
+  console.log(lineinfoData);
+  console.log("Doing this type of work here -----------------------");
+  const [tableItem, settableItem] = useState<TableRow[]>([
+    {
+      projectCode: "",
+      description: "",
+      costCenter: "",
+      qty: "",
+      uintprice: "",
+      unitpriceper: "",
+      total: 0,
+    },
+  ]);
   const [totalAmount, settotalAmount] = useState<number>(0);
+
+  const deleteTable = () => {
+    let totalNumber = {
+      id: id,
+      amount: 0,
+      completedelete: true,
+    };
+    dispatch(changeCheckbox(tableviewItem.typeofPurchaseName));
+    dispatch(deletetypePurchases(id));
+    addTotalAmount(totalNumber);
+  };
   const glaccount: IDropdownOption[] = [
     { key: "1", text: "500120(COGS - Semi Finished Good)" },
     { key: "2", text: "500120(COGS - Finished Good)" },
@@ -41,6 +77,9 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   //create new Row in the table
   const createNewRow = () => {
     let newRow = {
+      projectCode: "",
+      description: "",
+      costCenter: "",
       qty: "",
       uintprice: "",
       unitpriceper: "",
@@ -89,10 +128,28 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
     settotalAmount(sum);
   }, [tableItem]);
 
+  useEffect(() => {
+    // lineinfoData
+    let newRow = {
+      projectCode: tableviewItem.fetchProjectCodelastIndex(
+        lineinfoData.selectDepartment
+      ),
+      description: "",
+      costCenter: tableviewItem.costCenterlastIndex(),
+      qty: "",
+      uintprice: "",
+      unitpriceper: "",
+      total: 0,
+    };
+
+    settableItem([newRow]);
+  }, []);
+
   React.useMemo(() => {
     let totalNumber = {
       id,
       amount: totalAmount,
+      completedelete: false,
     };
     addTotalAmount(totalNumber);
   }, [totalAmount]);
@@ -117,8 +174,30 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       key: "project_code",
       name: "Project Code",
       fieldName: "project_code",
+      minWidth: 200,
+      maxWidth: 300,
       onRender: (item: TableRow, rowIndex: number) => {
-        return <TextField />;
+        return (
+          <Stack
+            enableScopedSelectors
+            horizontal
+            horizontalAlign="space-between"
+          >
+            <TextField
+              value={tableItem[rowIndex].projectCode}
+              // value={
+              //   lineinfoData.projectCode[lineinfoData.projectCode.length - 1]
+              // }
+            />
+            <IconButton
+              iconProps={{ iconName: "Add" }}
+              title="Add"
+              ariaLabel="Add"
+              onClick={() => console.log("Addition here ......")}
+            />
+            <span></span>
+          </Stack>
+        );
       },
     },
     {
@@ -134,7 +213,12 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       name: "Cost Center",
       fieldName: "cost_center",
       onRender: (item: TableRow, rowIndex: number) => {
-        return <TextField />;
+        return (
+          <TextField
+            value={tableItem[rowIndex].costCenter}
+            // value={lineinfoData.costCenter[lineinfoData.costCenter.length - 1]}
+          />
+        );
       },
     },
     {
@@ -254,6 +338,19 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   ];
   return (
     <div>
+      <div>
+        <Stack horizontal horizontalAlign="space-between">
+          <span>{tableviewItem.typeofPurchaseName}</span>
+          <span>
+            <IconButton
+              iconProps={{ iconName: "Delete" }}
+              title="Delete"
+              ariaLabel="Delete"
+              onClick={() => deleteTable()}
+            />
+          </span>
+        </Stack>
+      </div>
       <Stack>
         <Stack.Item>
           <DetailsList

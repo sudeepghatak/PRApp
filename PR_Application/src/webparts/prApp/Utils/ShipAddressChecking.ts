@@ -1,5 +1,5 @@
 import { ConnectPr } from "../Api/api";
-import { IPRShippingAddressCompanyCode } from "../components/Middle/IPrShippingAddress";
+import { IPRShippingAddressCompanyCode } from "../Model/IPrShippingAddress";
 
 export class ShipAddressChecking{
 
@@ -9,17 +9,13 @@ export class ShipAddressChecking{
 
     let  filterprCompanyCodeList= prCompanyCodeList.filter((prcompanyCodeItem:IPRShippingAddressCompanyCode)=>
     prcompanyCodeItem.Title===companyCode);
-    
-   let getPrSupplierAdd=await ConnectPr.getInstance().GetPRSupplierAddress()
+    let getPrSupplierAdd=await ConnectPr.getInstance().GetPRSupplierAddress()
     let shipToAddress:string[]=[];
-      // console.log(getPrSupplierAdd);
-      // console.log(filterprCompanyCodeList);
-      
-  for(let i:number=0; i<getPrSupplierAdd.length;i++){
+    
+   for(let i:number=0; i<getPrSupplierAdd.length;i++){
     for(let j:number=0;j<filterprCompanyCodeList.length;j++){
          if(filterprCompanyCodeList[j].Plant == getPrSupplierAdd[i].PlantNumber ){
-            shipToAddress.push(getPrSupplierAdd[i].Title)
-             
+            shipToAddress.push(getPrSupplierAdd[i].Title)       
          } 
          else if(filterprCompanyCodeList[j].Plant!==getPrSupplierAdd[i].PlantNumber &&  getPrSupplierAdd[i].Country==="Other")   
          {
@@ -30,6 +26,5 @@ export class ShipAddressChecking{
   
    }
    return shipToAddress
-
 }
 }

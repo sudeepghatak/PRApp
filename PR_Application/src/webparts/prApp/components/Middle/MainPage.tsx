@@ -10,6 +10,9 @@ import PrimaryInfoComponent from "./PrimaryInfoComponent";
 import VendorandShippingComponent from "./VendorandShippingComponent";
 import LineItemComponent from "./LineItemComponent";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
+import {lazy, Suspense } from "react";
+
+const LazyFourth= lazy(() => import('./FourthComponent'));
 
 export interface ITableBuildProps {
   name: string;
@@ -30,8 +33,8 @@ export const tableDeleteContext = createContext<
 interface IPMainComponent{
   context:WebPartContext
 }
-export const MainPage:React.FunctionComponent<IPMainComponent> = (props) => {
-  const {context}=props;
+export const MainPage:React.FunctionComponent = () => {
+  // const {context}=props;
   let userDisplayName: string = " Blank";
 
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -172,7 +175,7 @@ export const MainPage:React.FunctionComponent<IPMainComponent> = (props) => {
               <PrimaryInfoComponent
                 buttonContxtSave={buttonContxtSave}
                 setTableCreate={setTableCreate}
-                context={context}
+                // context={context}
               />
             ) : null}
             {pageNumber === 2 ? (
@@ -187,6 +190,17 @@ export const MainPage:React.FunctionComponent<IPMainComponent> = (props) => {
                 buttonContxtBack={buttonContxtBack}
               />
             ) : null}
+             {pageNumber === 4 ? (
+              <>
+              <Suspense fallback={"Loading....."} >
+               <LazyFourth
+                  buttonContxtBack={buttonContxtBack}
+                /> 
+              </Suspense>
+              </>
+              ):null
+            }
+
           </tableBuildContext.Provider>
         </tableDeleteContext.Provider>
       </div>

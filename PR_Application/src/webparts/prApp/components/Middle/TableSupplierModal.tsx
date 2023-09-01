@@ -12,6 +12,9 @@ import {
 import { IconButton } from "@fluentui/react/lib/Button";
 import { VendorData } from "../../Api/vendorapi";
 import { VendorDetails } from "../../Model/vendor_details";
+import { RootState } from "../../../../app/store";
+import { useSelector } from "react-redux";
+import { Spinner } from "office-ui-fabric-react";
 
 interface IModalProps {
   isModalOpen: boolean;
@@ -25,6 +28,8 @@ let vendorName: VendorDetails[] = [];
 let vendorNumber: VendorDetails[] = [];
 let vendorNamestring: string = "";
 let vendorNumberstring: string = "";
+let completeSupplierDatafetch:boolean=false;
+
 
 export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
   const { isModalOpen, showModal, venderItemDatapick } = props;
@@ -43,10 +48,13 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
 
   const sendVendorDetails = (vendorDetails: VendorDetails) => {
     console.log(vendorDetails);
-    console.log("I am From SupplierModal .....");
     venderItemDatapick(vendorDetails);
     showModal();
   };
+
+  const optionGroupData = useSelector(
+    (state: RootState) => state.primaryinfo.optionGroup
+  );
 
   let columns = [
     {
@@ -352,14 +360,29 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
   };
 
   React.useEffect(() => {
+    console.log("Length",items.length);
     setselectNumber(items.length);
   }, [items]);
 
   React.useEffect(() => {
-    Allitems = VendorData.fetchVendordetails();
-    console.log(Allitems);
-    setitems(Allitems);
-  }, []);
+
+    console.log(
+
+      "--------------------- vvvvvvvvvvvvvv ------------------------"
+
+    );
+
+    console.log(optionGroupData.companyCode.text);
+
+     VendorData.fetchVendordetails(optionGroupData.companyCode.text).then((newAllitems) => {
+
+      Allitems = newAllitems;
+
+      setitems(Allitems);
+
+    });
+
+  }, []);;
 
   return (
     <Modal
@@ -448,12 +471,25 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
                 </div>
               </div>
             </div>
-            <DetailsList
-              items={items}
-              columns={columns}
-              checkboxVisibility={CheckboxVisibility.hidden}
-            />
-          </Stack>
+         {
+              // !completeDatafetch ? (
+              //   <div>
+              //     <Spinner label="Please wait .." />
+              //   </div>
+              // ) :
+
+              (items.length === 0) ?
+
+                <Spinner label="Please wait .." /> : (
+
+                  <DetailsList
+                    items={items}
+                    columns={columns}
+                    checkboxVisibility={CheckboxVisibility.hidden}
+                  />)
+            }
+    
+         </Stack>
         </div>
       </div>
     </Modal>

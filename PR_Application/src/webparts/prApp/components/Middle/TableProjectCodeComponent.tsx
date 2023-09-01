@@ -21,7 +21,8 @@ const ProjectCodeComponent: React.FunctionComponent<IPProjectCode> = (
   const { isProjectCodeOpen, showProjectCode, ProjectCode_title } = props;
   const [items,setitems]=React.useState([])
   React.useEffect(()=>{
-    if(ProjectCode_title ==="Engineering"){
+    if(ProjectCode_title ==="Engineering")
+    {
       let eng=[]
       ConnectPr.getInstance().GetPREnggProCodeNeedHelp().then((engValue)=>{
         for(let i=0;i<engValue.length;i++){
@@ -39,7 +40,8 @@ const ProjectCodeComponent: React.FunctionComponent<IPProjectCode> = (
       })
 
     }
-   else if(ProjectCode_title ==="Marketing"){
+   else if(ProjectCode_title ==="Marketing")
+   {
     ConnectPr.getInstance().GetPRMarketProCodeNeedHelp().then((mrkvalue)=>{
       console.log("Marketing values");
       let mar=[]
@@ -62,13 +64,7 @@ const ProjectCodeComponent: React.FunctionComponent<IPProjectCode> = (
 
 
   },[])
-  // const items = [
-  //   {
-  //     key: 1,
-  //     project_code: "ACP.DAP",
-  //     description: "Omnicell Device Platform ",
-  //   },
-  // ];
+
   const columns = [
     {
       key: "column1",

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {
   Dropdown,
   IDropdownOption,
@@ -11,9 +11,12 @@ import {
 } from "office-ui-fabric-react";
 // import { useState } from "react";
 import { findIndex, map } from "lodash";
-import TypeOfPurchase from "./TypeOfPurchase";
+// import TypeOfPurchase from "./TypeOfPurchase";
 import LineItemTableFormat from "./TypeOfPurchase_TableFormat";
 import { tableBuildContext } from "./MainPage";
+import { RootState } from "../../../../app/store";
+import { useSelector } from "react-redux";
+import { TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
 
 // interface ThirdProps {
 //   [key: string]: React.FunctionComponent[];
@@ -25,11 +28,14 @@ interface IThirdprops {
 interface IAmountProps {
   id: number;
   amount: number;
+  completedelete: boolean;
 }
 let listOftotalAmount: IAmountProps[] = [];
+
 const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
   const tableContent = useContext(tableBuildContext);
   const { buttonContxtSave, buttonContxtBack } = props;
+  const lineinfoData = useSelector((state: RootState) => state.lineiteminfo);
   const [selectedItems, setSelectedItems] = React.useState<{
     [key: string]: IDropdownOption;
   }>({
@@ -69,14 +75,23 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
   const [totalAmount, settotalAmount] = React.useState<number>(0);
 
   const addTotalAmount = (total: IAmountProps) => {
+    console.log("Jjjjjjjjjjjjjjjj");
+    console.log(total);
+    console.log("Hiii Every One How Are You For Doing This Type Of work Here ");
     const index = findIndex(listOftotalAmount, (item) => item.id === total.id);
-    if (index !== -1) {
-      // Update the existing object
-      listOftotalAmount[index] = total;
-    } else {
-      // Add the new object to the array
-      listOftotalAmount.push(total);
+    if (!total.completedelete) {
+      if (index !== -1) {
+        // Update the existing object
+        listOftotalAmount[index] = total;
+      } else {
+        // Add the new object to the array
+        listOftotalAmount.push(total);
+      }
     }
+    if (total.completedelete) {
+      listOftotalAmount = listOftotalAmount.filter((item) => item.id != index);
+    }
+
     console.log("iiiiiiiiiiiiiiiii");
     console.log(listOftotalAmount);
     console.log("oooooooooooooooo");
@@ -156,17 +171,19 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
           </Stack>
 
           <Stack.Item>
-            {tableContent ? (
+            {lineinfoData.TypeofPurchaseDetailList ? (
               <>
-                {tableContent.map((tableValue: any, index: number) => (
-                  <>
-                    <TypeOfPurchase text={tableValue.name} index={index} />
-                    <LineItemTableFormat
-                      id={index}
-                      addTotalAmount={addTotalAmount}
-                    />
-                  </>
-                ))}
+                {lineinfoData.TypeofPurchaseDetailList.map(
+                  (tableValueItem: TypeofPurchaseDetail, index: number) => (
+                    <>
+                      <LineItemTableFormat
+                        tableviewItem={tableValueItem}
+                        id={index}
+                        addTotalAmount={addTotalAmount}
+                      />
+                    </>
+                  )
+                )}
               </>
             ) : (
               <span></span>

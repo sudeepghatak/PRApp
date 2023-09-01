@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { IStackStyles, Stack } from "@fluentui/react/lib/Stack";
 import { DefaultButton } from "@fluentui/react/lib/Button";
@@ -12,12 +13,16 @@ import {
   IDropdownStyles,
 } from "@fluentui/react/lib/Dropdown";
 import { Link } from "@fluentui/react";
-import { SupplierModal } from "./SupplierModal";
+import { SupplierModal } from "./TableSupplierModal";
 import { VendorDetails } from "../../Model/vendor_details";
 import { ConnectPr } from "../../Api/api";
 import { ShipAddressChecking } from "../../Utils/ShipAddressChecking";
-import OtherShippingAddComponent from "./OtherShippingAddComponent";
-import { IPROtherShippingLoc } from "./IPrOtherShippingLoc";
+import OtherShippingAddComponent from "./TableOtherShippingComponent";
+import { IPROtherShippingLoc } from "../../Model/IPrOtherShippingLoc";
+import { saveVendorandShippingData } from "../../../../features/reducers/vendorandshippingSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../app/store";
+
 // import SupplierModal from "./SupplierModal";
 interface ISecondprops {
   buttonContxtSave: () => void;
@@ -27,6 +32,12 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   props
 ) => {
   const { buttonContxtSave, buttonContxtBack } = props;
+  const dispatch = useDispatch();
+  const vendorandshippingData = useSelector(
+
+    (state: RootState) => state.vendorandshipping
+
+  );
   const [textvalue, settextvalue] = useState({
     suppliername: " ",
     justificationorder: " ",
@@ -97,7 +108,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
 
   useEffect(()=>{
 
-  //Ship Address Company Code Compare------------------------------------------------------
+  //Ship Address to Company Code Compare------------------------------------------------------
     
   let listDataSupplierAdd=[]
   ShipAddressChecking.shipToAddressCheck("OM01").then((shipAddressValue)=>{
@@ -170,6 +181,20 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     }));
     console.log(id);
   };
+
+  const saveVendorandSupplierDetails = () => {
+
+    dispatch(saveVendorandShippingData(vendorItem));
+
+    buttonContxtSave();
+
+  };
+
+useEffect(() => {
+
+    setvendorItem(vendorandshippingData.vendorDetails);
+
+  }, []);
 
   // where are you based....
 
@@ -275,6 +300,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                           isModalOpen={openSupplierSearch}
                           showModal={showSupplierSearchModal}
                           venderItemDatapick={venderItemDatapick}
+                          
                         />
                       ) : null}
                     </DefaultButton>
@@ -325,7 +351,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
               </Stack>
             </Stack.Item>
 
-            {/* ______________________________________________________ */}
+ {/* ____________________________________________________________________ */}
 
             {buttonState ? (
               <>
@@ -519,7 +545,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                     <Stack.Item styles={col2Style}>
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <TextField
-                          placeholder="House No."
+                          placeholder={"House No."}
                           value={shippingItem.HouseNumber}
                           style={{ width: 100 }}
                         />

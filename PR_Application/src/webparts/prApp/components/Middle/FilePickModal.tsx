@@ -3,14 +3,31 @@ import * as React from "react";
 import { Modal, IIconProps, Stack, Link } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
 import Dropzone from "react-dropzone";
+import { useDispatch } from "react-redux";
+import {
+  fileInformation,
+  saveFileDoc,
+} from "../../../../features/reducers/primaryinfoSlice";
+
 interface IModalProps {
   isModalOpen: boolean;
   showModal: () => void;
 }
 export const FilePickModal: React.FunctionComponent<IModalProps> = (props) => {
   const { isModalOpen, showModal } = props;
+  const dispatch = useDispatch();
   const onDrop = (acceptedFiles: any) => {
     console.log(acceptedFiles);
+    let randomKey: string = new Date().valueOf().toString();
+    let fileData: fileInformation = {
+      key:randomKey,
+      fileName: acceptedFiles[0].name,
+      fileType: "file",
+      // acceptedFiles[0].type
+      fileModifiedTime: new Date().toLocaleDateString(),
+    };
+    dispatch(saveFileDoc(fileData));
+    showModal();
   };
   return (
     <div style={{ maxWidth: 500 }}>

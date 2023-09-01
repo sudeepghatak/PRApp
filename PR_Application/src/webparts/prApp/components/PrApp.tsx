@@ -9,12 +9,12 @@ import "@pnp/sp/items";
 import "@pnp/sp/items/get-all";
 import { SPFI, spfi } from '@pnp/sp';
 import { getSP } from './pnpjsConfig';
-import { Accordion } from "@pnp/spfx-controls-react/lib/Accordion";
-import { ComboBoxListItemPicker } from '@pnp/spfx-controls-react/lib/ListItemPicker';
-import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
+// import { Accordion } from "@pnp/spfx-controls-react/lib/Accordion";
+// import { ComboBoxListItemPicker } from '@pnp/spfx-controls-react/lib/ListItemPicker';
+// import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { SPHttpClient } from '@microsoft/sp-http';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { FieldPicker } from "@pnp/spfx-controls-react/lib/FieldPicker";
+// import { FieldPicker } from "@pnp/spfx-controls-react/lib/FieldPicker";
 import { Checkbox } from '@fluentui/react/lib/Checkbox';
 import { IPersonaProps } from '@fluentui/react/lib/Persona';
 import { IBasePickerSuggestionsProps, NormalPeoplePicker, ValidationState } from '@fluentui/react/lib/Pickers';
@@ -23,10 +23,11 @@ import { ButtonType, DefaultPalette, Icon } from 'office-ui-fabric-react';
 import { DefaultButton } from '@fluentui/react';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { MainPage } from './Middle/MainPage';
-import { IPRMarketProjectCode } from './Middle/IPrMarketProjectCode';
 import { ConnectPr } from '../Api/api';
-import Sample from './Middle/Sample';
-// import modal
+import PrMainPage from './Middle/PrMainPage';
+
+
+
 
 export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}> {
 
@@ -450,7 +451,8 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
           {/* <Sample/> */}
 
 
-           <MainPage context={this.props.context as any}/> 
+           {/* <MainPage context={this.props.context as any}/>  */}
+           <PrMainPage/>
            
           {/*}  <FirstComponent />
             <SecondComponent/> 

@@ -1,4 +1,7 @@
 export class CipNumberDetails{
+    push(cipDetails: CipNumberDetails) {
+        throw new Error("Method not implemented.");
+    }
     cipNumber:string;
     details:string;
     companycode:string;

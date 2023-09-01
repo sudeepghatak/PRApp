@@ -58,8 +58,16 @@ const otherSelectItem=((item:IPROtherShippingLoc)=>{
       fieldName: "Title",
       minWidth: 150,
       maxWidth: 200,
-      
       isResizable: true,  
+      styles: {
+        root: {
+          backgroundColor: "green", // Replace with your desired color
+          color: "white",
+          borderRightColor: "white", // Set the right border color to white
+          borderRightWidth: "1px", // Optional: Adjust the border width if needed
+          borderRightStyle: "solid", // Replace with your desired text color
+        },
+      },
     },
     {
       key: "column2",
@@ -68,6 +76,15 @@ const otherSelectItem=((item:IPROtherShippingLoc)=>{
       minWidth: 150,
       maxWidth: 200,
       isResizable: true,
+      styles: {
+        root: {
+          backgroundColor: "green", // Replace with your desired color
+          color: "white",
+          borderRightColor: "white", // Set the right border color to white
+          borderRightWidth: "1px", // Optional: Adjust the border width if needed
+          borderRightStyle: "solid", // Replace with your desired text color
+        },
+      },
     },
     {
       key: "column3",
@@ -76,29 +93,65 @@ const otherSelectItem=((item:IPROtherShippingLoc)=>{
       minWidth: 150,
       maxWidth: 200,
       isResizable: true,
+      styles: {
+        root: {
+          backgroundColor: "green", // Replace with your desired color
+          color: "white",
+          borderRightColor: "white", // Set the right border color to white
+          borderRightWidth: "1px", // Optional: Adjust the border width if needed
+          borderRightStyle: "solid", // Replace with your desired text color
+        },
+      },
     },
     {
       key: "column4",
       name: "City",
       fieldName: "City",
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 100,
+      maxWidth: 150,
       isResizable: true,
+      styles: {
+        root: {
+          backgroundColor: "green", // Replace with your desired color
+          color: "white",
+          borderRightColor: "white", // Set the right border color to white
+          borderRightWidth: "1px", // Optional: Adjust the border width if needed
+          borderRightStyle: "solid", // Replace with your desired text color
+        },
+      },
     },
     {
       key: "column5",
       name: "Region",
       fieldName: "Region",
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 100,
+      maxWidth: 150,
       isResizable: true,
+      styles: {
+        root: {
+          backgroundColor: "green", // Replace with your desired color
+          color: "white",
+          borderRightColor: "white", // Set the right border color to white
+          borderRightWidth: "1px", // Optional: Adjust the border width if needed
+          borderRightStyle: "solid", // Replace with your desired text color
+        },
+      },
     },
     {
       key: "column6",
       name: " ",
       fieldName: " ",
-      minWidth: 150,
-      maxWidth: 200, 
+      minWidth: 50,
+      maxWidth: 100,
+      styles: {
+        root: {
+          backgroundColor: "green", // Replace with your desired color
+          color: "white",
+          borderRightColor: "white", // Set the right border color to white
+          borderRightWidth: "1px", // Optional: Adjust the border width if needed
+          borderRightStyle: "solid", // Replace with your desired text color
+        },
+      }, 
       onRender: ((item:any) => {
         return(
           <button onClick={()=>otherSelectItem(item)}>Select</button>

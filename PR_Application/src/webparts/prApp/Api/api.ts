@@ -1,13 +1,15 @@
 import { SPFI,spfi } from "@pnp/sp";
 import { getSP } from "../components/pnpjsConfig";
 import { IPRItem } from "../components/IPRItem";
-import { IPRMarketProCodeNeedHelp, IPRMarketProjectCode } from "../components/Middle/IPrMarketProjectCode";
-import { IPREngineerProCodeNeedHelp, IPREngineerProjectCode } from "../components/Middle/IPrEngineerProjectCode";
-import { IPRCostCenterHSRI, IPRCostCenterSap, IPRCostCenterThreeFortyB } from "../components/Middle/IPrCostCenter";
-import { IPRShippingAddress, IPRShippingAddressCompanyCode } from "../components/Middle/IPrShippingAddress";
-import { IPRCompanyCode } from "../components/Middle/IPrCompanyCode";
-import { IPRCountry, IPRRegion } from "../components/Middle/IPrRegionCountry";
-import { IPROtherShippingLoc } from "../components/Middle/IPrOtherShippingLoc";
+import { IPRMarketProCodeNeedHelp, IPRMarketProjectCode } from "../Model/IPrMarketProjectCode";
+import { IPREngineerProCodeNeedHelp, IPREngineerProjectCode } from "../Model/IPrEngineerProjectCode";
+import { IPRCompanyCode } from "../Model/IPrCompanyCode";
+import { IPRCostCenterHSRI, IPRCostCenterSap, IPRCostCenterThreeFortyB } from "../Model/IPrCostCenter";
+import { IPRShippingAddress, IPRShippingAddressCompanyCode } from "../Model/IPrShippingAddress";
+import { IPRCountry, IPRRegion } from "../Model/IPrRegionCountry";
+import { IPROtherShippingLoc } from "../Model/IPrOtherShippingLoc";
+import { IPRExpenseGLLoc, IPRPrepaidGLLoc } from "../Model/IPrGLAccountLoc";
+
 // import { ISearchQuery, SearchResults, SearchQueryBuilder } from "@pnp/sp/search";
 
 
@@ -126,8 +128,7 @@ public async GetPRCostCenterSap() {
       const response: IPRCostCenterSap[] = await spCache.web.lists
         .getByTitle("PR_Unmapped_Cost_Center")
         .items
-        .select("Title","Details")();
-      // console.log(response);
+        .select("Title","Details","CompanyCode")();
       return response;
     } catch (error) {
       console.log("Error in GetItem : " + error);
@@ -242,5 +243,47 @@ public async GetPRCostCenterSap() {
   }
 
 // ------------------------------------------------------------------------
+//Expense View GL Accounts ...................................
+
+  public async GetPRExpenseGLLoc() {
+    try {
+      const spCache = spfi(ConnectPr.sp);
+      const response: IPRExpenseGLLoc[] = await spCache.web.lists
+        .getByTitle("PR_GL_Account_Mapping")
+        .items
+        .select("Title","OrderType","Desc")();
+        console.log("hello")
+        console.log(response);
+      return response;
+    } 
+    catch (error) {
+      console.log("Error in GetItem : " + error);
+
+    }
+  }
+
+// ------------------------------------------------------------------------
+//Prepaid View GL Accounts ...................................
+
+  public async GetPRPrepaidGLLoc() {
+    try {
+      const spCache = spfi(ConnectPr.sp);
+      const response: IPRPrepaidGLLoc[] = await spCache.web.lists
+        .getByTitle("Prepaid_View_GL_AC")
+        .items
+        .select("Type_of_Purchase","GL_Code","GL_Code_Description","Documents_Needed")();
+      console.log("hi.........")
+      console.log(response);
+      return response;
+            
+    } 
+    catch (error) {
+      console.log("Error in GetItem : " + error);
+
+    }
+  }
+
+// ------------------------------------------------------------------------
+
 
 }
