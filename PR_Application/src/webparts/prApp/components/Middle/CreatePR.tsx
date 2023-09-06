@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { IStackItemStyles, Stack } from '@fluentui/react/lib/Stack';
+import { IStackItemStyles, IStackTokens, Stack } from '@fluentui/react/lib/Stack';
 import { Icon } from '@fluentui/react';
 import { mergeStyles, DefaultPalette } from '@fluentui/react/lib/Styling';
 import { DefaultButton, IStackStyles } from 'office-ui-fabric-react';
 
-export const GettingStarted: React.FunctionComponent = () => {
+export const CreatePR: React.FunctionComponent = () => {
 
     const stackItemStyles: IStackItemStyles = {
         root: {
@@ -18,21 +18,16 @@ export const GettingStarted: React.FunctionComponent = () => {
     return (
 
         <div>
-
             <Stack >
                 <Stack.Item align='stretch' styles={stackItemStyles}>
-                    <p>Getting Started</p>
+                    <p>Create a Purchase Requisition</p>
                 </Stack.Item>
                 <Stack.Item align='start'>
-                    <ul>
-                        <li>General Information</li>
-                        <li>Contact Info</li>
-                        <li>Create PR</li>
-                        <li>Approve PR</li>
-                        <li>Help</li>
-                    </ul>
+                    <p>Create a new purchase requisition in few steps</p>
                 </Stack.Item>
-
+                <Stack.Item align='end'>
+                    <DefaultButton text='Start your PR' />
+                </Stack.Item>
             </Stack>
         </div>
 

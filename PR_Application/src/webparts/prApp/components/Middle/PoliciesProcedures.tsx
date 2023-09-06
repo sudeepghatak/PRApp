@@ -4,7 +4,7 @@ import { Icon } from '@fluentui/react';
 import { mergeStyles, DefaultPalette } from '@fluentui/react/lib/Styling';
 import { DefaultButton, IStackStyles } from 'office-ui-fabric-react';
 
-export const GettingStarted: React.FunctionComponent = () => {
+export const PoliciesProcedures: React.FunctionComponent = () => {
 
     const stackItemStyles: IStackItemStyles = {
         root: {
@@ -16,14 +16,14 @@ export const GettingStarted: React.FunctionComponent = () => {
       };
 
     return (
-
         <div>
+
 
             <Stack >
                 <Stack.Item align='stretch' styles={stackItemStyles}>
-                    <p>Getting Started</p>
+                    <p>Policies and Procedures</p>
                 </Stack.Item>
-                <Stack.Item align='start'>
+                <Stack.Item align='stretch'>
                     <ul>
                         <li>General Information</li>
                         <li>Contact Info</li>

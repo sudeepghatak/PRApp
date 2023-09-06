@@ -57,6 +57,25 @@ export class ConnectPr{
         }
       }
 
+
+
+      public async GetGettingStarted() {
+        try {
+          // debugger;
+          const spCache = spfi(ConnectPr.sp);
+          const response: IPRMarketProjectCode[] = await spCache.web.lists
+            .getByTitle("Getting Started")
+            .items
+            .select("Title","Url")();
+          // console.log(response);
+        //   this.setState({ PrMarketProjectCode: response });
+        return response;
+    
+        } catch (error) {
+          console.log("Error in GetItem : " + error);
+        }
+      }
+
     public async GetPREnggProjectCodeItems() {
     try {
       const spCache = spfi(ConnectPr.sp);

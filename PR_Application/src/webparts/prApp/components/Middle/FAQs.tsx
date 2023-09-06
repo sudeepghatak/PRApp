@@ -4,7 +4,7 @@ import { Icon } from '@fluentui/react';
 import { mergeStyles, DefaultPalette } from '@fluentui/react/lib/Styling';
 import { DefaultButton, IStackStyles } from 'office-ui-fabric-react';
 
-export const GettingStarted: React.FunctionComponent = () => {
+export const FAQs: React.FunctionComponent = () => {
 
     const stackItemStyles: IStackItemStyles = {
         root: {
@@ -14,22 +14,22 @@ export const GettingStarted: React.FunctionComponent = () => {
             paddingLeft:10
         },
       };
-
+      
     return (
 
         <div>
 
-            <Stack >
+
+            <Stack horizontalAlign='stretch'>
                 <Stack.Item align='stretch' styles={stackItemStyles}>
-                    <p>Getting Started</p>
+                    <p>We've got Answers</p>
                 </Stack.Item>
-                <Stack.Item align='start'>
+                <Stack.Item align='stretch'>
                     <ul>
-                        <li>General Information</li>
-                        <li>Contact Info</li>
-                        <li>Create PR</li>
-                        <li>Approve PR</li>
-                        <li>Help</li>
+                        <li>How to Create a PR</li>
+                        <li>How to Approve a PR</li>
+                        <li>Do I need a quote?</li>
+
                     </ul>
                 </Stack.Item>
 
