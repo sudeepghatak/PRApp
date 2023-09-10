@@ -2,5 +2,5 @@
   "$schema": "https://developer.microsoft.com/json-schemas/core-build/serve.schema.json",
   "port": 4321,
   "https": true,
-  "initialPage": "https://omnicell.sharepoint.com/sites/ConnectPRDev/_layouts/15/workbench.aspx"
+  "initialPage": "https://simpsoftsp.sharepoint.com/_layouts/15/workbench.aspx"
 }

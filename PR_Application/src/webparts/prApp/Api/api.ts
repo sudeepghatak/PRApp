@@ -63,7 +63,7 @@ export class ConnectPr{
         try {
           // debugger;
           const spCache = spfi(ConnectPr.sp);
-          const response: IPRMarketProjectCode[] = await spCache.web.lists
+          const response: any[] = await spCache.web.lists
             .getByTitle("Getting Started")
             .items
             .select("Title","Url")();
