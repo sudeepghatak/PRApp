@@ -64,7 +64,8 @@ export class ConnectPr{
         .getByTitle("PR_Engg_Project_Codes")
         .items
         .select("Title","IsActive")();
-      // console.log(response);
+        console.log("response GetPREnggProjectCodeItems");
+      console.log(response);
       
       return response;
     //   setState({ PrEngineerProjectCode: response });
@@ -129,7 +130,10 @@ public async GetPRCostCenterSap() {
         .getByTitle("PR_Unmapped_Cost_Center")
         .items
         .select("Title","Details","CompanyCode")();
+        console.log(response);
       return response;
+      
+      
     } catch (error) {
       console.log("Error in GetItem : " + error);
     }
@@ -172,6 +176,8 @@ public async GetPRCostCenterSap() {
         .getByTitle("PR_Plant_Locations")
         .items
         .select("Title","PlantNumber","Country")();
+        console.log(response);
+        
       return response;
             
     } catch (error) {

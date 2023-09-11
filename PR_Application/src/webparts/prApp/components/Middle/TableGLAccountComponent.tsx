@@ -10,6 +10,7 @@ import {
 import * as React from "react";
 import { ConnectPr } from "../../Api/api";
 import { BaseButton } from "office-ui-fabric-react";
+import { restApiCall } from "../../Api/ApiCall";
 
 
 interface IPGLAcoountCode {
@@ -26,14 +27,17 @@ export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (pr
   React.useEffect(()=>{
     if( GLAccountType == "Expense" ){
       let expense=[]
-      ConnectPr.getInstance().GetPRExpenseGLLoc().then((expValue)=>{
+      restApiCall.getExpenseGLList().then((expValue)=>{
+        // console.log("iiiiiiiiiiiiiiiiShohini .......................")
+        // console.log(expValue)
+        // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
         for(let i=0;i<expValue.length;i++){
           let newItemExp={
             key: expValue[i] ,
             TypeOfPurchase: expValue[i].OrderType,
             GLCode: expValue[i].Title,
-            GLCodeDescription: expValue[i].Desc,
-            DocumentsNeeded: expValue[i].OrderType
+            GLCodeDescription: expValue[i].Dscription,
+            DocumentsNeeded: "SOW, Quote, Proposal, Other, "
           }
           expense.push(newItemExp)
 

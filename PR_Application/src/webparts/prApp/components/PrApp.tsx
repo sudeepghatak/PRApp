@@ -25,6 +25,7 @@ import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import { MainPage } from './Middle/MainPage';
 import { ConnectPr } from '../Api/api';
 import PrMainPage from './Middle/PrMainPage';
+import FourthComponent from './Middle/FourthComponent';
 
 
 
@@ -453,14 +454,11 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
 
            {/* <MainPage context={this.props.context as any}/>  */}
            <PrMainPage/>
+           {/* <FourthComponent buttonContxtBack={function (): void {
+            throw new Error('Function not implemented.');
+          } } /> */}
            
-          {/*}  <FirstComponent />
-            <SecondComponent/> 
-         <ThirdComponent/>
-          <TypeOfPurchase_Table/> */}
-          {/* <button onClick={()=>ConnectPr.getInstance().GetPREnggProCodeNeedHelp()}> Engg</button>
-          <button onClick={()=>ConnectPr.getInstance().GetPRMarketProCodeNeedHelp()}> Mark</button> */}
-      
+          
         </div>
       </section>
     );

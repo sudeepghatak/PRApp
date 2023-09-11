@@ -22,6 +22,7 @@ import { IPROtherShippingLoc } from "../../Model/IPrOtherShippingLoc";
 import { saveVendorandShippingData } from "../../../../features/reducers/vendorandshippingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
+import { restApiCall } from "../../Api/ApiCall";
 
 // import SupplierModal from "./SupplierModal";
 interface ISecondprops {
@@ -57,8 +58,12 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   const showOtherShipping = () => {
     setopenOtherShipping(!openOtherShipping);
   };
+//Redux save
+  useEffect(() => {
 
+    setvendorItem(vendorandshippingData.vendorDetails);
 
+  }, []);
 
   const [vendorItem, setvendorItem] = useState<VendorDetails>(
     new VendorDetails(0, " ", " ", " ", " ", " ", " ", " ", " ")
@@ -111,7 +116,8 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   //Ship Address to Company Code Compare------------------------------------------------------
     
   let listDataSupplierAdd=[]
-  ShipAddressChecking.shipToAddressCheck("OM01").then((shipAddressValue)=>{
+  
+  restApiCall.getShippingAddress("OM01").then((shipAddressValue)=>{
 
     for(let i:number=0;i<shipAddressValue.length;i++){
           let newObjSupplierAdd={
@@ -189,6 +195,111 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     buttonContxtSave();
 
   };
+const saveVendorDetails=()=>{
+  console.log("Here It is Vendor data Here --- >> ",vendorandshippingData.PKID);
+  dispatch(saveVendorandShippingData(vendorItem));
+  let saveDetails=[
+{
+    "PKID": vendorandshippingData.PKID,
+    "ConnectPRID": null,
+    "Type_Of_Buy": null,
+    "PrepaidOrCapitalEquipment": null,
+    "EHS": null,
+    "Title": null,
+    "RequestFor": null,
+    "Type_Of_Order": null,
+    "Order_Amount": null,
+    "CIP_Number": null,
+    "UFID": null,
+    "Supplier_Account_Number": vendorItem.vendorNumber,
+    "Supplier_Name": vendorItem.vendorName,
+    "Supplier_Address": vendorItem.vendorAddress,
+    "Supplier_City": vendorItem.vendorCity,
+    "Supplier_State": vendorItem.vendorState,
+    "Supplier_Zip": vendorItem.vendorZip,
+    "Supplier_Country": vendorItem.vendorCountry,
+    "Manager": null,
+    "Manager1": null,
+    "Manager2": null,
+    "Manager3": null,
+    "GL_Account": null,
+    "Status": null,
+    "TaskCreatedFor": null,
+    "ApprovalInstance": null,
+    "Comments": null,
+    "Cost_Center": null,
+    "Location": null,
+    "IsDeleted": null,
+    "Special_Instructions": null,
+    "Shipping_Name": null,
+    "Shipping_Street": null,
+    "Shipping_Postal_Code": null,
+    "Shipping_Location": null,
+    "Shipping_Region": null,
+    "Shipping_Country": null,
+    "Shipping_ContactPhone": null,
+    "OldReqId": null,
+    "SAPPRId": null,
+    "LastWorkflowRun": null,
+    "CurrentApprovalStep": null,
+    "ManagerLevel": null,
+    "FinalApprovalDate": null,
+    "IsOtherCC": null,
+    "IsCFOApproved": null,
+    "CFO": null,
+    "AllApprovers": null,
+    "CreateDate": null,
+    "LastStatus": null,
+    "AllManagers": null,
+     "JLReminderCount": null,
+    "FIReminderCount": null,
+    "AesyntPRType": null,
+    "PONumber": null,
+    "IsCompleted": null,
+    "Company": null,
+    "ProjectNumber": null,
+    "ActCostCenter": null,
+    "CompanyCode": null,
+    "FromCurrency": null,
+    "ToCurrency": null,
+    "RequesterCurrency": null,
+    "ExchangeRate": null,
+    "ExchangeRateV": null,
+    "ExchangeRateDate": null,
+    "ConvertedDollerAmount": null,
+    "CountryKey": null,
+    "HRADCompanyCode": null,
+    "QuickbookPO": null,
+    "CCDescription": null,
+    "IsProjectPR":null,
+    "ProjectDepartment": null,
+    "ProjectCode": null,
+    "Created": null,
+    "CreatedBy": null,
+    "Modified": null,
+    "ModifiedBy": null,
+    "PRNumber": null,
+    "DWCreateDate": null,
+    "PRId": null,
+    "OldAllApprovers": null,
+    "OldAllManagers": null,
+    "OldCFO": null,
+    "OldCreatedBy": null,
+    "OldManager": null,
+    "OldManager1": null,
+    "OldManager2": null,
+    "OldManager3": null,
+    "OldModifiedBy": null,
+    "OldRequestFor": null,
+    "OldTaskCreatedFor": null
+}
+];
+// restApiCall.insertVendorDetails(saveDetails);
+
+  buttonContxtSave();
+
+}
+  
 
 useEffect(() => {
 
@@ -264,7 +375,7 @@ useEffect(() => {
                     borderRadius: 5,
                     height: "40px",
                   }}
-                  onClick={() => buttonContxtSave()}
+                  onClick={() =>saveVendorDetails()}
                 >
                   <Stack horizontal>
                     <span style={{ marginRight: 10, marginTop: 2 }}>

@@ -1,55 +1,52 @@
+import { IDropdownOption } from "@fluentui/react";
+
 export class TypeofPurchaseDetail{
-        typeofPurchaseName:string;
-        engprojectCodeList:ProjectCodeList;
-        markprojectCodeList:ProjectCodeList;
-        costCenterList:string[];
-    
+
+    typeofPurchaseName:string;
+    projectCode:string;
+    costCenter:string;
+    typeOfPurchaseInfoList:TypeLineItem[];
+    demotypeOfPurchaseInfoList:TypeLineItem[];
+     glaccount: IDropdownOption[] = [];
+    // tableviewItem: any;
+ 
+
     constructor(typeofPurchaseName:string){
-            this.typeofPurchaseName=typeofPurchaseName;
-            this.engprojectCodeList = new ProjectCodeList(); // Initialize engprojectCodeList
-        this.markprojectCodeList = new ProjectCodeList(); 
-            
-            this.costCenterList=[];
+
+        this.typeofPurchaseName=typeofPurchaseName;
+        this.projectCode="";
+        this.costCenter="";
+        this.typeOfPurchaseInfoList=[];
+        this.demotypeOfPurchaseInfoList=[];
+
          }
-        saveintoProjectCode(name:string,item:string){
-            if(name==="Engineering"){
-                this.engprojectCodeList.projectCodeName="Engineering";
-                this.engprojectCodeList.projectCodeList.push(item);
 
-            }else if(name==="Marketing"){
-                this.markprojectCodeList.projectCodeName="Marketing";
-                this.markprojectCodeList.projectCodeList.push(item);
-            }
+ 
 
-        }
-
-        fetchProjectCodelastIndex(name:string){
-            if(name==="Engineering"){
-                return this.engprojectCodeList.projectCodeList[this.engprojectCodeList.projectCodeList.length-1];
-
-            }else if(name==="Marketing"){
-                return this.markprojectCodeList.projectCodeList[this.markprojectCodeList.projectCodeList.length-1];;
-
-            }
-
-        }
-        
-
-        //  public projectCodelastIndex():string{
-        //     let projectCode:string=this.projectCodeList[this.projectCodeList.length-1];
-        //     return projectCode;
-        //  }
-         public costCenterlastIndex():string{
-            let costCenter:string=this.costCenterList[this.costCenterList.length-1];
-            return costCenter;
-         }
 }
+export class TypeLineItem{
+    projectCode:string;
+    des:string;
+    CostCenter:string;
+    date:string;
+    glAccount:string;
+    qty:string;
+    uOM:string;
+    unitPrice:string;
+    unitPricePer:string;
+    totalamount:number;
 
-class ProjectCodeList{
-    projectCodeName:string;
-    projectCodeList:string[];
-    constructor() {
-        this.projectCodeName = ""; // Initialize projectCodeName
-        this.projectCodeList = []; // Initialize projectCodeList
+    constructor(projectCode:string,des:string,CostCenter:string,date:string,
+        glAccount:string,qty:string,uOM:string,unitPrice:string,unitPricePer:string,totalamount:number){
+          this.projectCode=projectCode,
+          this.des=des,
+          this.CostCenter=CostCenter,
+          this.date=date,
+          this.glAccount=glAccount,
+          this.qty=qty,
+          this.uOM=uOM,
+          this.unitPrice=unitPrice,
+          this.unitPricePer=unitPricePer,
+          this.totalamount=totalamount
     }
 }

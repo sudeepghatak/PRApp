@@ -15,8 +15,10 @@ import { findIndex, map } from "lodash";
 import LineItemTableFormat from "./TypeOfPurchase_TableFormat";
 import { tableBuildContext } from "./MainPage";
 import { RootState } from "../../../../app/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
+import { saveButtonClick } from "../../../../features/reducers/lineitemSlice";
+import { restApiCall } from "../../Api/ApiCall";
 
 // interface ThirdProps {
 //   [key: string]: React.FunctionComponent[];
@@ -35,7 +37,10 @@ let listOftotalAmount: IAmountProps[] = [];
 const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
   const tableContent = useContext(tableBuildContext);
   const { buttonContxtSave, buttonContxtBack } = props;
+const dispatch = useDispatch();
+
   const lineinfoData = useSelector((state: RootState) => state.lineiteminfo);
+  const vendorPKIDData = useSelector((state: RootState) => state.vendorandshipping.PKID);
   const [selectedItems, setSelectedItems] = React.useState<{
     [key: string]: IDropdownOption;
   }>({
@@ -104,6 +109,83 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
 
     settotalAmount(totalnumber);
   };
+  const saveIntoTable = () => {
+    // lineinfoData.saveTable =1
+    // saveButtonClick()
+    dispatch(saveButtonClick());
+    let saveList=[];
+    for (
+      let i: number = 0;
+      i < lineinfoData.TypeofPurchaseDetailList.length;
+      i++
+    ) {
+      console.log(lineinfoData.TypeofPurchaseDetailList[i].demotypeOfPurchaseInfoList);
+      lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList=[...lineinfoData.TypeofPurchaseDetailList[i].demotypeOfPurchaseInfoList];
+      // lineinfoData.TypeofPurchaseDetailList[i].projectCodeList = [
+      //   ...lineinfoData.TypeofPurchaseDetailList[i].demoprojectCodeList,
+      // ];
+
+      // lineinfoData.TypeofPurchaseDetailList[i].costCenterList = [
+      //   ...lineinfoData.TypeofPurchaseDetailList[i].democostCenterList,
+      // ];
+      //       lineinfoData.TypeofPurchaseDetailList[i].description = [
+      //   ...lineinfoData.TypeofPurchaseDetailList[i].demodescription,
+      // ];
+
+      // lineinfoData.TypeofPurchaseDetailList[i].QtyList = [
+      //   ...lineinfoData.TypeofPurchaseDetailList[i].demoQtyList,
+      // ];
+      //       lineinfoData.TypeofPurchaseDetailList[i].unitPriceList = [
+      //   ...lineinfoData.TypeofPurchaseDetailList[i].demounitPriceList,
+      // ];
+
+      // lineinfoData.TypeofPurchaseDetailList[i].unitPricePerList = [
+      //   ...lineinfoData.TypeofPurchaseDetailList[i].demounitPricePerList,
+      // ];
+
+      for(let j:number=0;j<lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList.length;j++){
+        let bodyItem={
+           "PKID":vendorPKIDData ,
+           "ConnectPRID": vendorPKIDData,
+           "DateRequired": lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].date,
+           "Qty": lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].qty,
+           "UOM": null,
+           "Plant": null,
+           "Amount": null,
+           "Cost_Center":lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].costCenter,
+           "GL_Account": null,
+           "Unit_Price": lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].unitPrice,
+           "Requester_Name": null,
+           "Requester_LoginName": null,
+           "TypeOfOrder": null,
+           "ItemDescription": null,
+           "Manager1": null,
+           "Manager2": null,
+           "Manager3": null,
+           "Manager4": null,
+           "PrepaidFromDate": null,
+           "PrepaidToDate": null,
+           "OverallLimit": null,
+           "AssetNbr": null,
+           "UnitPricePer": lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].unitPricePer,
+           "OtherTypeOfOrder": null,
+           "ExpenseGL": null,
+           "IsDeleted": null,
+           "ProjCode": lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].projectCode,
+           "Created": null,
+           "CreatedBy": null,
+           "Modified": null,
+           "ModifiedBy": null
+};
+saveList.push(bodyItem);
+
+      }
+
+
+    }
+      // restApiCall.insertLineItem(saveList);
+    buttonContxtSave();
+  };
   return (
     <>
       <div>
@@ -137,7 +219,7 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
                     borderRadius: 5,
                     height: "40px",
                   }}
-                  onClick={() => buttonContxtSave()}
+                  onClick={() => saveIntoTable()}
                 >
                   <Stack horizontal>
                     <span style={{ marginRight: 10, marginTop: 2 }}>

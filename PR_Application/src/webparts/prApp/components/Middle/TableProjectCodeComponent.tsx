@@ -8,6 +8,7 @@ import {
 } from "@fluentui/react";
 import * as React from "react";
 import { ConnectPr } from "../../Api/api";
+import { restApiCall } from "../../Api/ApiCall";
 
 interface IPProjectCode {
   isProjectCodeOpen: boolean;
@@ -21,46 +22,28 @@ const ProjectCodeComponent: React.FunctionComponent<IPProjectCode> = (
   const { isProjectCodeOpen, showProjectCode, ProjectCode_title } = props;
   const [items,setitems]=React.useState([])
   React.useEffect(()=>{
-    if(ProjectCode_title ==="Engineering")
-    {
-      let eng=[]
-      ConnectPr.getInstance().GetPREnggProCodeNeedHelp().then((engValue)=>{
-        for(let i=0;i<engValue.length;i++){
-          let newItem={
+      let listProjectCode=[]
+
+restApiCall.getProjetCodeList(ProjectCode_title).then((projectCodevalue)=>{
+  console.log(projectCodevalue);
+      for(let i=0;i<projectCodevalue.length;i++){
+        console.log(projectCodevalue[i])
+        if(projectCodevalue[i].IsActive){
+          console.log(projectCodevalue[i].ProjDesc)
+        let newItem={
             key:i,
-            project_code:engValue[i].Title,
-            description:engValue[i].ProjDesc
+            project_code:projectCodevalue[i].Title,
+            description:projectCodevalue[i].ProjDesc
           }
-          eng.push(newItem)
-
-        }
-          setitems([...eng])
-
-
-      })
-
-    }
-   else if(ProjectCode_title ==="Marketing")
-   {
-    ConnectPr.getInstance().GetPRMarketProCodeNeedHelp().then((mrkvalue)=>{
-      console.log("Marketing values");
-      let mar=[]
-      for(let i=0;i<mrkvalue.length;i++){
-        let newmrkItem={
-            key:i,
-            project_code:mrkvalue[i].Title,
-            description:mrkvalue[i].ProjectDesc
-          }
-          mar.push(newmrkItem)
+          console.log(newItem)
+          listProjectCode.push(newItem)}
           
           
         
       }
-          setitems([...mar])
+          setitems([...listProjectCode])
 
-    })
-
-   }
+})
 
 
   },[])

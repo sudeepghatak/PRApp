@@ -2,7 +2,8 @@ import * as React from 'react'
 import { Stack} from '@fluentui/react/lib/Stack';
 import { Icon } from '@fluentui/react';
 import { mergeStyles,DefaultPalette} from '@fluentui/react/lib/Styling';
-import { DefaultButton, IStackStyles } from 'office-ui-fabric-react';
+import { DefaultButton, IStackStyles, Link } from 'office-ui-fabric-react';
+import './StyleFourthComponent.css'
 
 
 interface IFourthprops {
@@ -20,9 +21,16 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
         display: 'flex',
         height: 50,
         justifyContent: 'flex-start',
-        // blockSize: "10px"
+        blockSize: "20px"
 
       });
+
+    const BlockSize: IStackStyles = {
+    root: {
+        blocksize: "12px",
+        fontsize: "10px"
+    },
+  };
 
     const col2Style: IStackStyles = {
     root: {
@@ -32,21 +40,23 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
       color:'Black',
       fontsize: "10px",
       marginTop: "10px",
+      blocksize: "10px"
     },
   };
    const col1Style: IStackStyles = {
     root: {
       padding: "10px",
-      textAlign: "right",
+      textAlign: "left",
       width: "30%",
       fontsize: "10px",
-      color:'green'
+      color:'green',
+      blocksize: "10px"
     },
   };
   const col1StyleSingleLine : IStackStyles = {
     root: {
       padding: "10px",
-      textAlign: "right",
+      textAlign: "left",
       fontsize: "10px",
       marginRight:" 0px",
       color:'green',
@@ -82,7 +92,7 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
            </Stack>
           
            <Stack>
-              <span className={stackItemStyles}>Review - Order Details <Icon iconName="Question"   styles={{
+              <span className={stackItemStyles}> Review - Order Details <Icon iconName="Question"   styles={{
                 root: {
                   borderRadius: '50%',
                   backgroundColor: 'gray',
@@ -93,43 +103,67 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
              </span>              
           </Stack>
           </Stack>
-
-          <Stack horizontal horizontalAlign="space-between">
-             <Stack.Item grow={4}>
+          {/* <div className='button-border-end'> */}
+          <Stack horizontal horizontalAlign="space-between"  styles={BlockSize} >
+             <Stack.Item grow={20}>
                   <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item styles={col1Style}>
-                      <div>Type of Buy: </div>
+                    <Stack.Item >
+                      <div  className='heading'>Type of Buy </div>
                     </Stack.Item>
-                    <Stack.Item styles={col2Style}>
-                      <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <div> Expense Buy </div>
+                  </Stack>
+                </Stack.Item>
+                <Stack.Item grow={0}>
+                  <Stack horizontal horizontalAlign="baseline">
+                    <Stack.Item >
+                      <div  className='heading'>
+                        <Link href="" underline>
+                          View PR Approvals Needed
+                       </Link>
+                     </div>
+                    </Stack.Item>
+                  </Stack>
+                </Stack.Item>
+          </Stack>
+          {/* </div> */}
+  {/* --------------------------------------------------------------------------------- */}
+         <div className='button-border-end'>
+          <Stack horizontal horizontalAlign="space-between" >
+            <Stack.Item grow={5} >
+                  <Stack horizontal horizontalAlign="baseline">
+                    <Stack.Item >
+                      <div className='text-heading' >Type of Buy: </div>
+                    </Stack.Item>
+                    <Stack.Item >
+                      <Stack horizontal tokens={{ childrenGap: 10 }}>
+                        <div className='text-des'> Expense Buy </div>
                       </Stack>
                     </Stack.Item>
                   </Stack>
                 </Stack.Item>
-                <Stack.Item grow={4}>
+                <Stack.Item grow={5}>
                   <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item styles={col1Style}>
-                      <div>Prepaid or Capital buy? </div>
+                    <Stack.Item >
+                      <div  className='text-heading'>Prepaid or Capital buy? </div>
                     </Stack.Item>
-                    <Stack.Item styles={col2Style}>
-                      <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <div>Expense </div>
+                    <Stack.Item >
+                      <Stack horizontal tokens={{ childrenGap: 10 }}>
+                        <div className='text-des'>Expense </div>
                       </Stack>
                     </Stack.Item>
                   </Stack>
                 </Stack.Item>
           </Stack>
-     {/* ----------------------------------------------------------------------- */}
-            <Stack >
-             <Stack.Item grow={4}>
+        </div>
+{/* ----------------------------------------------------------------------- */}
+            <Stack styles={BlockSize} >
+             <Stack.Item grow={10}>
                   <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item styles={col1StyleSingleLine}>
-                      <div>Type of Purchase: </div>
+                    <Stack.Item >
+                      <div  className='text-heading' >Type of Purchase: </div>
                     </Stack.Item>
-                    <Stack.Item styles={col2Style}>
-                      <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <div> Consulting; Other; </div>
+                    <Stack.Item >
+                      <Stack horizontal tokens={{ childrenGap: 15 }}>
+                        <div className='text-des'> Consulting; Other; </div>
                       </Stack>
                     </Stack.Item>
                   </Stack>
@@ -137,42 +171,42 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
               </Stack>
      {/* ----------------------------------------------------------------------- */}
 
-          <Stack horizontal horizontalAlign="space-between">
-             <Stack.Item grow={4}>
+          <Stack horizontal horizontalAlign="space-between" styles={BlockSize}>
+             <Stack.Item grow={10}>
                   <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item styles={col1StyleSingleLine}>
-                      <div>Is this Project Related?: </div>
+                    <Stack.Item >
+                      <div  className='text-heading'> Is this Project Related?: </div>
                     </Stack.Item>
-                    <Stack.Item styles={col2Style}>
-                      <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <div> Yes </div>
+                    <Stack.Item >
+                      <Stack horizontal tokens={{ childrenGap: 15 }}>
+                        <div className='text-des'> Yes </div>
                       </Stack>
                     </Stack.Item>
                   </Stack>
                 </Stack.Item>
-                <Stack.Item grow={4}>
+                <Stack.Item grow={10}>
                   <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item styles={col1Style}>
-                      <div>	Project Code: </div>
+                    <Stack.Item>
+                      <div  className='text-heading'>Project Code: </div>
                     </Stack.Item>
-                    <Stack.Item styles={col2Style}>
-                      <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <div>Engineering (ACP.DAP) </div>
+                    <Stack.Item >
+                      <Stack horizontal tokens={{ childrenGap: 15 }}>
+                        <div className='text-des' >Engineering (ACP.DAP) </div>
                       </Stack>
                     </Stack.Item>
                   </Stack>
                 </Stack.Item>
           </Stack>
      {/* ----------------------------------------------------------------------- */}
-         <Stack >
-             <Stack.Item grow={4}>
+         <Stack styles={BlockSize}>
+             <Stack.Item grow={10}>
                   <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item styles={col1Style}>
-                      <div>Is this EHS relevant?:</div>
+                    <Stack.Item >
+                      <div  className='text-heading'> Is this EHS relevant?:</div>
                     </Stack.Item>
-                    <Stack.Item styles={col2Style}>
-                      <Stack horizontal tokens={{ childrenGap: 5 }}>
-                        <div> No </div>
+                    <Stack.Item >
+                      <Stack horizontal tokens={{ childrenGap: 15 }}>
+                        <div className='text-des' > No </div>
                       </Stack>
                     </Stack.Item>
                   </Stack>
