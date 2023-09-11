@@ -76,6 +76,60 @@ export class ConnectPr{
         }
       }
 
+
+      public async GetPoliciesAndProcedures() {
+        try {
+          // debugger;
+          const spCache = spfi(ConnectPr.sp);
+          const response: any[] = await spCache.web.lists
+            .getByTitle("Policies and Procedures")
+            .items
+            .select("Title","Url")();
+          // console.log(response);
+        //   this.setState({ PrMarketProjectCode: response });
+        return response;
+    
+        } catch (error) {
+          console.log("Error in GetItem : " + error);
+        }
+      }
+
+
+      public async GetLegalDocuments() {
+        try {
+          // debugger;
+          const spCache = spfi(ConnectPr.sp);
+          const response: any[] = await spCache.web.lists
+            .getByTitle("Legal Documents")
+            .items
+            .select("Title","Description")();
+          // console.log(response);
+        //   this.setState({ PrMarketProjectCode: response });
+        return response;
+    
+        } catch (error) {
+          console.log("Error in GetItem : " + error);
+        }
+      }
+
+
+      public async GetFAQs() {
+        try {
+          // debugger;
+          const spCache = spfi(ConnectPr.sp);
+          const response: any[] = await spCache.web.lists
+            .getByTitle("FAQs")
+            .items
+            .select("Title","Description")();
+          // console.log(response);
+        //   this.setState({ PrMarketProjectCode: response });
+        return response;
+    
+        } catch (error) {
+          console.log("Error in GetItem : " + error);
+        }
+      }
+
     public async GetPREnggProjectCodeItems() {
     try {
       const spCache = spfi(ConnectPr.sp);

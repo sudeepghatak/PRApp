@@ -37,6 +37,7 @@ export const GettingStarted: React.FunctionComponent = () => {
         fetchData(); // Call the fetchData function
     }, []); // Empty dependency array to run the effect only once
 
+    
     return (
         <div>
             <Stack>
