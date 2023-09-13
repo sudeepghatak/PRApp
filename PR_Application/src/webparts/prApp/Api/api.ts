@@ -66,7 +66,7 @@ export class ConnectPr{
           const response: any[] = await spCache.web.lists
             .getByTitle("Getting Started")
             .items
-            .select("Title","Url")();
+            .select("Title","Url","Html","HtmlOrUrl")();
           // console.log(response);
         //   this.setState({ PrMarketProjectCode: response });
         return response;

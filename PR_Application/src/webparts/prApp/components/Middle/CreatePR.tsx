@@ -3,9 +3,11 @@ import { IStackItemStyles, IStackTokens, Stack } from '@fluentui/react/lib/Stack
 import { Icon } from '@fluentui/react';
 import { mergeStyles, DefaultPalette } from '@fluentui/react/lib/Styling';
 import { DefaultButton, IStackStyles } from 'office-ui-fabric-react';
+import { MainPage } from './MainPage';
 
 export const CreatePR: React.FunctionComponent = () => {
-
+    const [load,setload]
+=React.useState(false)
     const stackItemStyles: IStackItemStyles = {
         root: {
             background: DefaultPalette.green,
@@ -30,9 +32,10 @@ export const CreatePR: React.FunctionComponent = () => {
                     <p>Create a new purchase requisition in a few steps</p>
                 </Stack.Item>
                 <Stack.Item align='end'>
-                    <DefaultButton text='Start your PR' />
+                    <DefaultButton text='Start your PR' onClick={()=>setload(true)}/>
                 </Stack.Item>
             </Stack>
+            
         </div>
     );
 };
