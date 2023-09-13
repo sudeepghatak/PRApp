@@ -10,6 +10,7 @@ import { GettingStarted } from './GettingStarted';
 import { PoliciesProcedures } from './PoliciesProcedures';
 import { LegalDocuments } from './LegalDocuments';
 import { FAQs } from './FAQs';
+import RequestGallery from './RequestGallery';
 
 export const LandingScreen: React.FunctionComponent = () => {
 
@@ -38,7 +39,10 @@ export const LandingScreen: React.FunctionComponent = () => {
 
         <div>
             <Stack enableScopedSelectors horizontal  tokens={stackTokens}>
-                <Stack.Item align='stretch'  grow={2} >
+            <Stack.Item align='stretch'  grow={2} >
+            <Stack.Item align='start' styles={stackItemStyles}> <RequestGallery /></Stack.Item>
+                </Stack.Item>
+                <Stack.Item align='stretch'  grow={1} >
                     <Stack.Item align='start' styles={stackItemStyles}> <CreatePR /></Stack.Item>
                     <Stack.Item align='start' styles={stackItemStyles}>
                         <DelegatePR />
@@ -47,7 +51,7 @@ export const LandingScreen: React.FunctionComponent = () => {
                         <PendingApprovals />
                     </Stack.Item>
                 </Stack.Item>
-                <Stack.Item  align='stretch' grow={2}>
+                <Stack.Item  align='stretch' grow={1}>
                     <Stack.Item align='start' styles={stackItemStyles}> <GettingStarted /></Stack.Item>
                     <Stack.Item align='start' styles={stackItemStyles}>
                         <PoliciesProcedures />

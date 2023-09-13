@@ -10,25 +10,27 @@ export const PendingApprovals: React.FunctionComponent = () => {
         root: {
             background: DefaultPalette.green,
             color: DefaultPalette.white,
-            textAlign:'left',
-            paddingLeft:10
+            textAlign: 'left',
+            paddingLeft: 10
         },
-      };
+    };
+
+    const buttonStyles = {
+        root: {
+            marginTop: '20px' // Adjust the top margin of the button to add indentation
+        }
+    };
 
     return (
-
         <div>
-
-
-            <Stack >
+            <Stack>
                 <Stack.Item align='stretch' styles={stackItemStyles}>
                     <p>Pending Approvals</p>
                 </Stack.Item>
                 <Stack.Item align='end'>
-                    <DefaultButton text='Pending Approvals' />
+                    <DefaultButton text='Pending Approvals' styles={buttonStyles} />
                 </Stack.Item>
             </Stack>
         </div>
-
     );
 };

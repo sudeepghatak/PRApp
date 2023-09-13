@@ -94,7 +94,7 @@ const FAQAccordionItem: React.FC<{
 
     return (
         <div>
-            <Stack>
+            <Stack style={{paddingTop:10}}>
                 <Stack.Item align='stretch' styles={stackTitleItemStyles}>
                     <div className={`accordion-button ${isOpen ? 'accordion-open' : 'accordion-closed'}`} onClick={onClick}>
                         <Icon iconName={isOpen ? 'ChevronDown' : 'ChevronRight'} />

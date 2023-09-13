@@ -10,23 +10,27 @@ export const DelegatePR: React.FunctionComponent = () => {
         root: {
             background: DefaultPalette.green,
             color: DefaultPalette.white,
-            textAlign:'left',
-            paddingLeft:10
+            textAlign: 'left',
+            paddingLeft: 10
         },
-      };
+    };
+
+    const buttonStyles = {
+        root: {
+            marginTop: '20px' // Adjust the top margin of the button to add indentation
+        }
+    };
 
     return (
-
         <div>
-            <Stack >
+            <Stack>
                 <Stack.Item align='stretch' styles={stackItemStyles}>
                     <p>Delegate PR Approval Tasks</p>
                 </Stack.Item>
                 <Stack.Item align='end'>
-                    <DefaultButton text='Delegate My Task' />
+                    <DefaultButton text='Delegate My Task' styles={buttonStyles} />
                 </Stack.Item>
             </Stack>
         </div>
-
     );
 };

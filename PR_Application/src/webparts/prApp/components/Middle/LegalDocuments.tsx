@@ -15,14 +15,13 @@ export const LegalDocuments: React.FunctionComponent = () => {
         },
     };
 
-    const [GetLegalDocumentsText, setLegalDocumentsOption] = useState([]); // Initialize with an empty array of strings
+    const [GetLegalDocumentsText, setLegalDocumentsOption] = useState(''); // Initialize with an empty string
 
     useEffect(() => {
         // Use a loading state to indicate that data is being fetched
         const fetchData = async (): Promise<void> => {
             try {
                 const response = await ConnectPr.getInstance().GetLegalDocuments();
-           
                 setLegalDocumentsOption(response[0].Description);
             } catch (error) {
                 console.log('Error fetching data:', error);
@@ -35,7 +34,7 @@ export const LegalDocuments: React.FunctionComponent = () => {
 
     function HTMLRenderer({ htmlContent }) {
         return (
-          <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+          <div style={{ textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: htmlContent }} />
         );
       }
 
@@ -46,7 +45,7 @@ export const LegalDocuments: React.FunctionComponent = () => {
                     <p>Legal Documents</p>
                 </Stack.Item>
                 <Stack.Item align="start">
-                <HTMLRenderer htmlContent={GetLegalDocumentsText} />
+                    <HTMLRenderer htmlContent={GetLegalDocumentsText} />
                 </Stack.Item>
             </Stack>
         </div>

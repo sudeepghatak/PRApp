@@ -1,40 +1,58 @@
-import * as React from 'react'
+
+import * as React from 'react';
 import { IStackItemStyles, Stack } from '@fluentui/react/lib/Stack';
-import { Icon } from '@fluentui/react';
-import { mergeStyles, DefaultPalette } from '@fluentui/react/lib/Styling';
-import { DefaultButton, IStackStyles } from 'office-ui-fabric-react';
+import { DefaultPalette } from '@fluentui/react/lib/Styling';
+import { ConnectPr } from '../../Api/api';
+import { useEffect, useState } from 'react';
+import { IChoiceGroupOption } from '@fluentui/react';
 
 export const PoliciesProcedures: React.FunctionComponent = () => {
-
     const stackItemStyles: IStackItemStyles = {
         root: {
             background: DefaultPalette.green,
             color: DefaultPalette.white,
-            textAlign:'left',
-            paddingLeft:10
+            textAlign: 'left',
+            paddingLeft: 10,
         },
-      };
+    };
+
+    const [PolicyProceduresOption, setGettingStartedOption] = useState([]); // Initialize with an empty array of strings
+
+    useEffect(() => {
+        // Use a loading state to indicate that data is being fetched
+        const fetchData = async (): Promise<void> => {
+            try {
+                const response = await ConnectPr.getInstance().GetPoliciesAndProcedures();
+                const choiceGroupOptions = response.map((item, index) => ({
+                    key: index.toString(),
+                    text: item.Title,
+                    url: item.Url, // Assuming "Title" corresponds to the text property
+                }));
+                setGettingStartedOption(choiceGroupOptions);
+            } catch (error) {
+                console.log('Error fetching data:', error);
+                // Handle the error state here (e.g., show an error message)
+            }
+        };
+
+        fetchData(); // Call the fetchData function
+    }, []); // Empty dependency array to run the effect only once
 
     return (
         <div>
-
-
-            <Stack >
-                <Stack.Item align='stretch' styles={stackItemStyles}>
+            <Stack>
+                <Stack.Item align="stretch" styles={stackItemStyles}>
                     <p>Policies and Procedures</p>
                 </Stack.Item>
-                <Stack.Item align='stretch'>
-                    <ul>
-                        <li>General Information</li>
-                        <li>Contact Info</li>
-                        <li>Create PR</li>
-                        <li>Approve PR</li>
-                        <li>Help</li>
+                <Stack.Item align="start">
+                    <ul style={{ textAlign: 'left', paddingLeft: '20px' }}>
+                        {PolicyProceduresOption.map((item, index) => (
+                            <li key={index}><a href={item.url}>{item.text}</a></li>
+                        ))}
                     </ul>
                 </Stack.Item>
-
             </Stack>
         </div>
-
     );
 };
+

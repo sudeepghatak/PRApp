@@ -10,6 +10,7 @@ import { GettingStarted } from './GettingStarted';
 import { PoliciesProcedures } from './PoliciesProcedures';
 import { LegalDocuments } from './LegalDocuments';
 import { FAQs } from './FAQs';
+import RequestGallery from './RequestGallery';
 
 export const Test: React.FunctionComponent = () => {
 
@@ -38,26 +39,7 @@ export const Test: React.FunctionComponent = () => {
         <div>
             <Stack enableScopedSelectors horizontal  tokens={stackTokens}>
                 <Stack.Item align='stretch'  grow={2} >
-                    <Stack.Item align='start' styles={stackItemStyles}> <CreatePR /></Stack.Item>
-                    <Stack.Item align='start' styles={stackItemStyles}>
-                        <DelegatePR />
-                    </Stack.Item>
-                    <Stack.Item align='start' styles={stackItemStyles}>
-                        <PendingApprovals />
-                    </Stack.Item>
-                </Stack.Item>
-                <Stack.Item  align='stretch' grow={2}>
-                    <Stack.Item align='start' styles={stackItemStyles}> <GettingStarted /></Stack.Item>
-                    <Stack.Item align='start' styles={stackItemStyles}>
-                        <PoliciesProcedures />
-                    </Stack.Item>
-                    <Stack.Item align='start' styles={stackItemStyles}>
-                        <LegalDocuments />
-                    </Stack.Item>
-                </Stack.Item>
-                <Stack.Item  align='stretch' grow>
-                    <Stack.Item align='start' styles={stackItemStyles}> <FAQs /></Stack.Item>
-
+                    <RequestGallery />
                 </Stack.Item>
             </Stack>
         </div>

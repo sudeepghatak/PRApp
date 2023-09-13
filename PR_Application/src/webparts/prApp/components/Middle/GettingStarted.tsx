@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { IStackItemStyles, Stack } from '@fluentui/react/lib/Stack';
 import { DefaultPalette } from '@fluentui/react/lib/Styling';
@@ -25,7 +26,7 @@ export const GettingStarted: React.FunctionComponent = () => {
                 const choiceGroupOptions = response.map((item, index) => ({
                     key: index.toString(),
                     text: item.Title,
-                    url:item.Url, // Assuming "Title" corresponds to the text property
+                    url: item.Url, // Assuming "Title" corresponds to the text property
                 }));
                 setGettingStartedOption(choiceGroupOptions);
             } catch (error) {
@@ -37,7 +38,6 @@ export const GettingStarted: React.FunctionComponent = () => {
         fetchData(); // Call the fetchData function
     }, []); // Empty dependency array to run the effect only once
 
-    
     return (
         <div>
             <Stack>
@@ -45,7 +45,7 @@ export const GettingStarted: React.FunctionComponent = () => {
                     <p>Getting Started</p>
                 </Stack.Item>
                 <Stack.Item align="start">
-                    <ul>
+                    <ul style={{ textAlign: 'left', paddingLeft: '20px' }}>
                         {GettingStartedOption.map((item, index) => (
                             <li key={index}><a href={item.url}>{item.text}</a></li>
                         ))}
@@ -55,3 +55,4 @@ export const GettingStarted: React.FunctionComponent = () => {
         </div>
     );
 };
+
