@@ -36,6 +36,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { CheckboxItem, changeCheckbox, setValue } from "../../../../features/reducers/primaryinfoSlice";
 import { setlineitemValue } from "../../../../features/reducers/lineitemSlice";
 import { TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
+import { restApiCall } from "../../Api/ApiCall";
+import { savePkid } from "../../../../features/reducers/vendorandshippingSlice";
 
 
 interface IFirstProps {
@@ -302,8 +304,8 @@ useEffect(() => {
   const [projectCodeOption,setprojectCodeOption]=useState([])
 
   const PrOption: IDropdownOption[] = [
-    { key: "sap", text: "SAP(Omnicell)" },
-    { key: "hsri", text: "HSRI" },
+    { key: "SAP", text: "SAP(Omnicell)" },
+    { key: "HSRI", text: "HSRI" },
     { key: "340B", text: "340B" },
   ];
 
@@ -377,18 +379,10 @@ const [costCenterOption,setCostCenterOption]=useState([])
 const dispatch = useDispatch();
 
 const primaryinfoData = useSelector((state: RootState) => state.primaryinfo);
+const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
 
 useEffect(() => {
 
-    // console.log("This is The main adata   ---- ");
-
-    // console.log(primaryinfoData["radioGroup"]);
-
-    // console.log(primaryinfoData.radioGroup);
-
-    // console.log(Object.keys(primaryinfoData.radioGroup));
-
-    // console.log(Object.keys(primaryinfoData.radioGroup).length);
 
     for (let i = 0; i < Object.keys(primaryinfoData.optionGroup).length; i++) {
 
@@ -463,10 +457,10 @@ useEffect(() => {
 
 useMemo(()=>{
 // Select Other Cost Center Options ----------------------------------
- 
-  if(selectedItems.prOption.text==="SAP(Omnicell)")
-    {
-      ConnectPr.getInstance().GetPRCostCenterSap().then((Prcostcenter)=>{
+if(selectedItems.prOption.key==="SAP"){
+
+
+   restApiCall.getCostCenterList(selectedItems.companyCode.text).then((Prcostcenter)=>{
   
     let listDataCostCenterSap=[]
       for(let i=0;i<Prcostcenter.length;i++){
@@ -478,82 +472,27 @@ useMemo(()=>{
       }
       setCostCenterOption([...listDataCostCenterSap])
     })
-   }
-   else if(selectedItems.prOption.text==="HSRI")
-   {
-    ConnectPr.getInstance().GetPRCostCenterHSRI().then((PrcostcenterHSRI)=>{
+  }
+ 
+
+  },[selectedItems.companyCode])
   
-    let listDataCostCenterHSRI=[]
-      for(let i=0;i<PrcostcenterHSRI.length;i++){
-        let newObjCostCenterHSRI={
-          key: PrcostcenterHSRI[i] ,
-          text: PrcostcenterHSRI[i].HSRICC+"("+PrcostcenterHSRI[i].Title+")"
-        }
-        listDataCostCenterHSRI.push(newObjCostCenterHSRI)
-      }
-      setCostCenterOption([...listDataCostCenterHSRI])
-    })
-    
-   }
-   else if(selectedItems.prOption.text==="340B")
-   {
-    ConnectPr.getInstance().GetPRCostCenterThreeFortyB().then((PrcostcenterThreeFortyB)=>{
-  
-    let listDataCostCenterThreeFortyB=[]
-      for(let i=0;i<PrcostcenterThreeFortyB.length;i++){
-        let newObjCostCenterThreeFortyB={
-          key: PrcostcenterThreeFortyB[i] ,
-          text: PrcostcenterThreeFortyB[i].ThreeFortyBCC+"("+PrcostcenterThreeFortyB[i].Title+")"
-        }
-        listDataCostCenterThreeFortyB.push(newObjCostCenterThreeFortyB)
-      }
-      setCostCenterOption([...listDataCostCenterThreeFortyB])
-    })
-    
-   }
-
-  // Select Department and Project Code Options------------------ 
-
-      if(selectedItems.selectDepartment.text=="Marketing"){
-        console.log("Enter Into Marketing ")
-        let marketing=[];
-      ConnectPr.getInstance().GetPRMarketProjectCode().then((PrValue)=>{
-
-      console.log(PrValue)
-      for(let i=0;i<PrValue.length;i++){
-        if(PrValue[i].IsActive){
+useMemo(()=>{
+  let listProjectCode=[];
+  restApiCall.getProjetCodeList(selectedItems.selectDepartment.text).then((projectCodeList)=>{
+            for(let i=0;i<projectCodeList.length;i++){
+          if(projectCodeList[i].IsActive){
         let newOption={
-          key:PrValue[i].Title.toLowerCase(),text:PrValue[i].Title
+          key:projectCodeList[i].Title.toLowerCase(),text:projectCodeList[i].Title
         }
-        marketing.push(newOption)}
-      }
-        setprojectCodeOption([...marketing])
-
-    })
-
-      }
-      else if(selectedItems.selectDepartment.text=="Engineering"){
-        console.log("Enter Into Engineering ")
-
-        let engineering=[];
-        ConnectPr.getInstance().GetPREnggProjectCodeItems().then((PrValue)=>{
-        console.log(PrValue)
-        for(let i=0;i<PrValue.length;i++){
-          if(PrValue[i].IsActive){
-        let newOption={
-          key:PrValue[i].Title.toLowerCase(),text:PrValue[i].Title
-        }
-         engineering.push(newOption)}
+         listProjectCode.push(newOption)}
         
       }
-      setprojectCodeOption([...engineering])
-    })
-      }
+      setprojectCodeOption([...listProjectCode])
 
-    
+  })
 
-  },[selectedItems])
-
+},[selectedItems.selectDepartment])
   //......................................
 
   //for file upload .........................
@@ -726,7 +665,7 @@ interface IoptionSave {
 
  
 
-    let cheboxList = primaryinfoData.leftCheckbox.filter(
+    let checkboxList = primaryinfoData.leftCheckbox.filter(
 
       (checkItem: CheckboxItem) => checkItem.isChecked
 
@@ -736,7 +675,7 @@ interface IoptionSave {
 
     console.log("vvvvvvvvvvv");
 
-    console.log(cheboxList);
+    console.log(checkboxList);
 
     console.log(selectedItems["selectDepartment"]?.text);
 
@@ -748,65 +687,60 @@ interface IoptionSave {
 
     let ListofTypePurchases: TypeofPurchaseDetail[] = [];
 
-    cheboxList.map((item: CheckboxItem) => {
-
-      let newpurchaseItem: TypeofPurchaseDetail = new TypeofPurchaseDetail(
-
-        item.label
-
-      );
-
-      newpurchaseItem.costCenterList.push(costCenter);
-
-      newpurchaseItem.saveintoProjectCode(
-
-        selectedItems["selectDepartment"]?.text,
-
-        selectedItems["projectCode"]?.text
-
-      );
+    checkboxList.map((item: CheckboxItem,index:number) => {
+    
+            let newpurchaseItem: TypeofPurchaseDetail;
 
  
 
-      // newpurchaseItem.projectCodeList.push(selectedItems["projectCode"]?.text);
+      if (lineintemData.TypeofPurchaseDetailList.length !== 0) {
+
+        if (
+
+          lineintemData.TypeofPurchaseDetailList[index].typeofPurchaseName ===
+
+          item.label
+
+        ) {
+
+          newpurchaseItem = lineintemData.TypeofPurchaseDetailList[index];
+
+        }else{
+          newpurchaseItem=new TypeofPurchaseDetail(item.label);
+
+        }
+
+      }
+      else{
+        newpurchaseItem=new TypeofPurchaseDetail(item.label);
+      }
+      newpurchaseItem.costCenter = costCenter;
+
+      newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
+      // newpurchaseItem.costCenterList.push(costCenter);
+
+      console.log("pppppppppppppppppp",selectedItems["projectCode"]?.text);
+
 
       ListofTypePurchases.push(newpurchaseItem);
 
     });
 
- 
-
-    // primaryinfoData.leftCheckbox
-
-    //   .filter((checkItem: CheckboxItem) => checkItem.isChecked)
-
-    //   .map((item: CheckboxItem) => item.label);
 
  
-
-    // let setlineItemData = {
-
-    //   projectCode: selectedItems.projectCode.text,
-
-    //   constCenter: costCenter,
-
-    //   typePurchase: primaryinfoData.leftCheckbox
-
-    //     .filter((checkItem: CheckboxItem) => checkItem.isChecked)
-
-    //     .map((item: CheckboxItem) => item.label),
-
-    // };
-
- 
-
-    let setlineItemData = {
-
+    console.log("lineItemsaveTable");
+      console.log(lineintemData);
+    let setlineItemData = {      
+      // projectCode:selectedItems["projectCode"]?.text,
+      saveTable:(lineintemData.saveTable===0)?0:1,
       selectDepartment: selectedItems["selectDepartment"]?.text,
 
       TypeofPurchaseDetailList: ListofTypePurchases,
 
     };
+    console.log("setlineItemData");
+    console.log(setlineItemData);
+    
 
  
 
@@ -815,6 +749,119 @@ interface IoptionSave {
  
 
     dispatch(setValue(saveData));
+
+    console.log("1.SAVE PR ALL Values...........");
+    let samplecheckbox=[];
+    for(let i:number=0;i<checkboxList.length;i++){
+      
+      samplecheckbox.push(checkboxList[i].label)
+
+
+    }
+    let Type_Of_Order:string=samplecheckbox.join()
+    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",Type_Of_Order)
+    
+    let saveprimayData=[
+{
+   "PKID": Math.floor(Math.random()*100000000),
+    "ConnectPRID":null,
+    "Type_Of_Buy": selectRadioItems.buyRadio.text,
+    "PrepaidOrCapitalEquipment": selectRadioItems.prepaidcapitalRadio.text,
+    "EHS": false,
+    "Title": null,
+    "RequestFor": null,
+    "Type_Of_Order": Type_Of_Order,
+    "Order_Amount": null,
+    "CIP_Number": null,
+    "UFID": null,
+    "Supplier_Account_Number": null,
+    "Supplier_Name": null,
+    "Supplier_Address": null,
+    "Supplier_City": null,
+    "Supplier_State": null,
+    "Supplier_Zip": null,
+    "Supplier_Country": null,
+    "Manager": null,
+    "Manager1": null,
+    "Manager2": null,
+    "Manager3": null,
+    "GL_Account": null,
+    "Status": null,
+    "TaskCreatedFor": null,
+    "ApprovalInstance":null,
+    "Comments": null,
+    "Cost_Center": +costCenter,
+    "Location": null,
+    "IsDeleted": null,
+    "Special_Instructions": null,
+    "Shipping_Name": null,
+    "Shipping_Street": null,
+    "Shipping_Postal_Code": null,
+    "Shipping_Location": null,
+    "Shipping_Region": null,
+    "Shipping_Country": null,
+    "Shipping_ContactPhone": null,
+    "OldReqId": null,
+    "SAPPRId": null,
+    "LastWorkflowRun": null,
+    "CurrentApprovalStep": null,
+    "ManagerLevel": null,
+    "FinalApprovalDate": null,
+    "IsOtherCC": null,
+    "IsCFOApproved": null,
+    "CFO": null,
+    "AllApprovers": null,
+    "CreateDate": null,
+    "LastStatus": null,
+    "AllManagers": null,
+     "JLReminderCount": 0,
+    "FIReminderCount": 0,
+    "AesyntPRType": selectedItems.prOption.key,
+    "PONumber": null,
+    "IsCompleted":null,
+    "Company": null,
+    "ProjectNumber": null,
+    "ActCostCenter": +costCenter,
+    "CompanyCode": selectedItems.companyCode.text,
+    "FromCurrency": null,
+    "ToCurrency": null,
+    "RequesterCurrency": null,
+    "ExchangeRate": null,
+    "ExchangeRateV": null,
+    "ExchangeRateDate": null,
+    "ConvertedDollerAmount": null,
+    "CountryKey": null,
+    "HRADCompanyCode": null,
+    "QuickbookPO": null,
+    "CCDescription": null,
+    "IsProjectPR":true,
+    "ProjectDepartment": selectedItems.selectDepartment.text,
+    "ProjectCode": selectedItems.projectCode.text,
+    "Created": null,
+    "CreatedBy": null,
+    "Modified": null,
+    "ModifiedBy": null,
+    "PRNumber": null,
+    "DWCreateDate": null,
+    "PRId": null,
+    "OldAllApprovers": null,
+    "OldAllManagers": null,
+    "OldCFO": null,
+    "OldCreatedBy": null,
+    "OldManager": null,
+    "OldManager1": null,
+    "OldManager2": null,
+    "OldManager3": null,
+    "OldModifiedBy": null,
+    "OldRequestFor": null,
+    "OldTaskCreatedFor": null
+}
+];
+// restApiCall.insertPrimaryInfoData(saveprimayData).then((value:number)=>{
+//   dispatch(savePkid(value));
+// });
+
+    
 
     buttonContxtSave();
 
@@ -1055,8 +1102,8 @@ interface IoptionSave {
                 <Stack horizontal horizontalAlign="baseline">
                   <Stack.Item styles={col1Style}>
                     <div>Select Other Cost Center: </div>
-                  </Stack.Item>
-                  <Stack.Item styles={col2Style}>
+                   </Stack.Item>
+                    <Stack.Item styles={col2Style}>
                     <Dropdown
                       placeholder="---Select Other Cost Center---"
                       // id="selectDepartment"
@@ -1109,8 +1156,6 @@ interface IoptionSave {
                       <Dropdown
                         placeholder="Select an option"
                         id="selectDepartment"
-                        
-                        // defaultValue={"Enginnering"}
                         onChange={changeDropdownOption}
                         style={{ width: "150px" }}
                         selectedKey={selectedItems["selectDepartment"]?.key}

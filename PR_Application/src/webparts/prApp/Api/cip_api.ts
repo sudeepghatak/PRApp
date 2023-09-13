@@ -1,4 +1,3 @@
-
 import { CipNumberDetails } from "../Model/cip_numbers";
 import {CIPApi} from "./ApiCall";
 

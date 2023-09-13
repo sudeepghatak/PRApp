@@ -1,0 +1,44 @@
+.TextStyle{
+    padding: 0px;
+    text-align: left;
+    width: 70%
+}
+.heading{
+    font-weight: bold;
+    font-size: 12px;
+}
+.text-heading{
+    padding: 30px;
+    text-align: left;
+    width: 90%;
+    font-size: 12px;
+    color: green;
+    vertical-align: top;
+    /* block-size: 10px */
+}
+.text-des {
+    padding: 20px;
+    text-align: left;
+    width: 90%;
+    color:Black;
+    font-size: 12px;
+    margin-Top: 10px;
+    vertical-align: top;
+    /* block-size: 10px */
+}
+.single-text-heading {
+    padding: 30px;
+    width: 90%;
+    color: green;
+}
+.button-border-end{
+    display: table-row;
+    flex-flow: column;
+    width: auto;
+    height: auto;
+    box-sizing: border-box;
+    border-bottom: 1px solid #cccccc;
+    vertical-align: inherit;
+    border-color: inherit;
+    block-size: 50px;
+}

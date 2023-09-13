@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState, createContext } from "react";
 import { Stack, IStackTokens } from "@fluentui/react/lib/Stack";
 import { DefaultButton } from "@fluentui/react/lib/Button";
-import { mergeStyles } from "@fluentui/react";
+import { Spinner, mergeStyles } from "@fluentui/react";
 import ComponentHeader from "../ComponentHeader";
 import { DefaultPalette } from "@fluentui/react/lib/Styling";
 import { escape } from "@microsoft/sp-lodash-subset";
@@ -192,10 +192,12 @@ export const MainPage:React.FunctionComponent = () => {
             ) : null}
              {pageNumber === 4 ? (
               <>
-              <Suspense fallback={"Loading....."} >
+              <Suspense fallback={"Loading .."} >
+                {/* <Spinner label= "Please wait .."> */}
                <LazyFourth
                   buttonContxtBack={buttonContxtBack}
                 /> 
+                {/* </Spinner> */}
               </Suspense>
               </>
               ):null

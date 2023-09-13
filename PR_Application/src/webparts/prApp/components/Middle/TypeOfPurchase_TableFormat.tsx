@@ -10,23 +10,30 @@ import {
   DatePicker,
   Dropdown,
   IDropdownOption,
+  defaultDatePickerStrings,
+  IDatePicker,
 } from "@fluentui/react";
 import { map } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import TypeOfPurchase from "./TypeOfPurchase";
-import { changeCheckbox } from "../../../../features/reducers/primaryinfoSlice";
+import { changeCheckbox, setValue } from "../../../../features/reducers/primaryinfoSlice";
 import { deletetypePurchases } from "../../../../features/reducers/lineitemSlice";
-import { TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
+import { TypeLineItem, TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
+import { restApiCall } from "../../Api/ApiCall";
 // Initialize Fluent UI icons (required)
 interface TableRow {
+  
   projectCode: string;
   description: string;
   costCenter: string;
+  date:string;
+  glAccount:string;
   qty: string;
+  uOM:string;
   uintprice: string;
   unitpriceper: string;
-  total: number;
+  totalAmount: number;
 }
 interface IThirdProps {
   tableviewItem: TypeofPurchaseDetail;
@@ -45,12 +52,25 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       projectCode: "",
       description: "",
       costCenter: "",
+      date:"",
+      glAccount:"",
       qty: "",
+      uOM:"",
       uintprice: "",
       unitpriceper: "",
-      total: 0,
+      totalAmount: 0,
     },
   ]);
+    const [selectedItems, setSelectedItems] = useState<{
+
+    [key: string]: IDropdownOption;
+
+  }>({
+
+    glAccount: { key: "", text: "" },
+    uom: { key: "", text: "" },
+  });
+
   const [totalAmount, settotalAmount] = useState<number>(0);
 
   const deleteTable = () => {
@@ -63,10 +83,9 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
     dispatch(deletetypePurchases(id));
     addTotalAmount(totalNumber);
   };
-  const glaccount: IDropdownOption[] = [
-    { key: "1", text: "500120(COGS - Semi Finished Good)" },
-    { key: "2", text: "500120(COGS - Finished Good)" },
-  ];
+
+
+
   const uom: IDropdownOption[] = [
     { key: "1", text: "Acre(ACR)" },
     { key: "2", text: "Activity Unit(AU)" },
@@ -74,22 +93,39 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
     { key: "2", text: "Bottle(BT)" },
   ];
 
+  const onDropdownChange = React.useCallback((event: React.FormEvent<HTMLDivElement>, option: IDropdownOption) => {
+    // setFirstDayOfWeek(option.key as number);
+    console.log(option.key);
+    console.log(setFirstDayOfWeek(option.key as number));
+    
+    
+  }, []);
+
   //create new Row in the table
   const createNewRow = () => {
     let newRow = {
-      projectCode: "",
+      projectCode: tableviewItem.projectCode,
       description: "",
-      costCenter: "",
+      costCenter: tableviewItem.costCenter,
+      date:"",
+      glAccount:"",
       qty: "",
+      uOM:"",
       uintprice: "",
       unitpriceper: "",
-      total: 0,
+      totalAmount: 0,
     };
+    const typOfPuchaseCreateNew= new TypeLineItem(newRow.projectCode, newRow.description, newRow.costCenter, newRow.date, newRow.glAccount, newRow.qty, newRow.uOM, newRow.uintprice, newRow.unitpriceper, newRow.totalAmount)
+    tableviewItem.demotypeOfPurchaseInfoList=[...tableviewItem.typeOfPurchaseInfoList,typOfPuchaseCreateNew]
+   
+  
 
     settableItem([...tableItem, newRow]);
   };
   //delete Row....
   const deleteRow = (tableRownumber: number) => {
+    tableviewItem.demotypeOfPurchaseInfoList=tableviewItem.demotypeOfPurchaseInfoList.filter((value,index)=>index !=tableRownumber);
+ 
     settableItem(tableItem.filter((value, index) => index !== tableRownumber));
   };
 
@@ -97,9 +133,49 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   const copyRow = (rowIndex: number) => {
     let newtableItem = [...tableItem];
     let copyItem = newtableItem[rowIndex];
+    let newRow = {
+      projectCode: copyItem.projectCode,
+      description: copyItem.description,
+      costCenter: copyItem.costCenter,
+      date: copyItem.date,
+      glAccount:copyItem.glAccount,
+      qty: copyItem.qty,
+      uOM:copyItem.uOM,
+      unitPrice: copyItem.uintprice,
+      unitPricePer: copyItem.unitpriceper,
+      totalAmount: copyItem.totalAmount,
+    };
+
+    const copyTypeOfPurchase= new TypeLineItem(newRow.projectCode, newRow.description, newRow.costCenter, newRow.date, newRow.glAccount, newRow.qty, newRow.uOM, newRow.unitPrice, newRow.unitPricePer, newRow.totalAmount)
+
+    tableviewItem.demotypeOfPurchaseInfoList=[...tableviewItem.typeOfPurchaseInfoList,copyTypeOfPurchase]
+ 
+
+
     newtableItem.splice(rowIndex + 1, 0, copyItem);
     settableItem(newtableItem);
   };
+// date Format.............................................
+const [value, setValue] = React.useState<Date | undefined>();
+
+  const datePickerRef = React.useRef<IDatePicker>(null);
+  // const regex = new RegExp(value)
+  // console.log("Date Value",regex) ; 
+  
+  const onClick = React.useCallback((): void => {
+    setValue(undefined);
+     
+    datePickerRef.current?.focus();
+  }, []);
+
+const onFormatDate = (date?: Date): string => {
+  return !date ? '' : date.getDate() + '/' + (date.getMonth() + 1) + '/' + (date.getFullYear() % 100);
+  
+};
+console.log("Date ::",onFormatDate) ;
+
+
+
   //---------------------------------------------------
   const newhandleInputChange = (
     e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -113,11 +189,23 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       ...newItem[rowIndex],
       [name]: newValue,
     };
+
+    console.log("pppppppppppppppppppp");
+    console.log(name);
+    console.log(newItem[rowIndex]);
+    console.log("kkkkkkkkkkkkkkk");
+  
+  
+
     let qtynumber: number = +newItem[rowIndex].qty;
     let uintpricenumber: number = +newItem[rowIndex].uintprice;
     let unitpricepernumber: number = +newItem[rowIndex].unitpriceper;
-    let total: number = (qtynumber * uintpricenumber) / unitpricepernumber;
-    newItem[rowIndex].total = total;
+    let totalAmount: number = (qtynumber * uintpricenumber) / unitpricepernumber;
+    newItem[rowIndex].totalAmount = totalAmount;
+
+    const changeTypeOfPurchase=new TypeLineItem(newItem[rowIndex].projectCode, newItem[rowIndex].description, newItem[rowIndex].costCenter, newItem[rowIndex].date, newItem[rowIndex].glAccount, newItem[rowIndex].qty, newItem[rowIndex].uOM, newItem[rowIndex].uintprice, newItem[rowIndex].unitpriceper, newItem[rowIndex].totalAmount)
+      
+     tableviewItem.demotypeOfPurchaseInfoList[rowIndex]=changeTypeOfPurchase;
     settableItem([...newItem]);
   };
 
@@ -128,21 +216,105 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
     settotalAmount(sum);
   }, [tableItem]);
 
-  useEffect(() => {
-    // lineinfoData
-    let newRow = {
-      projectCode: tableviewItem.fetchProjectCodelastIndex(
-        lineinfoData.selectDepartment
-      ),
-      description: "",
-      costCenter: tableviewItem.costCenterlastIndex(),
-      qty: "",
-      uintprice: "",
-      unitpriceper: "",
-      total: 0,
-    };
+  const changeDropdownOption = (
 
-    settableItem([newRow]);
+    event: React.FormEvent<HTMLDivElement>,
+
+    item: IDropdownOption | undefined,
+
+    index: number
+
+  ): void => {
+
+    const { id } = event.target as HTMLDivElement;
+
+    // console.log("------------------");
+
+    // console.log(id);
+
+    let newSelectedItem: IDropdownOption = { key: "", text: "" };
+
+    if (item) {
+
+    newSelectedItem = { key: item?.key as string, text: item?.text as string };
+
+    }
+
+    setSelectedItems((prevSelectedItems) => ({
+
+      ...prevSelectedItems,
+
+      [id]: newSelectedItem,
+
+    }));
+
+    // console.log(selectedItems);
+
+
+  }
+
+  useEffect(() => {
+    restApiCall.getExpenseGLOdrTypeList(tableviewItem.typeofPurchaseName).then((dataOrdertype)=>{
+      console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+      console.log(dataOrdertype)
+    //   { key: "1", text: "500120(COGS - Semi Finished Good)" },
+    // { key: "2", text: "500120(COGS - Finished Good)" }
+
+    for(let i:number=0;i<dataOrdertype.length;i++){
+      let item={
+        key:dataOrdertype[i].Title.toLowerCase(),
+        text:dataOrdertype[i].Title+"("+dataOrdertype[i].Dscription+")"
+      }
+      tableviewItem.glaccount.push(item);
+
+    }
+    });
+
+
+    let simpleList = [];
+    if (lineinfoData.saveTable === 0) {
+      let newRow = {
+        projectCode: tableviewItem.projectCode,
+        description: "",
+        costCenter: tableviewItem.costCenter,
+        date:"",
+        glAccount:"",
+        qty: "",
+        uOM:"",
+        uintprice: "",
+        unitpriceper: "",
+        totalAmount: 0,
+      };
+      const typeItem=new TypeLineItem(newRow.projectCode,newRow.description, newRow.costCenter,newRow.date,newRow.glAccount,newRow.qty,newRow.uOM, newRow.uintprice, newRow.unitpriceper ,newRow.totalAmount)
+      tableviewItem.demotypeOfPurchaseInfoList=[typeItem];
+      simpleList = [newRow];
+    } else {
+      console.log("typeOfPurchaseInfoList");
+      console.log(tableviewItem.typeOfPurchaseInfoList);
+      
+      
+      for (let i: number = 0; i < tableviewItem.typeOfPurchaseInfoList.length; i++) {
+        let newRow = {
+          projectCode: tableviewItem.typeOfPurchaseInfoList[i].projectCode,
+          description: tableviewItem.typeOfPurchaseInfoList[i].des,
+          costCenter: tableviewItem.typeOfPurchaseInfoList[i].CostCenter,
+          date:tableviewItem.typeOfPurchaseInfoList[i].date,
+          glAccount: tableviewItem.typeOfPurchaseInfoList[i].glAccount,
+          qty: tableviewItem.typeOfPurchaseInfoList[i].qty,
+          uOM: tableviewItem.typeOfPurchaseInfoList[i].uOM,
+          uintprice: tableviewItem.typeOfPurchaseInfoList[i].unitPrice,
+          unitpriceper: tableviewItem.typeOfPurchaseInfoList[i].unitPricePer,
+          totalAmount: +tableviewItem.typeOfPurchaseInfoList[i].totalamount,
+        };
+        console.log("newRow");
+        console.log(newRow);
+        
+        simpleList.push(newRow);
+        tableviewItem.demotypeOfPurchaseInfoList[i]=tableviewItem.typeOfPurchaseInfoList[i];
+      }
+    }
+
+    settableItem(simpleList);
   }, []);
 
   React.useMemo(() => {
@@ -184,7 +356,11 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
             horizontalAlign="space-between"
           >
             <TextField
+              name="projectCode"
               value={tableItem[rowIndex].projectCode}
+              onChange={(e, newValue) =>
+                newhandleInputChange(e, newValue as string, rowIndex)
+              }
               // value={
               //   lineinfoData.projectCode[lineinfoData.projectCode.length - 1]
               // }
@@ -215,7 +391,11 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       onRender: (item: TableRow, rowIndex: number) => {
         return (
           <TextField
+            name="costCenter"
             value={tableItem[rowIndex].costCenter}
+            onChange={(e, newValue) =>
+              newhandleInputChange(e, newValue as string, rowIndex)
+            }
             // value={lineinfoData.costCenter[lineinfoData.costCenter.length - 1]}
           />
         );
@@ -226,7 +406,17 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       name: "Date Required",
       fieldName: "date_required",
       onRender: (item: TableRow, rowIndex: number) => {
-        return <DatePicker />;
+        return (
+        <DatePicker 
+          placeholder="MM/DD/YY"
+          strings={defaultDatePickerStrings}
+          formatDate={onFormatDate}
+          value={value}
+          componentRef={datePickerRef}
+          onSelectDate={setValue as (date: Date | null | undefined) => void}
+          
+          
+        />);
       },
     },
     {
@@ -237,11 +427,11 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         return (
           <Dropdown
             placeholder="- Select GL Account -"
-            id="GlAccount"
-            options={glaccount}
-            // onChange={changeDropdownOption}
+            id="glAccount"
+            options={tableviewItem.glaccount}
+            onChange={changeDropdownOption}
             // styles={dropdownStyles}
-            // selectedKey={selectedItems["GlAccount"]?.key}
+            selectedKey={selectedItems["glAccount"]?.key}
             // options={glaccount}
           />
         );
@@ -268,7 +458,16 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       name: "UOM",
       fieldName: "uom",
       onRender: (item: TableRow, rowIndex: number) => {
-        return <Dropdown placeholder="- Select UOM -" id="UOM" options={uom} />;
+        return (
+        <>
+        <Dropdown 
+        placeholder="- Select UOM -" 
+        id="uom" 
+        options={uom} 
+        onChange={changeDropdownOption}
+        // styles={dropdownStyles}
+        selectedKey={selectedItems["uom"]?.key}/>;
+        </>)
       },
     },
     {
@@ -309,7 +508,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       fieldName: "total_amount",
       onRender: (item: TableRow, rowIndex: number) => {
         return (
-          <TextField value={tableItem[rowIndex].total.toString()} disabled />
+          <TextField value={tableItem[rowIndex].totalAmount.toString()} disabled />
         );
       },
     },
@@ -370,3 +569,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   );
 };
 export default LineItemTableFormat;
+function setFirstDayOfWeek(arg0: number) {
+  throw new Error("Function not implemented.");
+}
+
