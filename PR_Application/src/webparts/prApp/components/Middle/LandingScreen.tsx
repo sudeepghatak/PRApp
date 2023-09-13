@@ -39,7 +39,7 @@ export const LandingScreen: React.FunctionComponent = () => {
 
         <div>
             <Stack enableScopedSelectors horizontal  tokens={stackTokens}>
-            <Stack.Item align='stretch'  grow={2} >
+            <Stack.Item align='stretch'  grow={4} >
             <Stack.Item align='start' styles={stackItemStyles}> <RequestGallery /></Stack.Item>
                 </Stack.Item>
                 <Stack.Item align='stretch'  grow={1} >
