@@ -92,6 +92,12 @@ const FAQAccordionItem: React.FC<{
         },
     };
 
+    function HTMLRenderer({ htmlContent }) {
+        return (
+          <div style={{ textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        );
+      }
+
     return (
         <div>
             <Stack style={{paddingTop:10}}>
@@ -102,7 +108,7 @@ const FAQAccordionItem: React.FC<{
                     </div>
                 </Stack.Item>
                 <Stack.Item align='stretch' styles={stackDescItemStyles}>
-                    {isOpen && <div className='accordion-content'>{content}</div>}
+                    {isOpen && <div className='accordion-content'><HTMLRenderer htmlContent={content}/></div>}
                 </Stack.Item>
             </Stack>
         </div>
