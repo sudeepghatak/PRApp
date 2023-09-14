@@ -3,6 +3,7 @@ import { IStackItemStyles, Stack, Modal, IconButton } from '@fluentui/react/lib/
 import { DefaultPalette } from '@fluentui/react/lib/Styling';
 import { ConnectPr } from '../../Api/api';
 import { useEffect, useState } from 'react';
+import { TableCostCenterMapping } from './TableCostCenterMapping';
 
 export const GettingStarted: React.FunctionComponent = () => {
     const stackItemStyles: IStackItemStyles = {
@@ -15,10 +16,11 @@ export const GettingStarted: React.FunctionComponent = () => {
     };
 
     const [GettingStartedOption, setGettingStartedOption] = useState([]);
-    const [showPopup, setShowPopup] = useState(false); // State to manage popup visibility
-    const [selectedContent, setSelectedContent] = useState(''); // State to store the selected content
+    const [selectedContent, setSelectedContent] = useState('');
     const [selectedTitle, setSelectedTitle] = useState('');
+    const [selectedType, setSelectedType] = useState('');
     const [selectedUrl, setSelectedUrl] = useState('');
+    const [showPopup, setShowPopup] = useState(false); // State to manage popup visibility
 
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
@@ -28,8 +30,8 @@ export const GettingStarted: React.FunctionComponent = () => {
                     key: index.toString(),
                     text: item.Title,
                     content: item.Html,
-                    htmlOrUrl: item.HtmlOrUrl, // Assuming "HtmlOrUrl" corresponds to the property
-                    url: item.Url, // Assuming "Url" corresponds to the property
+                    htmlOrUrl: item.HtmlOrUrl,
+                    url: item.Url,
                 }));
                 setGettingStartedOption(choiceGroupOptions);
             } catch (error) {
@@ -42,17 +44,11 @@ export const GettingStarted: React.FunctionComponent = () => {
 
     // Function to open the popup with the selected content
     const openPopup = (item) => {
-        if (item.htmlOrUrl === 'Html') {
-            setSelectedContent(item.content);
-            setSelectedTitle(item.text);
-            setSelectedUrl('');
-            setShowPopup(true);
-        } else {
-            setSelectedUrl(item.url);
-            setSelectedTitle(item.text);
-            setSelectedContent('');
-            setShowPopup(false);
-        }
+        setSelectedTitle(item.text);
+        setSelectedType(item.htmlOrUrl);
+        setSelectedUrl(item.url);
+        setSelectedContent(item.content);
+        setShowPopup(true);
     };
 
     // Function to close the popup
@@ -60,8 +56,14 @@ export const GettingStarted: React.FunctionComponent = () => {
         setSelectedContent('');
         setSelectedTitle('');
         setSelectedUrl('');
+        setSelectedType('');
         setShowPopup(false);
     };
+
+
+    const togglePopUp = ()=>{
+        setShowPopup(!showPopup);
+    }
 
     function HTMLRenderer({ htmlContent }) {
         return (
@@ -79,14 +81,21 @@ export const GettingStarted: React.FunctionComponent = () => {
                     <ul style={{ textAlign: 'left', paddingLeft: '20px' }}>
                         {GettingStartedOption.map((item, index) => (
                             <li key={index}>
-                                {item.htmlOrUrl === 'Html' ? (
-                                    // Render a link with onClick for HTML content
-                                    <a href="#" onClick={() => openPopup(item)}>{item.text}</a>
-                                ) : (
-                                    // Render a regular hyperlink for other content
-                                    <a href={item.url} target="_blank" rel="noopener noreferrer">{item.text}</a>
-                                )}
-                            </li>
+                            {item.htmlOrUrl === 'Html' ? (
+                              // Render a link with onClick for HTML content
+                              <a href="#" onClick={() => openPopup(item)}>{item.text}</a>
+                            ) : item.htmlOrUrl === 'Url' ? (
+                              // Render a link to an external URL
+                              <a href={item.url} target="_blank" rel="noopener noreferrer">{item.text}</a>
+                            ) : item.htmlOrUrl === 'CostCenter' ? (
+                              // Render a link for CostCenter content
+                              <a href="#" onClick={() => openPopup(item)}>{item.text}</a>
+                            ) : (
+                              // Render a regular hyperlink for other content
+                              <a href="#" onClick={() => openPopup(item)}>{item.text}</a>
+                            )}
+                          </li>
+                          
                         ))}
                     </ul>
                 </Stack.Item>
@@ -101,7 +110,7 @@ export const GettingStarted: React.FunctionComponent = () => {
                     <Stack.Item align="stretch" styles={stackItemStyles}>
                         <p>{selectedTitle}</p>
                     </Stack.Item>
-                    <Stack.Item align="end"> {/* Move this item to the right */}
+                    <Stack.Item align="end">
                         <IconButton
                             iconProps={{ iconName: 'Cancel' }}
                             ariaLabel="Close"
@@ -110,8 +119,11 @@ export const GettingStarted: React.FunctionComponent = () => {
                     </Stack.Item>
                     <Stack.Item align="stretch">
                         <div>
-                            {/* Display the selected content */}
-                            <HTMLRenderer htmlContent={selectedContent} />
+                            {selectedType === "CostCenter" ? (
+                                <TableCostCenterMapping isModalOpen={showPopup} closeModal={closePopup}/>
+                            ) : (
+                                <HTMLRenderer htmlContent={selectedContent} />
+                            )}
                         </div>
                     </Stack.Item>
                 </Stack>

@@ -59,6 +59,44 @@ export class ConnectPr{
 
 
 
+      public async GetCostCenterMapping() {
+        try {
+          // debugger;
+          const spCache = spfi(ConnectPr.sp);
+          const response: any[] = await spCache.web.lists
+  .getByTitle("PR_Cost_Center_Approval_Mapping")
+  .items
+  .select("Title", "Amount", "CountryCode", "CompanyCode", "Approver/Id", "Approver/Title")
+  .expand("Approver")();
+          // console.log(response);
+        //   this.setState({ PrMarketProjectCode: response });
+        return response;
+    
+        } catch (error) {
+          console.log("Error in GetItem : " + error);
+        }
+      }
+
+
+      public async GetApprovalMapping() {
+        try {
+          // debugger;
+          const spCache = spfi(ConnectPr.sp);
+          const response: any[] = await spCache.web.lists
+  .getByTitle("PR_Cost_Center_Approval_Mapping")
+  .items
+  .select("Title", "Amount", "CountryCode", "CompanyCode", "Approver/Id", "Approver/Title")
+  .expand("Approver")();
+          // console.log(response);
+        //   this.setState({ PrMarketProjectCode: response });
+        return response;
+    
+        } catch (error) {
+          console.log("Error in GetItem : " + error);
+        }
+      }
+
+
       public async GetGettingStarted() {
         try {
           // debugger;

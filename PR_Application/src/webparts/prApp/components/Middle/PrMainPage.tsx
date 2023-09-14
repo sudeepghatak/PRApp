@@ -8,14 +8,35 @@ import { LandingScreen } from "./LandingScreen";
 import { Test } from "./test";
 import PrimaryInfoComponent from "./PrimaryInfoComponent";
 import { CreatePR } from "./CreatePR";
+import { TableCostCenterMapping } from "./TableCostCenterMapping";
+import { Link } from "@fluentui/react";
 
 const PrMainPage = () => {
+
+  const [openCipNumberModal, setopenCipNumberModal] = React.useState<boolean>(false);
+  const showCipNumberModal = () => {
+
+    setopenCipNumberModal(!openCipNumberModal);
+
+  };
   return (
-    <>
-      <Provider store={store}>
-        <LandingScreen  />
-      </Provider>
-    </>
+    
+      // <div>
+      //                      <Link onClick={() => showCipNumberModal()}>
+      //                    View All CIP Numbers
+      //                 </Link>
+      //                 {openCipNumberModal ? (
+      //                   <>
+      //                     <TableCostCenterMapping
+      //                       isModalOpen={openCipNumberModal}
+      //                       showModal={showCipNumberModal}
+      //                       companyCode={"selectedItems.companyCode.text"}
+      //                     />
+      //                </>
+      //                 ) : null}
+      //                </div>
+      <LandingScreen/>
+   
   );
 };
 
