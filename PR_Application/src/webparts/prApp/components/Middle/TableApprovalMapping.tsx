@@ -19,8 +19,7 @@ interface ITableItem {
   Title: string;
   Approver:string;
   Amount: string;
-  CompanyCode: string;
-  CountryCode: string;
+  
 }
 
 export const TableApprovalMapping: React.FunctionComponent<ITableApprovalMappingProps> = (props) => {
@@ -43,9 +42,7 @@ export const TableApprovalMapping: React.FunctionComponent<ITableApprovalMapping
           key: index.toString(),
           Title: item.Title,
           Amount: item.Amount,
-          CompanyCode: item.CompanyCode,
-          CountryCode: item.CountryCode,
-          Approver: item.Approver.Title,
+          Approver: item.Approvers.Title,
         }));
         setCompleteDatafetch(true);
         setItems(choiceGroupOptions);
@@ -108,8 +105,7 @@ export const TableApprovalMapping: React.FunctionComponent<ITableApprovalMapping
                     <th>Title</th>
                     <th>Approver</th>
                     <th>Amount</th>
-                    <th>CompanyCode</th>
-                    <th>CountryCode</th>
+                   
                   </tr>
                 </thead>
                 <tbody>
@@ -118,8 +114,7 @@ export const TableApprovalMapping: React.FunctionComponent<ITableApprovalMapping
                       <td>{item.Title}</td>
                       <td>{item.Approver}</td>
                       <td>{item.Amount}</td>
-                      <td>{item.CompanyCode}</td>
-                      <td>{item.CountryCode}</td>
+                      
                     </tr>
                   ))}
                 </tbody>
