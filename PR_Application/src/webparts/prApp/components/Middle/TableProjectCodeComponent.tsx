@@ -26,7 +26,7 @@ const ProjectCodeComponent: React.FunctionComponent<IPProjectCode> = (
 
 restApiCall.getProjetCodeList(ProjectCode_title).then((projectCodevalue)=>{
   console.log(projectCodevalue);
-      for(let i=0;i<projectCodevalue.length;i++){
+      for(let i:number=0;i<projectCodevalue.length;i++){
         console.log(projectCodevalue[i])
         if(projectCodevalue[i].IsActive){
           console.log(projectCodevalue[i].ProjDesc)

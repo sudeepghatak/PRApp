@@ -23,6 +23,7 @@ import { saveVendorandShippingData } from "../../../../features/reducers/vendora
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import { restApiCall } from "../../Api/ApiCall";
+import TooltipShow from "./TooltipShow";
 
 // import SupplierModal from "./SupplierModal";
 interface ISecondprops {
@@ -294,8 +295,7 @@ const saveVendorDetails=()=>{
     "OldTaskCreatedFor": null
 }
 ];
-// restApiCall.insertVendorDetails(saveDetails);
-
+restApiCall.insertVendorDetails(saveDetails);
   buttonContxtSave();
 
 }
@@ -325,6 +325,15 @@ useEffect(() => {
       padding: "10px",
       textAlign: "right",
       width: "30%",
+    },
+  };
+  const hoverStyle: IStackStyles = {
+    root: {
+      textAlign: "left",
+      marginBottom:"-10px",
+      marginRight:"3px",
+      marginLeft:"2px",
+      paddingBottom:"-10px"
     },
   };
   const col2Style: IStackStyles = {
@@ -394,6 +403,10 @@ useEffect(() => {
                 <Stack.Item styles={col1Style}>
                   <div>Supplier Name: </div>
                 </Stack.Item>
+                <Stack.Item styles={hoverStyle}>
+                <TooltipShow  context={"Is my supplier already in SAP?\n\n"+
+                                      "If we have previously sent the supplier an Omnicell PO, then yes they are in SAP. (Click On Magnifying Glass To Search By VendorName)"}/>
+              </Stack.Item>
                 <Stack.Item styles={col2Style}>
                   <Stack horizontal tokens={{ childrenGap: 5 }}>
                     <TextField
@@ -558,6 +571,10 @@ useEffect(() => {
                 >
                   <div>Justification/Reason for Order: </div>
                 </Stack.Item>
+                <Stack.Item styles={hoverStyle}>
+                <TooltipShow  context={"Please provide an explanation for the purchase."+
+                                      "Note:  Only the first 100 characters will be submitted to SAP and included in all correspondence."}/>
+              </Stack.Item>
                 <Stack.Item styles={col2Style}>
                   <div style={{ width: "450px" }}>
                     <TextField
@@ -581,6 +598,10 @@ useEffect(() => {
                 >
                   <div>Add Special Instructions/Down payment details:</div>
                 </Stack.Item>
+                <Stack.Item styles={hoverStyle}>
+                <TooltipShow  context={"Please provide additional information as needed.\n "+
+                                      "Note: Only the first 100 characters will be submitted to SAP and included in all correspondence."}/>
+              </Stack.Item>
                 <Stack.Item styles={col2Style}>
                   <div style={{ width: "450px" }}>
                     <TextField
@@ -602,6 +623,9 @@ useEffect(() => {
                 >
                   <div>Ship To Address: </div>
                 </Stack.Item>
+                <Stack.Item styles={hoverStyle}>
+                <TooltipShow  context={"Where will the item be delivered?"}/>
+              </Stack.Item>
                 <Stack.Item styles={col2Style}>
                   <Stack horizontal tokens={{ childrenGap: 5 }}>
                     <Dropdown

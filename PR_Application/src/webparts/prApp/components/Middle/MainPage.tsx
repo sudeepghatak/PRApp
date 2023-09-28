@@ -33,9 +33,17 @@ export const tableDeleteContext = createContext<
 interface IPMainComponent{
   context:WebPartContext
 }
-export const MainPage:React.FunctionComponent = () => {
-  // const {context}=props;
+export const MainPage:React.FunctionComponent = (props) => {
+  // const {siteUrl}=props;
   let userDisplayName: string = " Blank";
+    const [title,settitle]=useState({
+    "name":"",
+    "countryKey":"",
+    "currencyKey":"",
+    "costCenter":"",
+    "TypeofbuyOption":"",
+    "IsPrepaidCapital":"",
+  })
 
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [tableCreate, settableCreate] = useState<ITableBuildProps[]>([]);
@@ -70,6 +78,13 @@ export const MainPage:React.FunctionComponent = () => {
       setPageNumber(pageNumber - 1);
     }
   };
+
+  const setTile=(value)=>{
+    settitle(value);
+
+  }
+
+
   const sectionStackTokens: IStackTokens = { childrenGap: 15 };
   const customButtonStyles = mergeStyles({
     width: "150px", // Adjust the width to your desired value
@@ -88,7 +103,7 @@ export const MainPage:React.FunctionComponent = () => {
           />
         ) : null} */}
         <Stack tokens={sectionStackTokens}>
-          <ComponentHeader title="[PR ID - 30928] [Expense Buy][Expense] for-Sunanda Parvathaneni [US][USD] 740001 " />
+          <ComponentHeader title={"["+ title.TypeofbuyOption+"]["+title.IsPrepaidCapital+"] for- "+title.name+"["+title.countryKey+"]"+"["+title.currencyKey+"] - "+ title.costCenter }/>
           <Stack horizontal disableShrink>
             <Stack.Item order={1}>
               <span>
@@ -175,6 +190,7 @@ export const MainPage:React.FunctionComponent = () => {
               <PrimaryInfoComponent
                 buttonContxtSave={buttonContxtSave}
                 setTableCreate={setTableCreate}
+                setTile={setTile}
                 // context={context}
               />
             ) : null}

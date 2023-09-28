@@ -26,6 +26,9 @@ import { MainPage } from './Middle/MainPage';
 import { ConnectPr } from '../Api/api';
 import PrMainPage from './Middle/PrMainPage';
 import FourthComponent from './Middle/FourthComponent';
+import * as pnp from 'sp-pnp-js';
+import { GlobalStore } from '../../../app/globalStore';
+import Tippy from '@tippyjs/react';
 
 
 
@@ -360,7 +363,17 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     
      this.deletePRItem(17);
   }
-
+  public async getEmail(siteURL:string){
+    const web = new pnp.Web(siteURL); 
+    const useDetails= await web.currentUser.get();   
+    GlobalStore.storeEmail(useDetails.Email,true)
+    GlobalStore.storeName(useDetails.Title,true)
+    console.log(useDetails.Email)
+    console.log(useDetails.Title)
+    console.log(useDetails.Id)
+    console.log("HHHHHHHHHHHHHHH")
+  }
+ 
   private onSelectedItem(items: []) {
     console.log("selected items:", items);
   }
@@ -373,8 +386,10 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
       isDarkTheme,
       environmentMessage,
       hasTeamsContext,
-      userDisplayName
+      userDisplayName,
+      siteUrl
     } = this.props;
+    this.getEmail(siteUrl)
 
     const suggestionProps: IBasePickerSuggestionsProps = {
       suggestionsHeaderText: 'Suggested People',
@@ -412,6 +427,10 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
     return (
       <section className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ''}`}>
         <div className={styles.welcome}>
+
+          {/* <div>{siteUrl}</div>
+           <div>{userDisplayName}</div> */}
+          {/* <div>{userDisplayName}</div> */} 
         {/* <button onClick={()=>this.GetPRMarketProjectCode()}>Save</button> */}
       
           {/* <h1>ComboBox</h1>
@@ -453,7 +472,7 @@ export default class PrApp extends React.Component<IPrAppProps, IPrAppState, {}>
 
 
            {/* <MainPage context={this.props.context as any}/>  */}
-           <PrMainPage/>
+           <PrMainPage siteurl={siteUrl}/>
            {/* <FourthComponent buttonContxtBack={function (): void {
             throw new Error('Function not implemented.');
           } } /> */}

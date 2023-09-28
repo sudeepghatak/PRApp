@@ -14,6 +14,7 @@ import { VendorDetails } from "../../Model/vendor_details";
 import { CipData } from "../../Api/cip_api";
 import { Label } from "@fluentui/react/lib/Label";
 import { Spinner } from "@fluentui/react/lib/Spinner";
+import { restApiCall } from "../../Api/ApiCall";
 interface IModalProps {
   isModalOpen: boolean;
   showModal: () => void;
@@ -111,8 +112,13 @@ export const CipModal: React.FunctionComponent<IModalProps> = (props) => {
     CipData.fetchCpiDetails(companyCode).then((Allitems) => {
       completeDatafetch=true;
       setitems(Allitems);
-
-    });
+      
+    })
+  //  restApiCall.getCIPcode(companyCode).then((values:any)=>{
+  //     console.log("getCIPcode(companyCode)::  ",values);
+  //     completeDatafetch=true;
+  //     setitems(values);
+  //   });
   }, []);
 
   return (

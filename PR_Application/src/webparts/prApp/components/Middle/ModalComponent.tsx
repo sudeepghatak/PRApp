@@ -11,9 +11,21 @@ interface IModalProps {
   content?: string;
 }
 export const ModalComponent: React.FunctionComponent<IModalProps> = (props) => {
-  const { isModalOpen, showModal, backgroundcolor, title } = props;
+  const { isModalOpen, showModal, backgroundcolor, title,content } = props;
   const background_color = backgroundcolor as string;
   const modal_title = title as string;
+  console.log("Show content",content.split("\n"));
+  let splitContent:string[]=content.split("\n");
+
+  //loop for warning
+  let splitwarning=[];
+  for(let i:number=0;i<splitContent.length;i++){
+  
+    splitwarning.push( <><p>{splitContent[i]}</p></>);
+        }
+
+  
+
   return (
     <div style={{ maxWidth: 500 }}>
       <Modal isOpen={isModalOpen} onDismiss={showModal} isBlocking={false}>
@@ -44,9 +56,14 @@ export const ModalComponent: React.FunctionComponent<IModalProps> = (props) => {
           </span>
         </Stack>
         <div style={{ paddingLeft: 15, paddingRight: 15 ,color:"red"}}>
-          <p>
+
+          {
+            content !=null?<div>{splitwarning}</div>:<p>
             Sorry, Requestor can't create PR as no Company Code found!
+
           </p>
+          }
+       
         </div>
       </Modal>
     </div>

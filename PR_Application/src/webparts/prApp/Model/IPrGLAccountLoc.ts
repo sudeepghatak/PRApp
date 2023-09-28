@@ -13,7 +13,7 @@ export class IPRExpenseGLLoc{
 }
 
 export class IPRPrepaidGLLoc{
-    Type_of_Purchase:string;
+    Type_of_Purchase?:string;
     GL_Code: number;
     GL_Code_Description: string;
     Documents_Needed: string;

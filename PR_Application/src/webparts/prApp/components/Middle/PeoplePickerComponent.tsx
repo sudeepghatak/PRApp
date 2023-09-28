@@ -4,6 +4,8 @@ import { IPersonaProps } from "@fluentui/react/lib/Persona";
 import { NormalPeoplePicker } from "@fluentui/react/lib/Pickers";
 import { EmployeeData } from "../../Api/employee_api";
 import { EmployeeDetails } from "../../Model/employee_details";
+import { restApiCall } from "../../Api/ApiCall";
+import { GlobalStore } from "../../../../app/globalStore";
 
 interface IPeoplPickerProps {
   companyCodeOptionSet: (item) => void;
@@ -13,24 +15,81 @@ interface IPeoplPickerProps {
 export const PeoplePickerComponent: React.FunctionComponent<
   IPeoplPickerProps
 > = (props) => {
+
+    const [data, setdata] = useState("");
+
+ 
   const { companyCodeOptionSet } = props;
   const [delayResults, setDelayResults] = useState(false);
   const [employeeList, setemployeeList] = useState<EmployeeDetails[]>([]);
+    console.log("kSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSXXXXXXXXXXXXXx ------- ",employeeList);
   const picker = React.useRef(null);
-  useEffect(() => {
-    EmployeeData.fetchEmployeeDetails().then((employeesData) => {
-      console.log(employeesData);
-      console.log("Above employee data --------------");
-      setemployeeList(employeesData);
-    });
-  }, []);
+  // useEffect(() => {
+  //   EmployeeData.fetchEmployeeDetails().then((employeesData) => {
+  //     console.log(employeesData);
+  //     console.log("Above employee data --------------");
+  //     setemployeeList(employeesData);
+  //   });
+  // }, []);
+  const myDebounce = (callback: () => void, time: number) => {
+
+    let timer: any;
+
+    return function () {
+
+      if (timer) clearTimeout(timer);
+
+      timer = setTimeout(() => {
+
+        callback();
+
+      }, time);
+
+    };
+
+  };
+
+ 
+
+  const callFun = () => {
+    //api call arhument data 
+    console.log("My Search data ",data)
+    restApiCall.getallEmployeList(data).then((employeesData)=>{
+      console.log("My Search Output ",employeesData)
+        setemployeeList(employeesData);
+
+    })
+
+    // console.log("Now I am Doing Here .....", data);
+
+  };
+
+ 
+
+  // Debounce the call to callFun when data changes
+
+  const debouncedCallFun = myDebounce(callFun, 1000);
+    useEffect(() => {
+      console.log("I am Call Here =================")
+
+    debouncedCallFun();
+
+  }, [data]);
 
   const onFilterChanged = (
     filterText: string,
     currentPersonas: IPersonaProps[],
     limitResults?: number
   ): IPersonaProps[] | Promise<IPersonaProps[]> => {
+    console.log('filterText',filterText);
+    setdata(filterText);
+    if(picker.current.items.length !==0){
+      console.log("878787878787878787877-------------------- >",picker.current.items[0])
+    GlobalStore.storeName(picker.current.items[0]["text"],false);
+    GlobalStore.storeEmail(picker.current.items[0]['email'],false);
+    }
     console.log(picker.current.items);
+
     companyCodeOptionSet(picker.current.items);
     if (filterText) {
       let filteredPersonas: IPersonaProps[] = filterPersonasByText(filterText);

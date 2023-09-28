@@ -25,7 +25,6 @@ const PeopleComponent: React.FunctionComponent<IPPeopleComponent> = (props) => {
         required={true}
         disabled={false}
         onChange={getPeoplePickerItems}
-        showHiddenInUI={false}
         principalTypes={[PrincipalType.User]}
         resolveDelay={1000}
       />

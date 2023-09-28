@@ -1,0 +1,37 @@
+.iconDesign{
+border-radius: 50px;
+color: white;
+background-color: black;
+font-size: 10px;
+size: 10px;
+margin-top: 10px;
+font-weight: bold;
+cursor: pointer;
+display: flex;
+outline: none;
+}
+.iconRightDesign {
+    border-radius: 50px;
+    color: white;
+    background-color: black;
+    font-size: 10px;
+    size: 10px;
+    margin-top: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    outline: none;
+}
+.myContainer{
+    width: 100;
+    display:flex;
+    /* mask-type: white; */
+}
+.tooltiHover{
+    background-color: brown;
+}
+.tooltip{
+    background-color: black;
+    color: white;
+
+}

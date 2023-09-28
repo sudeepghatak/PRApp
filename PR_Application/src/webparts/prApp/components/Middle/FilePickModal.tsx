@@ -8,6 +8,7 @@ import {
   fileInformation,
   saveFileDoc,
 } from "../../../../features/reducers/primaryinfoSlice";
+import { GlobalStore } from "../../../../app/globalStore";
 
 interface IModalProps {
   isModalOpen: boolean;
@@ -16,17 +17,36 @@ interface IModalProps {
 export const FilePickModal: React.FunctionComponent<IModalProps> = (props) => {
   const { isModalOpen, showModal } = props;
   const dispatch = useDispatch();
+
   const onDrop = (acceptedFiles: any) => {
     console.log(acceptedFiles);
     let randomKey: string = new Date().valueOf().toString();
-    let fileData: fileInformation = {
+    const reader = new FileReader();
+    let thisbase64String:string="";
+    reader.onload = () => {       
+      const base64String = (reader.result as string).split(',')[1]; 
+      console.log("kkkkkkkkkkkkkkkkkkkkkkkkkk")
+      console.log(base64String)
+      thisbase64String=base64String;
+      let fileData: fileInformation = {
       key:randomKey,
       fileName: acceptedFiles[0].name,
-      fileType: "file",
+      fileType: acceptedFiles[0].type,
+      modifiedBy:GlobalStore.getmainName(),
       // acceptedFiles[0].type
       fileModifiedTime: new Date().toLocaleDateString(),
+      docType:"",
+      content:thisbase64String
     };
+    console.log("Data ---------------------- >> ",fileData)
+    
     dispatch(saveFileDoc(fileData));
+      console.log("llllllllllllllllllllllll")
+    }
+    reader.readAsDataURL(acceptedFiles[0]);
+    console.log("Here -------------------",thisbase64String);
+    
+
     showModal();
   };
   return (

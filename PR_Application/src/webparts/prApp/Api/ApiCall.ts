@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, getGLCodeOdrTypeUrl } from './Config/server_config'
+import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, getGLCodeOdrTypeUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems } from './Config/server_config'
+import { EmployeeDetails } from '../Model/employee_details'
 
 export class restApiCall {
    static  async rest_apiCall(url,body){
@@ -63,13 +64,65 @@ export class restApiCall {
         let res=await this.rest_apiCall(`${getGLCodeOdrTypeUrl}${odrtype}`,{});
         return res.data;
     }
+    
+    static async getRequestFor(empname:string){
+        let res=await this.rest_apiCall(`${RequestForUrl}${empname}`,{});
+        return res.data;
+    }
 
-    static async insertPrimaryInfoData(body){
+    static async getGLAccountValue(prtype:string,option:string){
+        let resGL= await this.rest_apiCall(`${GLAccountUrl}${prtype}&option=${option}`,{})
+        console.log(resGL.data);   
+        return resGL.data;
+    }
+
+    static async getCompanycode(){
+        
+        let resComCode=await this.rest_apiCall(`${CompanyCodeUrl}`,{});
+        return resComCode;
+    }
+
+    static async GetTypeOfPurGLCodeOdrType(pType:string,option:string,purType:string){
+        let res=await this.rest_apiCall(`${getTypeOfPurGLCodeOdrTypeUrl}${pType}&option=${option}&purType=${purType}`,{})
+        return res.data;
+    }
+
+    static async getCIPcode(comcode){
+        
+        let resCIPcode=await this.rest_apiCall(`${getCIPUrl}${comcode}`,{});
+        console.log(resCIPcode);
+        return resCIPcode.data;
+    }
+     static async getDocTypeurl(pID){
+        
+        let res=await this.rest_apiCall(`${getDocItems}${pID}&cT=X`,{});
+        console.log("getDocTypeurl----",res);
+        return res.data;
+    }
+
+    static async getallEmployeList(empname:string){
+        let employeeDetailsList=[];
+        if(empname!==""){
+        let employeList=await this.getRequestFor(empname);
+        for(let i=0;i<employeList.length;i++){
+            let fullName: string = employeList[i].FirstName + " " + employeList[i].LastName;
+        let employeeDetail=new EmployeeDetails(employeList[i].EmployeeID,employeList[i].Email,fullName,employeList[i].CompanyCode,employeList[i].CostCenter)
+         employeeDetailsList.push(employeeDetail)
+        }
+    }
+         return employeeDetailsList;
+ 
+    }
+
+
+
+    static async insertPrimaryInfoData(body,type:boolean){
         console.log("Data entry .......")
         console.log(body)
         console.log("............")
+        let inserEndpoint:string=(type)?`${postPRAllRequestUrl}`:`${postPRAllRequestUrl}?cT=X`
         
-       let res= await this.rest_apiCall(`${postPRAllRequestUrl}`,body);
+       let res= await this.rest_apiCall(`${inserEndpoint}`,body);
        console.log("save Data Succefully ---")
        console.log(res.data);
        console.log(res);
@@ -99,11 +152,11 @@ export class restApiCall {
 
 }
 
-export class CIPApi {
-    static async CIPDataApi(companyCode) {
+// export class CIPApi {
+//     static async CIPDataApi(companyCode) {
           
-        let res = await axios.get(`https://spdev365api.omnicell.com/api/getPRCIP_Result?compCode=${companyCode}`)
-        return res.data
+//         let res = await axios.get(`https://spdev365api.omnicell.com/api/getPRCIP_Result?compCode=${companyCode}`)
+//         return res.data
         
-    }
-}
+//     }
+// }

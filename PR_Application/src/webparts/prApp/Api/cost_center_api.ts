@@ -1,5 +1,5 @@
 import { CipNumberDetails } from "../Model/cip_numbers";
-import {CIPApi, restApiCall} from "./ApiCall";
+import { restApiCall} from "./ApiCall";
 
 // const CIPdata = require('../assets/CIPdata.json');
 

@@ -11,76 +11,39 @@ import * as React from "react";
 import { ConnectPr } from "../../Api/api";
 import { BaseButton } from "office-ui-fabric-react";
 import { restApiCall } from "../../Api/ApiCall";
+import { useDispatch } from "react-redux";
+import { tableToolinterface, toolTipUpdate } from "../../../../features/reducers/primaryinfoSlice";
+import { IPRPrepaidGLLoc } from "../../Model/IPrGLAccountLoc";
 
 
-interface IPGLAcoountCode {
-  isGLAccountOpen: boolean ;
-  showGLAccount: ()=> void ;
-   GlPRType:string | number;
-  // showGLAccount: React.Dispatch<React.SetStateAction<boolean>> |
-  GLAccountType: string;
- 
+
+interface InterTableTooltip{
+    store:[]
 }
 
-export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (props) => {
+const TableTooltipPurchases  : React.FunctionComponent<InterTableTooltip> = (props) => {
+    const {store}=props;
 
-  const { isGLAccountOpen, showGLAccount, GLAccountType,GlPRType } = props;
-  const [items,setitems]=React.useState([])
+//   const {prType,ebuy,toolName  } = props;
+//   console.log(data)
+//   console.log("====================>> ",toolName)
+   const dispatch = useDispatch();
+//   const [items,setitems]=React.useState([])
   React.useEffect(()=>{
-      let expense=[]
-      let newGlPRType=GlPRType as string;
-      restApiCall.getGLAccountValue(newGlPRType,GLAccountType).then((expValue)=>{
-      
-        for(let i=0;i<expValue.length;i++){
-          let newItemExp={
-            key: expValue[i] ,
-            TypeOfPurchase: expValue[i].OrderType,
-            GLCode: expValue[i].GL_Code,
-            GLCodeDescription: expValue[i].Dscription,
-            DocumentsNeeded: expValue[i].DocNeeded
-          }
-          expense.push(newItemExp)
-
-        }
-          setitems([...expense])
-    })
+    // console.log("In sert Here -------------------------",prType,ebuy,toolName)
 
 
   },[])
   
 
   const columns = [
+    
     {
       key: "column1",
-      name: "Type of Purchase",
-      fieldName: "TypeOfPurchase",
-      minWidth: 100,
-      maxWidth: 150,
-      isResizable: true,
-      styles: {
-        root: {
-          backgroundColor: "green",
-          color: "white",
-          borderRightColor: "white", // Set the right border color to white
-          borderRightWidth: "1px", // Optional: Adjust the border width if needed
-          borderRightStyle: "solid",
-          selectors: {
-            ":hover": {
-              backgroundColor: "green", // Change the background color on hover
-              cursor: "pointer",
-              color: "white",
-              // Optional: Show a pointer cursor on hover
-            },
-          },
-        },
-      },
-    },
-    {
-      key: "column2",
       name: "GL Code",
-      fieldName: "GLCode",
-      minWidth: 150,
-      maxWidth: 200,
+      fieldName: "GL_Code",
+      minWidth: 50,
+      maxWidth: 70,
       isResizable: true,
       styles: {
         root: {
@@ -100,11 +63,11 @@ export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (pr
         },
       },
     },{
-      key: "column3",
+      key: "column2",
       name: "GL Code Description",
-      fieldName: "GLCodeDescription",
-      minWidth: 150,
-      maxWidth: 200,
+      fieldName: "GL_Code_Description",
+      minWidth: 100,
+      maxWidth: 140,
       isResizable: true,
       styles: {
         root: {
@@ -125,9 +88,9 @@ export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (pr
       },
     },
     {
-      key: "column4",
+      key: "column3",
       name: "Documents Needed",
-      fieldName: "DocumentsNeeded",
+      fieldName: "Documents_Needed",
       minWidth: 150,
       maxWidth: 200,
       isResizable: true,
@@ -152,7 +115,16 @@ export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (pr
   ];
   return (
     <div>
-      <Modal
+       <div style={{ paddingLeft: 15, paddingRight: 15, width: 500}}>
+          <DetailsList
+            items={store}
+            columns={columns}
+            checkboxVisibility={CheckboxVisibility.hidden}
+          />
+        </div>
+        {/* <p>{prType}</p>
+        <p>{toolName}</p> */}
+      {/* <Modal
         isOpen={isGLAccountOpen}
         // onDismiss={showGLAccount}
         isBlocking={false}
@@ -190,7 +162,7 @@ export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (pr
             checkboxVisibility={CheckboxVisibility.hidden}
           />
         </div>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
@@ -199,5 +171,4 @@ export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (pr
 
 const cancelIcon: IIconProps = { iconName: "Cancel" };
 
-
-
+export default TableTooltipPurchases
