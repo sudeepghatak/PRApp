@@ -21,6 +21,8 @@ import { changeCheckbox, setValue } from "../../../../features/reducers/primaryi
 import { deletetypePurchases } from "../../../../features/reducers/lineitemSlice";
 import { TypeLineItem, TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
 import { restApiCall } from "../../Api/ApiCall";
+import ProjectCodeComponent from "./TableProjectCodeComponent";
+import { IPrProjectCode } from "../../Model/IPrProjectCode";
 // Initialize Fluent UI icons (required)
 interface TableRow {
   
@@ -44,9 +46,6 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   const dispatch = useDispatch();
   const { tableviewItem, id, addTotalAmount } = props;
   const lineinfoData = useSelector((state: RootState) => state.lineiteminfo);
-  console.log("Hello How Are You --------------------------");
-  console.log(lineinfoData);
-  console.log("Doing this type of work here -----------------------");
   const [tableItem, settableItem] = useState<TableRow[]>([
     {
       projectCode: "",
@@ -83,8 +82,29 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
     dispatch(deletetypePurchases(id));
     addTotalAmount(totalNumber);
   };
+//Link for Project Code-------------------------------------
 
+const [ProCodeItem, setProCodeItem] = useState<IPrProjectCode>(
+    new IPrProjectCode(" ", " ")
+  );
+const ProCodeItemDatapick = (ProCode: IPrProjectCode) => {
+    console.log(ProCode);
+    console.log("ProCode.project_code)---ProCode.project_code)",ProCode.project_code);
+    setProCodeItem(ProCode);
+  };
+// ................................................................
 
+//Project Code Modal Design Here ...........................
+  const [openProjectCode, setopenProjectCode] = useState<boolean>(false);
+  const showProjectCodeModal = () => {
+    setopenProjectCode(!openProjectCode);
+  };
+
+//Onclick for ProjectCodeModal
+  const linkClickEvent = () => {
+    // showModal();
+    showProjectCodeModal();
+  };
 
   const uom: IDropdownOption[] = [
     { key: "1", text: "Acre(ACR)" },
@@ -155,6 +175,11 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
     newtableItem.splice(rowIndex + 1, 0, copyItem);
     settableItem(newtableItem);
   };
+
+//prProjectRadio is true or false check var
+  let SelectPrProjectRadio= lineinfoData.prProjectRadio;
+  console.log("PrProjectRadio---PrProjectRadio",SelectPrProjectRadio,lineinfoData.selectDepartment);
+
 // date Format.............................................
 const [value, setValue] = React.useState<Date | undefined>();
 
@@ -254,22 +279,25 @@ console.log("Date ::",onFormatDate) ;
   }
 
   useEffect(() => {
-    restApiCall.getExpenseGLOdrTypeList(tableviewItem.typeofPurchaseName).then((dataOrdertype)=>{
-      console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-      console.log(dataOrdertype)
-    //   { key: "1", text: "500120(COGS - Semi Finished Good)" },
-    // { key: "2", text: "500120(COGS - Finished Good)" }
+  //   restApiCall.getExpenseGLOdrTypeList(tableviewItem.typeofPurchaseName).then((dataOrdertype)=>{
+  //     console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+  //     console.log(dataOrdertype)
+  //   //   { key: "1", text: "500120(COGS - Semi Finished Good)" },
+  //   // { key: "2", text: "500120(COGS - Finished Good)" }
 
-    for(let i:number=0;i<dataOrdertype.length;i++){
-      let item={
-        key:dataOrdertype[i].Title.toLowerCase(),
-        text:dataOrdertype[i].Title+"("+dataOrdertype[i].Dscription+")"
-      }
-      tableviewItem.glaccount.push(item);
+  //   for(let i:number=0;i<dataOrdertype.length;i++){
+  //     let item={
+  //       key:dataOrdertype[i].Title.toLowerCase(),
+  //       text:dataOrdertype[i].Title+"("+dataOrdertype[i].Dscription+")"
+  //     }
+  //     tableviewItem.glaccount.push(item);
 
-    }
-    });
+  //   }
+  //   });
+  console.log("PrProjectRadio---PrProjectRadio--",lineinfoData.prProjectRadio,lineinfoData.selectDepartment);
 
+  
+  
 
     let simpleList = [];
     if (lineinfoData.saveTable === 0) {
@@ -342,6 +370,7 @@ console.log("Date ::",onFormatDate) ;
         );
       },
     },
+  
     {
       key: "project_code",
       name: "Project Code",
@@ -369,9 +398,21 @@ console.log("Date ::",onFormatDate) ;
               iconProps={{ iconName: "Add" }}
               title="Add"
               ariaLabel="Add"
-              onClick={() => console.log("Addition here ......")}
+              onClick= {linkClickEvent}
             />
-            <span></span>
+            {openProjectCode ? (
+              <>
+                 <ProjectCodeComponent
+                    isProjectCodeOpen={openProjectCode}
+                    showProjectCode={showProjectCodeModal}
+                     ProjectCode_title={
+                      lineinfoData.selectDepartment
+                     }
+                     ProCodeItemDatapick={ProCodeItemDatapick}
+                     checkProCode={true}
+                  />
+              </>
+                ) : null}
           </Stack>
         );
       },
@@ -535,6 +576,8 @@ console.log("Date ::",onFormatDate) ;
       },
     },
   ];
+
+  let columnss=(SelectPrProjectRadio==="No")?columns.filter((columnsValue)=>columnsValue.name !=="Project Code"):columns
   return (
     <div>
       <div>
@@ -554,7 +597,7 @@ console.log("Date ::",onFormatDate) ;
         <Stack.Item>
           <DetailsList
             items={tableItem}
-            columns={columns as IColumn[]}
+            columns={columnss as IColumn[]}
             checkboxVisibility={CheckboxVisibility.hidden}
           />
         </Stack.Item>

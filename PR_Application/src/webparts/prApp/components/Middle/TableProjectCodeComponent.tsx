@@ -3,24 +3,44 @@ import {
   DetailsList,
   IIconProps,
   IconButton,
+  Link,
   Modal,
   Stack,
 } from "@fluentui/react";
 import * as React from "react";
 import { ConnectPr } from "../../Api/api";
 import { restApiCall } from "../../Api/ApiCall";
+import { IPrProjectCode } from "../../Model/IPrProjectCode";
+import { useState } from "react";
+
+//Link for Project Code-----------------
 
 interface IPProjectCode {
   isProjectCodeOpen: boolean;
   showProjectCode: () => void;
   ProjectCode_title: string;
+   ProCodeItemDatapick?: (ProCode: IPrProjectCode) => void;
+   checkProCode:boolean;
 }
+// ------------------------------------------------
+
 
 const ProjectCodeComponent: React.FunctionComponent<IPProjectCode> = (
   props
 ) => {
-  const { isProjectCodeOpen, showProjectCode, ProjectCode_title } = props;
+  const { isProjectCodeOpen, showProjectCode, ProjectCode_title ,ProCodeItemDatapick,checkProCode} = props;
   const [items,setitems]=React.useState([])
+
+
+//Link for Project Code-----------------
+  const sendProCodeDetails = (procodeDetails: IPrProjectCode) => {
+    console.log(procodeDetails);
+    ProCodeItemDatapick(procodeDetails);
+    showProjectCode();
+  };
+//---------------------------------------------------
+
+
   React.useEffect(()=>{
       let listProjectCode=[]
 
@@ -48,22 +68,71 @@ restApiCall.getProjetCodeList(ProjectCode_title).then((projectCodevalue)=>{
 
   },[])
 
-  const columns = [
+
+ 
+  
+  const columns = 
+  [  
     {
       key: "column1",
       name: "Project Code",
       fieldName: "project_code",
-      minWidth: 400,
-      maxWidth: 450,
+      minWidth: 300,
+      maxWidth: 350,
       isResizable: true,
+      onRender: (item:IPrProjectCode) => {
+        let procodeValue= item.project_code as string;
+        
+        return (
+          <>
+          {(ProCodeItemDatapick!== null && checkProCode===true)?(
+          <Link onClick={() =>sendProCodeDetails(item)}>{procodeValue}</Link>)
+          :{procodeValue}
+          }
+          </>
+        );
+      },
+      styles: {
+        root: {
+          backgroundColor: "green",
+          color: "white",
+          borderRightColor: "white", // Set the right border color to white
+          borderRightWidth: "1px", // Optional: Adjust the border width if needed
+          borderRightStyle: "solid",
+          selectors: {
+            ":hover": {
+              backgroundColor: "green", // Change the background color on hover
+              cursor: "pointer",
+              color: "white",
+              // Optional: Show a pointer cursor on hover
+            },
+          },
+        },
+      },
     },
     {
       key: "column2",
       name: "Description",
       fieldName: "description",
-      minWidth: 400,
-      maxWidth: 450,
+      minWidth: 500,
+      maxWidth: 600,
       isResizable: true,
+      styles: {
+        root: {
+          backgroundColor: "green",
+          color: "white",
+          borderRightColor: "white", // Set the right border color to white
+          borderRightWidth: "1px", // Optional: Adjust the border width if needed
+          borderRightStyle: "solid",
+          selectors: {
+            ":hover": {
+              backgroundColor: "green", // Change the background color on hover
+              color: "white",
+              // Optional: Show a pointer cursor on hover
+            },
+          },
+        },
+      },
     },
   ];
   return (
@@ -81,6 +150,15 @@ restApiCall.getProjetCodeList(ProjectCode_title).then((projectCodevalue)=>{
             border: "3px solid #fff",
           }}
         >
+
+
+        {/* <div className={classNames.item} data-is-focusable data-selection-index={itemIndex}>
+      {selection && selection.canSelectItem(item) && selection.mode !== SelectionMode.none && (
+        <div className={classNames.check} data-is-focusable data-selection-toggle>
+          <Check checked={isSelected} />
+        </div> */}
+
+
           <span style={{ marginTop: -5, paddingLeft: 15 }}>
             <h2 style={{ color: "#fff" }}>{ProjectCode_title} Project Codes</h2>
           </span>

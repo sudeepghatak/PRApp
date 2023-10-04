@@ -5,12 +5,14 @@ interface tableinformation {
   // projectCode:string;
   saveTable:number;
   selectDepartment:string;
+  prProjectRadio:string;
   TypeofPurchaseDetailList:TypeofPurchaseDetail[];
   }
   const initialState: tableinformation = {
     // projectCode:"",
     saveTable:0,
     selectDepartment:"",
+    prProjectRadio:"",
     TypeofPurchaseDetailList:[]
 
   };
@@ -26,10 +28,8 @@ export const lineitemSlice = createSlice({
         // state.projectCode=action.payload.projectCode;
         state.saveTable=action.payload.saveTable;
         state.selectDepartment=action.payload.selectDepartment;
-        state.TypeofPurchaseDetailList=action.payload.TypeofPurchaseDetailList;
-        console.log("1.action.payload.projectCode");
-        // console.log(action.payload.projectCode);
-        
+        state.prProjectRadio=action.payload.prProjectRadio;
+        state.TypeofPurchaseDetailList=action.payload.TypeofPurchaseDetailList;      
         
       },
       

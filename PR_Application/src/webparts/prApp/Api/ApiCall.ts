@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, getGLCodeOdrTypeUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems } from './Config/server_config'
+import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl } from './Config/server_config'
 import { EmployeeDetails } from '../Model/employee_details'
 
 export class restApiCall {
@@ -60,10 +60,10 @@ export class restApiCall {
         return res.data;
     }
 
-    static async getExpenseGLOdrTypeList(odrtype){
-        let res=await this.rest_apiCall(`${getGLCodeOdrTypeUrl}${odrtype}`,{});
-        return res.data;
-    }
+    // static async getExpenseGLOdrTypeList(odrtype){
+    //     let res=await this.rest_apiCall(`${getGLCodeOdrTypeUrl}${odrtype}`,{});
+    //     return res.data;
+    // }
     
     static async getRequestFor(empname:string){
         let res=await this.rest_apiCall(`${RequestForUrl}${empname}`,{});
@@ -147,7 +147,13 @@ export class restApiCall {
         console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
         
     }
+    static async insertPlantLoc(body){
+        let res= await this.rest_apiCall(`${insertPlantLocUrl}`,body);
+        console.log("PlantLoc---PlantLoc---PlantLoc :::",res,res.data);
+        
+    }
     // static async
+
 
 
 }

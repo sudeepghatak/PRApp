@@ -57,8 +57,6 @@ export class GlobalStore{
         return this.mainName;
     }
     static storeTooltipData(prType:string,ebuy:string,tooltipName:string,data:IPRPrepaidGLLoc[]){//SAP,prepaid,Enginner,data
-        // this.Tooldata[prType][ebuy][tooltipName]=data;
-        console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDdd ------- ",data)
         if(this.Tooldata[prType]!==undefined){
             if(this.Tooldata[prType][ebuy] ==undefined){
                 this.Tooldata[prType][ebuy] =[]
@@ -85,11 +83,11 @@ export class GlobalStore{
 
 
         }
-        console.log("Sourav -------------------- ",this.Tooldata)
+        // console.log("all data for pr Doc save file-------------------- ",this.Tooldata)
 
     }
     static getToolData(prType:string,ebuy:string,toolName:string){
-        console.log("Hello data ----------------- ")
+        console.log(" all data ----------------- ")
         console.log(prType,ebuy,toolName)
         console.log(this.Tooldata[prType])
         console.log(this.Tooldata[prType][ebuy])

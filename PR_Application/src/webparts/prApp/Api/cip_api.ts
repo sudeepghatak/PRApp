@@ -17,7 +17,7 @@ export class CipData{
              cipDetailsList.push(cipDetails)
         }
         console.log("bbbbbbbbbbbbbbbbbbb",cipDetailsList)
-        return cipDetailsList
+        return cipDetailsList;
     }
 
 }

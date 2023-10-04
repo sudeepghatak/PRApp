@@ -7,7 +7,7 @@ export class TypeofPurchaseDetail{
     costCenter:string;
     typeOfPurchaseInfoList:TypeLineItem[];
     demotypeOfPurchaseInfoList:TypeLineItem[];
-     glaccount: IDropdownOption[] = [];
+    glaccount: IDropdownOption[] = [];
     // tableviewItem: any;
  
 

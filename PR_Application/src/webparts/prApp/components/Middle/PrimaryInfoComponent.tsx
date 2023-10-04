@@ -47,6 +47,7 @@ import Tippy from "@tippyjs/react";
 import { TooltipPurchases } from "../../Utils/tooltipTypeofpurchases";
 import TableTooltipPurchases from "./TableTooltipPurchases";
 import { ModalModelessExample } from "./Modalwarning";
+import { IPrProjectCode } from "../../Model/IPrProjectCode";
 
 
 interface IFirstProps {
@@ -373,6 +374,17 @@ useEffect(() => {
   //   { key: "4", text: "OM32" },
   // ];
 
+  //Link for Project Code-------------------------------------
+
+const [ProCodeItem, setProCodeItem] = useState<IPrProjectCode>(
+    new IPrProjectCode( " ", " ")
+  );
+// const ProCodeItemDatapick =(ProCode: IPrProjectCode) => {};
+    // console.log("ProCode.project_code---ProCode.project_code",ProCode.project_code);
+    // setProCodeItem(ProCode);
+  // };
+// ................................................................
+
 
   const selectCostCenterOption: IChoiceGroupOption[] = [
     { key: "1", text: "Department" },
@@ -442,14 +454,13 @@ useEffect(() => {
     console.log("------------------Sap===Sap",item);
     console.log(id);
     let newSelectedItem: IDropdownOption = { key: "", text: "" };
-    let warningCheckData={};
     // let warningmsg={
     //     "Click on Alternate Cost Center radio button and then select needed Cost Center.":
 
     //   }
     newSelectedItem = { key: item?.key as string, text: item?.text as string };
     // if (item.key==="SAP") {
-    // newSelectedItem = { key: item?.key as string, text: item?.text as string };
+    //   newSelectedItem = { key: item?.key as string, text: item?.text as string };
     // }
     // else{
     //   <ModalModelessExample/>
@@ -461,7 +472,8 @@ useEffect(() => {
       [id]: newSelectedItem,
     }));
     if (id === "prOption") {
-      setshowDialog(true);
+      // setshowDialog(true);
+      // <ModalModelessExample/>
     }
   };
   //------------------------------------------
@@ -476,7 +488,8 @@ const primaryinfoData = useSelector((state: RootState) => state.primaryinfo);
 const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
 
 useEffect(() => {
-
+ console.log("selectedItems.selectDepartment.text----",selectedItems.selectDepartment.text);
+ 
 
     for (let i = 0; i < Object.keys(primaryinfoData.optionGroup).length; i++) {
 
@@ -510,7 +523,7 @@ useEffect(() => {
 
     for (let i = 0; i < Object.keys(primaryinfoData.radioGroup).length; i++) {
 
-      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX       -------------------------------                       --------------------               ----------------------             ",primaryinfoData.radioGroup[
+      console.log("       -------------------------------                       --------------------               ----------------------             ",primaryinfoData.radioGroup[
 
           Object.keys(primaryinfoData.radioGroup)[i]
 
@@ -658,23 +671,16 @@ const hoverCallfunction=(prType:string,ebuy:string,toolName:string)=>{
   //for file upload .........................
 
 interface IoptionSave {
-
     [key: string]: IDropdownOption;
-
   }
 
   interface IradioSave {
-
     [key: string]: IChoiceGroupOption;
-
   }
 
   interface ISaveData {
-
     radioGroup: IradioSave[];
-
     optionGroup: IoptionSave[];
-
   }
 
   const changeStrToBool=(value:string)=>{
@@ -868,11 +874,8 @@ interface IoptionSave {
       else{
         newpurchaseItem=new TypeofPurchaseDetail(item.label);
       }
-      newpurchaseItem.costCenter = costCenter;
-
+      newpurchaseItem.costCenter = costCenter;      
       newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
-
-
       ListofTypePurchases.push(newpurchaseItem);
 
     });
@@ -885,19 +888,16 @@ interface IoptionSave {
       // projectCode:selectedItems["projectCode"]?.text,
       saveTable:(lineintemData.saveTable===0)?0:1,
       selectDepartment: selectedItems["selectDepartment"]?.text,
-
+      prProjectRadio: selectRadioItems["prProjectRadio"]?.text,
       TypeofPurchaseDetailList: ListofTypePurchases,
 
     };
     console.log("setlineItemData");
     console.log(setlineItemData);
+    console.log(",setlineItemData.prProjectRadio--,setlineItemData.prProjectRadio",setlineItemData.prProjectRadio);
     
 
- 
-
     dispatch(setlineitemValue(setlineItemData));
-
- 
 
     dispatch(setValue(saveData));
 
@@ -1052,40 +1052,42 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
    
 }
 ];
-restApiCall.insertPrimaryInfoData(saveprimayData,true).then((value:number)=>{
-  dispatch(savePkid(value));
+// restApiCall.insertPrimaryInfoData(saveprimayData,true).then((value:number)=>{
+//   dispatch(savePkid(value));
 
-  let ConnectPRID:string="000000"+value;
-  GlobalStore.storePrId(ConnectPRID);
-  if(primaryinfoData.fileData.length !==0){
-  for(let i:number=0;i<primaryinfoData.fileData.length;i++){
-    console.log("primaryinfoData-primaryinfoData=primaryinfoData",primaryinfoData.fileData[i]);
+  // let ConnectPRID:string="000000"+value;
+  // GlobalStore.storePrId(ConnectPRID);
+  // if(primaryinfoData.fileData.length !==0){
+  // for(let i:number=0;i<primaryinfoData.fileData.length;i++){
+  //   console.log("primaryinfoData-primaryinfoData=primaryinfoData",primaryinfoData.fileData[i]);
     
-    let fileDatainfo={
-      "PKID":value ,
-      "ConnectPRID": ConnectPRID,
-      "Doc_Type":primaryinfoData.fileData[i].docType,
-      "Filename":primaryinfoData.fileData[i].fileName,
-      "Content":primaryinfoData.fileData[i].content,
-      "Modified_By":GlobalStore.getmainName(),
-      "Modified_Date":primaryinfoData.fileData[i].fileModifiedTime,   
-    };
-    console.log("DocData save.........  ",fileDatainfo)
-    fileInfo.push(fileDatainfo)
+  //   let fileDatainfo={
+  //     "PKID":value ,
+  //     "ConnectPRID": ConnectPRID,
+  //     "Doc_Type":primaryinfoData.fileData[i].docType,
+  //     "Filename":primaryinfoData.fileData[i].fileName,
+  //     "Content":primaryinfoData.fileData[i].content,
+  //     "Modified_By":GlobalStore.getmainName(),
+  //     "Modified_Date":primaryinfoData.fileData[i].fileModifiedTime,   
+  //   };
+  //   console.log("DocData save.........  ",fileDatainfo)
+  //   fileInfo.push(fileDatainfo)
 
-  }
+  // }
   // let fileDatapayload={
   //    "Attachment":fileInfo
   // }
-  restApiCall.insertPrimaryInfoData(fileInfo,false).then((value)=>{
-    console.log(value)
-    console.log("Data Save Here ------------");
-    buttonContxtSave();
-  });
-    }
-  })}
+  // restApiCall.insertPrimaryInfoData(fileInfo,false).then((value)=>{
+  //   console.log(value)
+  //   console.log("Data Save Here ------------");
+  //   buttonContxtSave();
+  // });
+  //   }
+  // })
+  buttonContxtSave();
+}
 });
-
+    
   };
   //select checkBox.............
   // const []=useState({
@@ -1438,6 +1440,8 @@ restApiCall.insertPrimaryInfoData(saveprimayData,true).then((value:number)=>{
                             ProjectCode_title={
                               selectedItems.selectDepartment.text
                             }
+                            // ProCodeItemDatapick={ProCodeItemDatapick}
+                            checkProCode={false}
                           />
                         </>
                       ) : null}

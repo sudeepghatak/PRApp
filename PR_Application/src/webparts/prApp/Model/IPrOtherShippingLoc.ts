@@ -4,6 +4,7 @@ export class IPROtherShippingLoc {
     PostalCode: number;
     City: string;
     Region: string;
+    
 
   constructor(Title:string,HouseNumber:string,PostalCode:number,City:string){
     this.Title=Title;

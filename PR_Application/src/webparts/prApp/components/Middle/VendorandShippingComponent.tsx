@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import { restApiCall } from "../../Api/ApiCall";
 import TooltipShow from "./TooltipShow";
+import { insertOtherVendor } from "../../Model/InsertotherVendor";
 
 // import SupplierModal from "./SupplierModal";
 interface ISecondprops {
@@ -40,12 +41,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     (state: RootState) => state.vendorandshipping
 
   );
-  const [textvalue, settextvalue] = useState({
-    suppliername: " ",
-    justificationorder: " ",
-    downpayment: " ",
-  });
-
+  //primary Info companycode 
+   const optionGroupData = useSelector(
+    (state: RootState) => state.primaryinfo.optionGroup
+  );
+  
   const [selectshipAddress, setselectshipAddress] = useState<boolean>(false);
 
   const [openSupplierSearch, setopenSupplierSearch] = useState<boolean>(false);
@@ -68,6 +68,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
 
   const [vendorItem, setvendorItem] = useState<VendorDetails>(
     new VendorDetails(0, " ", " ", " ", " ", " ", " ", " ", " ")
+  );
+  //insertOtherVendor api....
+
+  const [otherLocInsert, setotherLocInsert] = useState<insertOtherVendor>(
+    new insertOtherVendor( " ",0, " ", " ", " ",true,true,true, " ")
   );
 
   const venderItemDatapick = (vendor: VendorDetails) => {
@@ -116,9 +121,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
 
   //Ship Address to Company Code Compare------------------------------------------------------
     
+  // console.log("optionGroupData.companyCode.text---optionGroupData.companyCode.text",optionGroupData.companyCode.text);
+  
   let listDataSupplierAdd=[]
   
-  restApiCall.getShippingAddress("OM01").then((shipAddressValue)=>{
+  restApiCall.getShippingAddress(optionGroupData.companyCode.text).then((shipAddressValue)=>{
 
     for(let i:number=0;i<shipAddressValue.length;i++){
           let newObjSupplierAdd={
@@ -168,18 +175,37 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   
 
   useEffect(() => {
+
     if (newshipAddress.text === "Other Shipping Location") {
       setselectshipAddress(() => true);
     } else {
       setselectshipAddress(() => false);
     }
   }, [newshipAddress]);
+//text save fields.............
+const [textvalue, settextvalue] = useState({
+    suppliername: " ",
+    justificatiOnOrder: " ",
+    downPaymentDetails: " ",
+    Name:" ",
+    HouseNumber:" ",
+    StreetName:" ",
+    PostalCode:" ",
+    City:" ",
+    ContactName:" "
+
+  });
+
   const textContext = (
     e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: Object | undefined
   ) => {
-    console.log(textvalue);
-    console.log(e.target);
+    // console.log("textvalue---textvalue",textvalue);
+  //   console.log("text__Name---",textvalue.Name);
+  // console.log("text__Comments---",textvalue.justificatiOnOrder,textvalue.downPaymentDetails);
+  // console.log("text__HouseNumber---",textvalue.HouseNumber,textvalue.StreetName);
+  // console.log("text__PostalCode---",textvalue.PostalCode,textvalue.City);
+  // console.log("text__ContactName---",textvalue.ContactName);
     const id = (e.target as HTMLInputElement).id;
     console.log(id);
     settextvalue((prevValue) => ({
@@ -189,15 +215,13 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     console.log(id);
   };
 
+   
   const saveVendorandSupplierDetails = () => {
-
     dispatch(saveVendorandShippingData(vendorItem));
-
     buttonContxtSave();
 
   };
 const saveVendorDetails=()=>{
-  console.log("Here It is Vendor data Here --- >> ",vendorandshippingData.PKID);
   dispatch(saveVendorandShippingData(vendorItem));
   let saveDetails=[
 {
@@ -227,11 +251,11 @@ const saveVendorDetails=()=>{
     "Status": null,
     "TaskCreatedFor": null,
     "ApprovalInstance": null,
-    "Comments": null,
+    "Comments": textvalue.justificatiOnOrder,
     "Cost_Center": null,
     "Location": null,
     "IsDeleted": null,
-    "Special_Instructions": null,
+    "Special_Instructions": textvalue.downPaymentDetails,
     "Shipping_Name": null,
     "Shipping_Street": null,
     "Shipping_Postal_Code": null,
@@ -295,13 +319,36 @@ const saveVendorDetails=()=>{
     "OldTaskCreatedFor": null
 }
 ];
-restApiCall.insertVendorDetails(saveDetails);
-  buttonContxtSave();
+// restApiCall.insertVendorDetails(saveDetails);
+  // buttonContxtSave();
+ 
+
+
+  let otherShippingAdd=[{
+        "Title": textvalue.Name + textvalue.HouseNumber + textvalue.StreetName
+               + textvalue.PostalCode+textvalue.City+ textvalue.ContactName,
+        "PlantNumber": null,
+        "StorageLocation": null,
+        "P2PBuy": null,
+        "NPIBuy": null,
+        "IsAvailable": true,
+        "IsAvlblShpToLocation": true,
+        "IsAesyntLocation": false,
+        "Country": "India",
+        
+  }]
+  console.log("otherShippingAdd__otherShippingAdd--",otherShippingAdd);
+
+  
+
+// restApiCall.insertPlantLoc(otherShippingAdd);
+buttonContxtSave();
 
 }
   
 
 useEffect(() => {
+    
 
     setvendorItem(vendorandshippingData.vendorDetails);
 
@@ -309,13 +356,13 @@ useEffect(() => {
 
   // where are you based....
 
-  const basedOptions: IDropdownOption[] = [
-    { key: "1", text: "US,- Strongsville, OH (STV) plant" },
-    { key: "2", text: "US, Cranberry" },
-    { key: "3", text: "US, Field Persons" },
-    { key: "4", text: "US, HQ-Mountain View, CA (MTV)" },
-    { key: "5", text: "US, Milpitas, (MIL) Plant" },
-  ];
+  // const basedOptions: IDropdownOption[] = [
+  //   { key: "1", text: "US,- Strongsville, OH (STV) plant" },
+  //   { key: "2", text: "US, Cranberry" },
+  //   { key: "3", text: "US, Field Persons" },
+  //   { key: "4", text: "US, HQ-Mountain View, CA (MTV)" },
+  //   { key: "5", text: "US, Milpitas, (MIL) Plant" },
+  // ];
 
   const dropdownStyles: Partial<IDropdownStyles> = {
     dropdown: { width: 150 },
@@ -578,7 +625,7 @@ useEffect(() => {
                 <Stack.Item styles={col2Style}>
                   <div style={{ width: "450px" }}>
                     <TextField
-                      id="justificationorder"
+                      id="justificatiOnOrder"
                       onChange={textContext}
                       multiline
                       rows={2}
@@ -605,7 +652,7 @@ useEffect(() => {
                 <Stack.Item styles={col2Style}>
                   <div style={{ width: "450px" }}>
                     <TextField
-                      id="downpayment"
+                      id="downPaymentDetails"
                       onChange={textContext}
                       multiline
                       rows={2}
@@ -665,8 +712,10 @@ useEffect(() => {
                     <Stack.Item styles={col2Style}>
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <TextField
+                          id="Name"
                           placeholder="Provide Company/Recipient Name.Maximum length"
                           style={{ width: 350 }}
+                          onChange={textContext}
                         />
                       </Stack>
                     </Stack.Item>
@@ -680,13 +729,17 @@ useEffect(() => {
                     <Stack.Item styles={col2Style}>
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <TextField
+                          id="HouseNumber"
                           placeholder={"House No."}
-                          value={shippingItem.HouseNumber}
+                          onChange={textContext}
+                          // value={shippingItem.HouseNumber}
                           style={{ width: 100 }}
                         />
                         <span style={{ marginTop: 10 }}>/</span>
                         <TextField
+                          id="StreetName"
                           placeholder="Street Name"
+                          onChange={textContext}
                           style={{ width: 300 }}
                         />
                       </Stack>
@@ -701,11 +754,18 @@ useEffect(() => {
                     <Stack.Item styles={col2Style}>
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <TextField
+                          id="PostalCode"
                           placeholder="Postal Code"
+                          onChange={textContext}
                           style={{ width: 100 }}
                         />
                         <span>/</span>
-                        <TextField placeholder="City" style={{ width: 250 }} />
+                        <TextField 
+                        placeholder="City" 
+                        id="City"
+                        style={{ width: 250 }}
+                        onChange={textContext}
+                         />
                       </Stack>
                     </Stack.Item>
                   </Stack>
@@ -719,9 +779,10 @@ useEffect(() => {
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <Dropdown
                           placeholder="Select an option"
-                          // onChange={changeshipDropdownOption}
+                          onChange={changeshipDropdownOption}
                           options={regionOptions}
                           styles={dropdownStyles}
+                          
                         />
                       </Stack>
                     </Stack.Item>
@@ -736,7 +797,7 @@ useEffect(() => {
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <Dropdown
                           placeholder="Select an option"
-                          // onChange={changeshipDropdownOption}
+                          onChange={changeshipDropdownOption}
                           options={countryOptions}
                           styles={dropdownStyles}
                         />
@@ -753,8 +814,8 @@ useEffect(() => {
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <Dropdown
                           placeholder="Select an option"
-                          // onChange={changeshipDropdownOption}
-                          options={basedOptions}
+                          onChange={changeshipDropdownOption}
+                          options={shipAddress}
                           styles={dropdownStyles}
                         />
                       </Stack>
@@ -769,6 +830,8 @@ useEffect(() => {
                     <Stack.Item styles={col2Style}>
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <TextField
+                          id="ContactName"
+                          onChange={textContext}
                           placeholder="Maximum length is 50 characters"
                           style={{ width: 300 }}
                         />

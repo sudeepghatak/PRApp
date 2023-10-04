@@ -11,7 +11,7 @@ export const getCIPUrl="getPRCIP_Result?compCode=";
 export const getEmpDetailsUrl="getEmployees_Result?eName=";
 export const getLocPlantUrl="getPlantLocation_Result?pLocation=";
 export const getPlantCodeUrl="getPlantCode_Result?compCode=";
-export const getGLCodeOdrTypeUrl="getGLAccount_Result?ordType=";
+// export const getGLCodeOdrTypeUrl="getGLAccount_Result?ordType=";
 export const postLineItemUrl="postRequestItem_Values";
 
 export const postPRAllRequestUrl="postPRRequest_Values";
@@ -20,6 +20,7 @@ export const RequestForUrl= "getEmployees_Result?eName=";
 export const CompanyCodeUrl= "getCompanyCode_Result";
 
 export const GLAccountUrl="getGLAccount_Result?pType=";
-export const getTypeOfPurGLCodeOdrTypeUrl="getGLAccount_Result?pType="
+export const getTypeOfPurGLCodeOdrTypeUrl="getGLAccount_Result?pType=";
 
-export const getDocItems="getPRRequest_Result?pID="
+export const getDocItems="getPRRequest_Result?pID=";
+export const insertPlantLocUrl="getPlantLocation_Result";
