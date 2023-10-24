@@ -4,7 +4,7 @@ import { Stack, IStackTokens, IStackStyles } from "@fluentui/react/lib/Stack";
 import { DefaultButton, IconButton } from "@fluentui/react/lib/Button";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { DefaultPalette } from "@fluentui/react/lib/Styling";
-import './TooltipShow.css'
+import "./TooltipShow.css";
 import styles from "../PrApp.module.scss";
 import {
   Dropdown,
@@ -31,10 +31,21 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 import PeopleComponent from "./PeopleComponent";
 import { CipModal } from "./TableCipModal";
 import { PeoplePickerComponent } from "./PeoplePickerComponent";
-import {GLAccountComponent} from "./TableGLAccountComponent";
+import { GLAccountComponent } from "./TableGLAccountComponent";
 import { RootState } from "../../../../app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { ChangeDisable, ChangeDisableToEdit, CheckboxItem, changeCheckbox, fileInformation, insertContent, rightchangeCheckbox, saveFileDoc, setValue, toolTipUpdate } from "../../../../features/reducers/primaryinfoSlice";
+import {
+  ChangeDisable,
+  ChangeDisableToEdit,
+  CheckboxItem,
+  changeCheckbox,
+  fileInformation,
+  insertContent,
+  rightchangeCheckbox,
+  saveFileDoc,
+  setValue,
+  toolTipUpdate,
+} from "../../../../features/reducers/primaryinfoSlice";
 import { setlineitemValue } from "../../../../features/reducers/lineitemSlice";
 import { TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
 import { restApiCall } from "../../Api/ApiCall";
@@ -49,43 +60,40 @@ import TableTooltipPurchases from "./TableTooltipPurchases";
 import { ModalModelessExample } from "./Modalwarning";
 import { IPrProjectCode } from "../../Model/IPrProjectCode";
 
-
 interface IFirstProps {
   buttonContxtSave: () => void;
   setTableCreate: (value: ITableBuildProps) => void;
-  setTile:(value)=>void
+  setTile: (value) => void;
   // context:WebPartContext;
 }
 let costCenter: string = "";
 const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
-  const { buttonContxtSave, setTableCreate,setTile } = props;
+  const { buttonContxtSave, setTableCreate, setTile } = props;
   //use for Modal Show ...........
   const [isModalOpen, setisModalOpen] = useState<boolean>(false);
   const showModal = () => {
     setisModalOpen(!isModalOpen);
   };
 
-//Project Code Modal Design Here ...........................
+  //Project Code Modal Design Here ...........................
   const [openProjectCode, setopenProjectCode] = useState<boolean>(false);
   const showProjectCodeModal = () => {
     setopenProjectCode(!openProjectCode);
   };
 
-//GL Account Modal Design Here ...........................
+  //GL Account Modal Design Here ...........................
   const [openGLAccount, setopenGLAccount] = useState<boolean>(false);
   const showopenGLAccount = () => {
     setopenGLAccount(!openGLAccount);
   };
 
-
-//Cost Center Modal Design Here ...........................
+  //Cost Center Modal Design Here ...........................
   const [openCostCenter, setopenCostCenter] = useState<boolean>(false);
   const showopenCostCenter = () => {
     setopenCostCenter(!openCostCenter);
   };
-  
 
-//this use state for Dialog is visible or not .......................
+  //this use state for Dialog is visible or not .......................
   const [showDialog, setshowDialog] = useState<boolean>(false);
 
   const showAlertDialog = () => {
@@ -95,122 +103,100 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   //--------------------   -------
 
   const sectionStackTokens: IStackTokens = { childrenGap: 15 };
-//CIP Number for saving
-const CIPInput = React.useRef();
+  //CIP Number for saving
+  const CIPInput = React.useRef();
 
-// Company Code Get ..................................................
-const [companyCodeOption,setCompanyCodeOption]=useState([])
+  // Company Code Get ..................................................
+  const [companyCodeOption, setCompanyCodeOption] = useState([]);
 
- //For save ---------------------------------------------------
-interface Textbox {
-  CIPNum: string;
-  UFID:string;
-}
+  //For save ---------------------------------------------------
+  interface Textbox {
+    CIPNum: string;
+    UFID: string;
+  }
 
-const [textbox, setTextbox] = useState<Textbox>(
-    {
-      CIPNum: "",
-      UFID:"",
-      
-    },
-  );
-
+  const [textbox, setTextbox] = useState<Textbox>({
+    CIPNum: "",
+    UFID: "",
+  });
 
   const newhandleInputChange = (
     e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    newValue: string,
+    newValue: string
   ) => {
-   
-    let name: string = (e.target as HTMLInputElement).name
-    let newtextBox={
+    let name: string = (e.target as HTMLInputElement).name;
+    let newtextBox = {
       ...textbox,
-      [name]:newValue
+      [name]: newValue,
     };
 
-setTextbox(newtextBox);
-  console.log("Textvalue ........",newtextBox);
-  }
+    setTextbox(newtextBox);
+    console.log("Textvalue ........", newtextBox);
+  };
 
-useEffect(() => {
-  //  ConnectPr.getInstance().GetPRCompanyCode().then((PrCompanyValue)=>{
-    
-  //   let listData=[]
-  //     for(let i=0;i<PrCompanyValue.length;i++){
-  //       if(PrCompanyValue[i].IsValidSAPCompanyCode){
-  //       let newObj={
-  //         key:PrCompanyValue[i],text:PrCompanyValue[i].MappedCompanyCode
-  //       }
-  //       listData.push(newObj)
-  //     }
-  //     setCompanyCodeOption(listData)
+  useEffect(() => {
+    //  ConnectPr.getInstance().GetPRCompanyCode().then((PrCompanyValue)=>{
 
-  //   }})
+    //   let listData=[]
+    //     for(let i=0;i<PrCompanyValue.length;i++){
+    //       if(PrCompanyValue[i].IsValidSAPCompanyCode){
+    //       let newObj={
+    //         key:PrCompanyValue[i],text:PrCompanyValue[i].MappedCompanyCode
+    //       }
+    //       listData.push(newObj)
+    //     }
+    //     setCompanyCodeOption(listData)
+
+    //   }})
     // setshowDialog(true);
 
-    restApiCall.getDocTypeurl(GlobalStore.getPrId()).then((value)=>{
-      if(value!==0){
-        for(let i:number=0;i<value.length;i++){
-          if(!(value[i].Content===primaryinfoData.fileData[i].content && value[i].Modified_Date===primaryinfoData.fileData[i].fileModifiedTime)){
+    restApiCall.getDocTypeurl(GlobalStore.getPrId()).then((value) => {
+      if (value !== 0) {
+        for (let i: number = 0; i < value.length; i++) {
+          if (
+            !(
+              value[i].Content === primaryinfoData.fileData[i].content &&
+              value[i].Modified_Date ===
+                primaryinfoData.fileData[i].fileModifiedTime
+            )
+          ) {
             let getfileData: fileInformation = {
-               key:value[i].ConnectPRID,
+              key: value[i].ConnectPRID,
               fileName: value[i].Filename,
               fileType: "file",
-              modifiedBy:value[i].Modified_By,
+              modifiedBy: value[i].Modified_By,
               fileModifiedTime: value[i].Modified_Date,
-              docType:value[i].Doc_Type,
-              content:value[i].Content
-         };
-          console.log(" get Doc type Data ---------------------- >> ",getfileData)
-    
-    dispatch(saveFileDoc(getfileData));
+              docType: value[i].Doc_Type,
+              content: value[i].Content,
+            };
+            console.log(
+              " get Doc type Data ---------------------- >> ",
+              getfileData
+            );
+
+            dispatch(saveFileDoc(getfileData));
           }
         }
       }
     });
 
-    restApiCall.getCompanycode().then((value)=>{
-        console.log("Company Code value",value);
-        let companyCodeList=[];
-        for(let i:number=0;i<value.data.length;i++){
-          let newcompany={
-            Key:value.data[i].MappedCompanyCode.toLowerCase(),
-            text:value.data[i].MappedCompanyCode,
-          }
-          companyCodeList.push(newcompany)
-        }
-        setCompanyCodeOption(companyCodeList);
-
-        
-    })
+    restApiCall.getCompanycode().then((value) => {
+      console.log("Company Code value", value);
+      let companyCodeList = [];
+      for (let i: number = 0; i < value.data.length; i++) {
+        let newcompany = {
+          Key: value.data[i].MappedCompanyCode.toLowerCase(),
+          text: value.data[i].MappedCompanyCode,
+        };
+        companyCodeList.push(newcompany);
+      }
+      setCompanyCodeOption(companyCodeList);
+    });
   }, []);
 
-
-
-
-    // For HSRI Call..............................................
-// const [costCenterOption,setCostCenterOption]=useState([])
-
-// useEffect(() => {
-//    ConnectPr.getInstance().GetPRCostCenterSap().then((Prcostcenter)=>{
   
-//     let listDataCostCenter=[]
-//       for(let i=0;i<Prcostcenter.length;i++){
-//         let newObjCostCenter={
-//           key: Prcostcenter[i] ,
-//           text: Prcostcenter[i].Title+"("+Prcostcenter[i].Details+")"
-//         }
-//         listDataCostCenter.push(newObjCostCenter)
-//       }
-//       setCostCenterOption(listDataCostCenter)
-//     })
-//     setshowDialog(true);
-//   }, []);
 
-// .....................................................................
-
-
-
-
+  // .....................................................................
 
   //this is for all radio option
   const [selectRadioItems, setSelectRadioItems] = useState<{
@@ -224,7 +210,8 @@ useEffect(() => {
     ehsRadio: { key: "", text: "" },
   });
 
-  const [isPrepaidCapitalbuy, setisPrepaidCapitalbuy] =useState<boolean>(false);
+  const [isPrepaidCapitalbuy, setisPrepaidCapitalbuy] =
+    useState<boolean>(false);
 
   const [isPrProject, setisPrProject] = useState<boolean>(false);
 
@@ -235,15 +222,12 @@ useEffect(() => {
   const [isAlternetCostcenterSelect, setisAlternetCostcenterSelect] =
     useState<boolean>(false);
 
-
   //cip Number pop up --- for capital equipment select
 
   const [openCipNumberModal, setopenCipNumberModal] = useState<boolean>(false);
 
   const showCipNumberModal = () => {
-
     setopenCipNumberModal(!openCipNumberModal);
-
   };
 
   const prOption: IChoiceGroupOption[] = [
@@ -312,7 +296,6 @@ useEffect(() => {
     }));
   };
 
-
   useEffect(() => {
     if (selectRadioItems.constCenterRadio.text == "Alternate Cost Center") {
       setisAlternetCostcenterSelect(true);
@@ -325,10 +308,8 @@ useEffect(() => {
       setisBlanketPrSelect(false);
     }
     if (selectRadioItems.prProjectRadio.text == "Yes") {
-      
       // GetPREnggProjectCodeItems()
       setisPrProject(true);
-
     } else {
       setisPrProject(false);
     }
@@ -336,9 +317,9 @@ useEffect(() => {
     if (selectRadioItems.prRadio.text == "No") {
       setisPRsubmit(true);
     } else {
-      console.log("I Just Enter For Check Here --------------------------- ",)
-      GlobalStore.storeEmail(GlobalStore.getmainEmail(),false);
-      GlobalStore.storeName(GlobalStore.getmainName(),false);
+      console.log("I Just Enter For Check Here --------------------------- ");
+      GlobalStore.storeEmail(GlobalStore.getmainEmail(), false);
+      GlobalStore.storeName(GlobalStore.getmainName(), false);
       setisPRsubmit(false);
     }
 
@@ -349,9 +330,9 @@ useEffect(() => {
     } else {
       setisPrepaidCapitalbuy(false);
     }
-    if(selectRadioItems.prepaidcapitalRadio.text === "Lease"){
-     dispatch(ChangeDisable(true)) ;
-    }else{
+    if (selectRadioItems.prepaidcapitalRadio.text === "Lease") {
+      dispatch(ChangeDisable(true));
+    } else {
       dispatch(ChangeDisableToEdit(true));
     }
   }, [selectRadioItems]);
@@ -364,7 +345,7 @@ useEffect(() => {
     companyCode: { key: "", text: "" },
     selectDepartment: { key: "", text: "" },
     projectCode: { key: "", text: "" },
-    SelectAltCostCenter:{ key:"",text:""}
+    SelectAltCostCenter: { key: "", text: "" },
   });
 
   // const companyCodeOption: IDropdownOption[] = [
@@ -376,30 +357,27 @@ useEffect(() => {
 
   //Link for Project Code-------------------------------------
 
-const [ProCodeItem, setProCodeItem] = useState<IPrProjectCode>(
-    new IPrProjectCode( " ", " ")
+  const [ProCodeItem, setProCodeItem] = useState<IPrProjectCode>(
+    new IPrProjectCode(" ", " ")
   );
-// const ProCodeItemDatapick =(ProCode: IPrProjectCode) => {};
-    // console.log("ProCode.project_code---ProCode.project_code",ProCode.project_code);
-    // setProCodeItem(ProCode);
+  // const ProCodeItemDatapick =(ProCode: IPrProjectCode) => {};
+  // console.log("ProCode.project_code---ProCode.project_code",ProCode.project_code);
+  // setProCodeItem(ProCode);
   // };
-// ................................................................
-
+  // ................................................................
 
   const selectCostCenterOption: IChoiceGroupOption[] = [
     { key: "1", text: "Department" },
     { key: "2", text: "Alternate Cost Center" },
-    
   ];
   const selectDepartmentOption: IDropdownOption[] = [
     { key: "engineering", text: "Engineering" },
     { key: "marketing", text: "Marketing" },
-    
   ];
 
-  const [projectCodeOption,setprojectCodeOption]=useState([])
+  const [projectCodeOption, setprojectCodeOption] = useState([]);
   // Cost Center Code Get UseState ..................................................
-  const [costCenterOption,setCostCenterOption]=useState([])
+  const [costCenterOption, setCostCenterOption] = useState([]);
 
   const PrOption: IDropdownOption[] = [
     { key: "SAP", text: "SAP(Omnicell)" },
@@ -412,46 +390,28 @@ const [ProCodeItem, setProCodeItem] = useState<IPrProjectCode>(
   };
 
   //peoplepicker
-   const companyCodeOptionSet = (newItem) => {
-
+  const companyCodeOptionSet = (newItem) => {
     if (newItem.length !== 0) {
-
       console.log(newItem[0].companyCode);
 
       let itemTest = {
-
         key: newItem[0].EmployeeId,
 
         text: newItem[0].companyCode,
-
       };
 
       costCenter = newItem[0].costCenter;
       setCompanyCodeOption([itemTest]);
-
     }
-
- 
-
-    // console.log(newItem[0].EmployeeId);
-
- 
-
-    // console.log("QQQQQQQQQQQQQQQQQQ ----- ");
-
-    // console.log(itemTest);
-
-    // console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-
   };
-  
+
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
     item: IDropdownOption | undefined,
     index: number
   ): void => {
     const { id } = event.target as HTMLDivElement;
-    console.log("------------------Sap===Sap",item);
+    console.log("------------------Sap===Sap", item);
     console.log(id);
     let newSelectedItem: IDropdownOption = { key: "", text: "" };
     // let warningmsg={
@@ -466,7 +426,10 @@ const [ProCodeItem, setProCodeItem] = useState<IPrProjectCode>(
     //   <ModalModelessExample/>
     //   newSelectedItem = { key: item?.key as string, text: item?.text as string };
     // }
-    console.log("------------------ newSelectedItem === newSelectedItem", newSelectedItem);
+    console.log(
+      "------------------ newSelectedItem === newSelectedItem",
+      newSelectedItem
+    );
     setSelectedItems((prevSelectedItems) => ({
       ...prevSelectedItems,
       [id]: newSelectedItem,
@@ -478,199 +441,181 @@ const [ProCodeItem, setProCodeItem] = useState<IPrProjectCode>(
   };
   //------------------------------------------
 
+  //company Code Using Redux
 
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
-//company Code Using Redux
+  const primaryinfoData = useSelector((state: RootState) => state.primaryinfo);
+  const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
 
- const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-
-const primaryinfoData = useSelector((state: RootState) => state.primaryinfo);
-const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
-
-useEffect(() => {
- console.log("selectedItems.selectDepartment.text----",selectedItems.selectDepartment.text);
- 
+  useEffect(() => {
+    console.log(
+      "selectedItems.selectDepartment.text----",
+      selectedItems.selectDepartment.text
+    );
 
     for (let i = 0; i < Object.keys(primaryinfoData.optionGroup).length; i++) {
-
       let newSelectedItem = {
-
         key: primaryinfoData.optionGroup[
-
           Object.keys(primaryinfoData.optionGroup)[i]
-
         ].key,
 
         text: primaryinfoData.optionGroup[
-
           Object.keys(primaryinfoData.optionGroup)[i]
-
         ].text,
-
       };
 
       setSelectedItems((prevSelectedItems) => ({
-
         ...prevSelectedItems,
 
         [Object.keys(primaryinfoData.optionGroup)[i]]: newSelectedItem,
-
       }));
-
     }
 
- 
-
     for (let i = 0; i < Object.keys(primaryinfoData.radioGroup).length; i++) {
-
-      console.log("       -------------------------------                       --------------------               ----------------------             ",primaryinfoData.radioGroup[
-
-          Object.keys(primaryinfoData.radioGroup)[i]
-
-        ].key, primaryinfoData.radioGroup[
-
-          Object.keys(primaryinfoData.radioGroup)[i]
-
-        ].text)
+      console.log(
+        "       -------------------------------                       --------------------               ----------------------             ",
+        primaryinfoData.radioGroup[Object.keys(primaryinfoData.radioGroup)[i]]
+          .key,
+        primaryinfoData.radioGroup[Object.keys(primaryinfoData.radioGroup)[i]]
+          .text
+      );
       let newSelectedItem = {
-
         key: primaryinfoData.radioGroup[
-
           Object.keys(primaryinfoData.radioGroup)[i]
-
         ].key,
 
         text: primaryinfoData.radioGroup[
-
           Object.keys(primaryinfoData.radioGroup)[i]
-
         ].text,
-
       };
 
       setSelectRadioItems((prevSelectRadioItems) => ({
-
         ...prevSelectRadioItems,
 
         [Object.keys(primaryinfoData.radioGroup)[i]]: newSelectedItem, // Update the specific option state key
-
       }));
-
     }
-
- 
 
     console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkk");
 
     console.log(selectedItems["companyCode"]?.key);
 
     console.log(selectRadioItems.buyRadio.key);
-
-    
-
   }, []);
-  useEffect(()=>{
+  useEffect(() => {
+    let prType: string = selectedItems.prOption.key as string;
 
-    let prType:string=selectedItems.prOption.key as string;
+    console.log("prType......prType.....prType :::", prType);
 
-    console.log("prType......prType.....prType :::",prType);
-    
-    for(let i:number=0;i<primaryinfoData.leftCheckbox.length;i++){
-      TooltipPurchases.expenseTooltipdata(prType,primaryinfoData.leftCheckbox[i].label);
-      TooltipPurchases.prepaidTooltipdata(prType,primaryinfoData.leftCheckbox[i].label);
-
+    for (let i: number = 0; i < primaryinfoData.leftCheckbox.length; i++) {
+      TooltipPurchases.expenseTooltipdata(
+        prType,
+        primaryinfoData.leftCheckbox[i].label
+      );
+      TooltipPurchases.prepaidTooltipdata(
+        prType,
+        primaryinfoData.leftCheckbox[i].label
+      );
     }
-    for(let j:number=0;j<primaryinfoData.rightCheckbox.length;j++){
+    for (let j: number = 0; j < primaryinfoData.rightCheckbox.length; j++) {
       // TooltipPurchases.expenseTooltipdata(selectedItems.prOption.text,primaryinfoData.rightCheckbox[i].label);
       // TooltipPurchases.prepaidTooltipdata(selectedItems.prOption.text,primaryinfoData.rightCheckbox[i].label);
     }
-  },[selectedItems.prOption])
+  }, [selectedItems.prOption]);
 
-  const [warningContent,setwarningContent]=useState<string>(" ");
+  const [warningContent, setwarningContent] = useState<string>(" ");
 
+  useEffect(() => {
+    WarningMessage.firstWarningCheck().then((value) => {
+      console.log(
+        "selectRadioItems.buyRadio.text:::--",
+        selectRadioItems.buyRadio.text
+      );
 
- useEffect(()=>{
-  WarningMessage.firstWarningCheck().then((value)=>{
-    console.log("selectRadioItems.buyRadio.text:::--",selectRadioItems.buyRadio.text);
-    
- let titledata={
-    "name":value.name,
-    "countryKey":value.CountryKey,
-    "currencyKey":value.CurrencyKey,
-    "costCenter":value.CostCenter,
-    "TypeofbuyOption":selectRadioItems.buyRadio.text,
-    "IsPrepaidCapital":selectRadioItems.prepaidcapitalRadio.text
-  }
-  setTile(titledata);
+      let titledata = {
+        name: value.name,
+        countryKey: value.CountryKey,
+        currencyKey: value.CurrencyKey,
+        costCenter: value.CostCenter,
+        TypeofbuyOption: selectRadioItems.buyRadio.text,
+        IsPrepaidCapital: selectRadioItems.prepaidcapitalRadio.text,
+      };
+      setTile(titledata);
 
-    if(value.warningMsg!==" "){
-      setwarningContent(value.warningMsg);
-      setshowDialog(true);
-    }
-  });
-
-},[GlobalStore.getName(),selectRadioItems.buyRadio.text,selectRadioItems.prepaidcapitalRadio.text])
-
-useMemo(()=>{
-// Select Other Cost Center Options ----------------------------------
-// if(selectedItems.prOption.key==="SAP"){
-
-
-   restApiCall.getCostCenterList(selectedItems.companyCode.text).then((Prcostcenter)=>{
-  
-    let listDataCostCenterSap=[]
-      for(let i=0;i<Prcostcenter.length;i++){
-        let newObjCostCenter={
-          key: Prcostcenter[i] ,
-          text: Prcostcenter[i].Title+"("+Prcostcenter[i].Details+")"
-        }
-        listDataCostCenterSap.push(newObjCostCenter)
+      if (value.warningMsg !== " ") {
+        setwarningContent(value.warningMsg);
+        setshowDialog(true);
       }
-      setCostCenterOption([...listDataCostCenterSap])
-    })
-  }
-//  }
-  ,[selectedItems.companyCode])
-  
-useMemo(()=>{
-  let listProjectCode=[];
-  restApiCall.getProjetCodeList(selectedItems.selectDepartment.text).then((projectCodeList)=>{
-            for(let i=0;i<projectCodeList.length;i++){
-          if(projectCodeList[i].IsActive){
-        let newOption={
-          key:projectCodeList[i].Title.toLowerCase(),
-          text:projectCodeList[i].Title
+    });
+  }, [
+    GlobalStore.getName(),
+    selectRadioItems.buyRadio.text,
+    selectRadioItems.prepaidcapitalRadio.text,
+  ]);
+
+  useMemo(
+    () => {
+      // Select Other Cost Center Options ----------------------------------
+      // if(selectedItems.prOption.key==="SAP"){
+
+      restApiCall
+        .getCostCenterList(selectedItems.companyCode.text)
+        .then((Prcostcenter) => {
+          let listDataCostCenterSap = [];
+          for (let i = 0; i < Prcostcenter.length; i++) {
+            let newObjCostCenter = {
+              key: Prcostcenter[i],
+              text: Prcostcenter[i].Title + "(" + Prcostcenter[i].Details + ")",
+            };
+            listDataCostCenterSap.push(newObjCostCenter);
+          }
+          setCostCenterOption([...listDataCostCenterSap]);
+        });
+    },
+    //  }
+    [selectedItems.companyCode]
+  );
+
+  useMemo(() => {
+    let listProjectCode = [];
+    restApiCall
+      .getProjetCodeList(selectedItems.selectDepartment.text)
+      .then((projectCodeList) => {
+        for (let i = 0; i < projectCodeList.length; i++) {
+          if (projectCodeList[i].IsActive) {
+            let newOption = {
+              key: projectCodeList[i].Title.toLowerCase(),
+              text: projectCodeList[i].Title,
+            };
+            listProjectCode.push(newOption);
+          }
         }
-         listProjectCode.push(newOption)}
-        
-      }
-      setprojectCodeOption([...listProjectCode])
+        setprojectCodeOption([...listProjectCode]);
+      });
+  }, [selectedItems.selectDepartment]);
 
-  })
+  // useEffect(()=>{
 
-},[selectedItems.selectDepartment])
+  // },[]);
 
-// useEffect(()=>{
-
-
-// },[]);
-
-const hoverCallfunction=(prType:string,ebuy:string,toolName:string)=>{
-  
-  let queryData={
-   prType:prType,
-    ebuy:ebuy,
-    toolName:toolName
+  const hoverCallfunction = (
+    prType: string,
+    ebuy: string,
+    toolName: string
+  ) => {
+    let queryData = {
+      prType: prType,
+      ebuy: ebuy,
+      toolName: toolName,
+    };
+    dispatch(toolTipUpdate(queryData));
   };
-  dispatch(toolTipUpdate(queryData));
-
-  
-}
   //......................................
 
   //for file upload .........................
 
-interface IoptionSave {
+  interface IoptionSave {
     [key: string]: IDropdownOption;
   }
 
@@ -683,418 +628,359 @@ interface IoptionSave {
     optionGroup: IoptionSave[];
   }
 
-  const changeStrToBool=(value:string)=>{
-    if(value==="Yes"){
+  const changeStrToBool = (value: string) => {
+    if (value === "Yes") {
       return true;
     }
     return false;
-  }
+  };
 
-
-
- const SaveandContinue = () => {
+  const SaveandContinue = () => {
     let saveRadioGroupData: IradioSave[] = [
-
       {
-
         ehsRadio: {
-
           key: selectRadioItems.ehsRadio.key,
 
           text: selectRadioItems.ehsRadio.text,
-
         },
-
       },
 
       {
-
         prepaidcapitalRadio: {
-
           key: selectRadioItems.prepaidcapitalRadio.key,
 
           text: selectRadioItems.prepaidcapitalRadio.text,
-
         },
-
       },
 
       {
-
         constCenterRadio: {
-
           key: selectRadioItems.constCenterRadio.key,
 
           text: selectRadioItems.constCenterRadio.text,
-
         },
-
       },
 
       {
-
         prRadio: {
-
           key: selectRadioItems.prRadio.key,
 
           text: selectRadioItems.prRadio.text,
-
         },
-
       },
 
       {
-
         buyRadio: {
-
           key: selectRadioItems.buyRadio.key,
 
           text: selectRadioItems.buyRadio.text,
-
         },
-
       },
 
       {
-
         prProjectRadio: {
-
           key: selectRadioItems.prProjectRadio.key,
 
           text: selectRadioItems.prProjectRadio.text,
-
         },
-
       },
-
     ];
 
- 
-
     let saveOptionGroupData: IoptionSave[] = [
-
       {
-
         prOption: {
-
           key: selectedItems.prOption.key,
 
           text: selectedItems.prOption.text,
-
         },
-
       },
 
       {
-
         companyCode: {
-
           key: selectedItems.companyCode.key,
 
           text: selectedItems.companyCode.text,
-
         },
-
       },
 
       {
-
         selectDepartment: {
-
           key: selectedItems.selectDepartment.key,
 
           text: selectedItems.selectDepartment.text,
-
         },
-
       },
 
       {
-
         projectCode: {
-
           key: selectedItems.projectCode.key,
 
           text: selectedItems.projectCode.text,
-
         },
-
       },
-
     ];
 
- 
-
     let saveData: ISaveData = {
-
       radioGroup: saveRadioGroupData,
 
       optionGroup: saveOptionGroupData,
-
     };
 
- 
-
-    let checkboxList =[];
-    checkboxList= [...checkboxList,...primaryinfoData.leftCheckbox.filter(
-
-      (checkItem: CheckboxItem) => checkItem.isChecked
-
-    )];
-      checkboxList= [...checkboxList,...primaryinfoData.rightCheckbox.filter(
-
-      (checkItem: CheckboxItem) => checkItem.isChecked
-
-    )];
+    let checkboxList = [];
+    checkboxList = [
+      ...checkboxList,
+      ...primaryinfoData.leftCheckbox.filter(
+        (checkItem: CheckboxItem) => checkItem.isChecked
+      ),
+    ];
+    checkboxList = [
+      ...checkboxList,
+      ...primaryinfoData.rightCheckbox.filter(
+        (checkItem: CheckboxItem) => checkItem.isChecked
+      ),
+    ];
     let ListofTypePurchases: TypeofPurchaseDetail[] = [];
 
-    checkboxList.map((item: CheckboxItem,index:number) => {
-    
-            let newpurchaseItem: TypeofPurchaseDetail;
-
- 
+    checkboxList.map((item: CheckboxItem, index: number) => {
+      let newpurchaseItem: TypeofPurchaseDetail;
 
       if (lineintemData.TypeofPurchaseDetailList.length !== 0) {
-           if (
-
+        if (
           lineintemData.TypeofPurchaseDetailList[index].typeofPurchaseName ===
-
           item.label
-
         ) {
-
           newpurchaseItem = lineintemData.TypeofPurchaseDetailList[index];
-
-        }else{
-          newpurchaseItem=new TypeofPurchaseDetail(item.label);
-
+        } else {
+          newpurchaseItem = new TypeofPurchaseDetail(item.label);
         }
-
+      } else {
+        newpurchaseItem = new TypeofPurchaseDetail(item.label);
       }
-      else{
-        newpurchaseItem=new TypeofPurchaseDetail(item.label);
-      }
-      newpurchaseItem.costCenter = costCenter;      
+      newpurchaseItem.costCenter = costCenter;
       newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
       ListofTypePurchases.push(newpurchaseItem);
-
     });
 
-
- 
     console.log("lineItemsaveTable");
-      console.log(lineintemData);
-    let setlineItemData = {      
+    console.log(lineintemData);
+    let setlineItemData = {
       // projectCode:selectedItems["projectCode"]?.text,
-      saveTable:(lineintemData.saveTable===0)?0:1,
+      saveTable: lineintemData.saveTable === 0 ? 0 : 1,
       selectDepartment: selectedItems["selectDepartment"]?.text,
       prProjectRadio: selectRadioItems["prProjectRadio"]?.text,
       TypeofPurchaseDetailList: ListofTypePurchases,
-
+      Finalpage: false,
     };
     console.log("setlineItemData");
     console.log(setlineItemData);
-    console.log(",setlineItemData.prProjectRadio--,setlineItemData.prProjectRadio",setlineItemData.prProjectRadio);
-    
+    console.log(
+      ",setlineItemData.prProjectRadio--,setlineItemData.prProjectRadio",
+      setlineItemData.prProjectRadio
+    );
 
     dispatch(setlineitemValue(setlineItemData));
 
     dispatch(setValue(saveData));
 
     console.log("1.SAVE PR ALL Values...........");
-    let samplecheckbox=[];
-    for(let i:number=0;i<checkboxList.length;i++){
-      
-      samplecheckbox.push(checkboxList[i].label)
-
-
+    let samplecheckbox = [];
+    for (let i: number = 0; i < checkboxList.length; i++) {
+      samplecheckbox.push(checkboxList[i].label);
     }
-let warningCheckData={};
-    if(selectRadioItems["constCenterRadio"].text=="Alternate Cost Center"){
-
-      let warningmsg={
-        "Select Other Cost Center":selectedItems["SelectAltCostCenter"]?.text
-
-      }
-      warningCheckData={...warningCheckData,...warningmsg};     
-    } 
-    
-    if(selectRadioItems["prepaidcapitalRadio"]?.text=="Capital Equipment / Asset"){
-      let warningmsg={
-        "CIP Number":textbox.CIPNum,
-        "UFID":textbox.UFID,
-      }
-      warningCheckData={...warningCheckData,...warningmsg};
-    }
-    if(selectRadioItems["prProjectRadio"].text==="Yes"){
-      let warningmsg={
-        "Select Department and Project Code": selectedItems["projectCode"]?.text
-      }
-      warningCheckData={...warningCheckData,...warningmsg};
-
+    let warningCheckData = {};
+    if (selectRadioItems["constCenterRadio"].text == "Alternate Cost Center") {
+      let warningmsg = {
+        "Select Other Cost Center": selectedItems["SelectAltCostCenter"]?.text,
+      };
+      warningCheckData = { ...warningCheckData, ...warningmsg };
     }
 
+    if (
+      selectRadioItems["prepaidcapitalRadio"]?.text ==
+      "Capital Equipment / Asset"
+    ) {
+      let warningmsg = {
+        "CIP Number": textbox.CIPNum,
+        UFID: textbox.UFID,
+      };
+      warningCheckData = { ...warningCheckData, ...warningmsg };
+    }
+    if (selectRadioItems["prProjectRadio"].text === "Yes") {
+      let warningmsg = {
+        "Select Department and Project Code":
+          selectedItems["projectCode"]?.text,
+      };
+      warningCheckData = { ...warningCheckData, ...warningmsg };
+    }
 
-  warningCheckData={
-    ...warningCheckData,
-  "Type of Purchase":samplecheckbox[0],
-  //cip number, ufid,project code ,Select Other Cost Center,Upload Important Documents:,document type
-}
-console.log("warningCheckData",warningCheckData);
-let pkid:number=Math.floor(Math.random()*100000000)
-let fileInfo=[];
+    warningCheckData = {
+      ...warningCheckData,
+      "Type of Purchase": samplecheckbox[0],
+      //cip number, ufid,project code ,Select Other Cost Center,Upload Important Documents:,document type
+    };
+    console.log("warningCheckData", warningCheckData);
+    let pkid: number = Math.floor(Math.random() * 100000000);
+    let fileInfo = [];
 
+    WarningMessage.accept(warningCheckData).then((warningRes) => {
+      if (warningRes != "") {
+        setwarningContent(warningRes);
+        setshowDialog(true);
+      } else if (warningRes === "") {
+        let Type_Of_Order: string = samplecheckbox.join();
 
-WarningMessage.accept(warningCheckData).then((warningRes)=>{
+        let saveprimayData = [
+          {
+            PKID: pkid,
+            ConnectPRID: "0123456",
+            Type_Of_Buy: selectRadioItems.buyRadio.text,
+            PrepaidOrCapitalEquipment:
+              selectRadioItems.prepaidcapitalRadio.text,
+            EHS: changeStrToBool(selectRadioItems.ehsRadio.text),
+            Title: null,
+            RequestFor: GlobalStore.getName(),
+            Type_Of_Order: Type_Of_Order,
+            Order_Amount: null,
+            CIP_Number: textbox.CIPNum,
+            UFID: textbox.UFID,
+            Supplier_Account_Number: null,
+            Supplier_Name: null,
+            Supplier_Address: null,
+            Supplier_City: null,
+            Supplier_State: null,
+            Supplier_Zip: null,
+            Supplier_Country: null,
+            Manager: null,
+            Manager1: null,
+            Manager2: null,
+            Manager3: null,
+            GL_Account: null,
+            Status: null,
+            TaskCreatedFor: null,
+            ApprovalInstance: null,
+            Comments: null,
+            Cost_Center: +costCenter,
+            Location: null,
+            IsDeleted: null,
+            Special_Instructions: null,
+            Shipping_Name: null,
+            Shipping_Street: null,
+            Shipping_Postal_Code: null,
+            Shipping_Location: null,
+            Shipping_Region: null,
+            Shipping_Country: null,
+            Shipping_ContactPhone: null,
+            OldReqId: null,
+            SAPPRId: null,
+            LastWorkflowRun: null,
+            CurrentApprovalStep: null,
+            ManagerLevel: null,
+            FinalApprovalDate: null,
+            IsOtherCC: null,
+            IsCFOApproved: null,
+            CFO: null,
+            AllApprovers: null,
+            CreateDate: null,
+            LastStatus: null,
+            AllManagers: null,
+            JLReminderCount: 0,
+            FIReminderCount: 0,
+            AesyntPRType: selectedItems.prOption.key,
+            PONumber: null,
+            IsCompleted: null,
+            Company: null,
+            ProjectNumber: null,
+            ActCostCenter: +costCenter,
+            CompanyCode: selectedItems.companyCode.text,
+            FromCurrency: null,
+            ToCurrency: null,
+            RequesterCurrency: null,
+            ExchangeRate: null,
+            ExchangeRateV: null,
+            ExchangeRateDate: null,
+            ConvertedDollerAmount: null,
+            CountryKey: null,
+            HRADCompanyCode: null,
+            QuickbookPO: null,
+            CCDescription: null,
+            IsProjectPR: changeStrToBool(selectRadioItems.prProjectRadio.text),
+            ProjectDepartment: selectedItems.selectDepartment.text,
+            ProjectCode: selectedItems.projectCode.text,
+            Created: null,
+            CreatedBy: null,
+            Modified: null,
+            ModifiedBy: null,
+            PRNumber: null,
+            DWCreateDate: null,
+            PRId: null,
+            OldAllApprovers: null,
+            OldAllManagers: null,
+            OldCFO: null,
+            OldCreatedBy: null,
+            OldManager: null,
+            OldManager1: null,
+            OldManager2: null,
+            OldManager3: null,
+            OldModifiedBy: null,
+            OldRequestFor: null,
+            OldTaskCreatedFor: null,
+          },
+        ];
+        restApiCall
+          .insertPrimaryInfoData(saveprimayData, true)
+          .then((value: number) => {
+            dispatch(savePkid(value));
 
-  if(warningRes !=""){
-          setwarningContent(warningRes);
-      setshowDialog(true);
+            let ConnectPRID: string = "000000" + value;
+            GlobalStore.storePrId(ConnectPRID);
+            if (primaryinfoData.fileData.length !== 0) {
+              for (
+                let i: number = 0;
+                i < primaryinfoData.fileData.length;
+                i++
+              ) {
+                console.log(
+                  "primaryinfoData-primaryinfoData=primaryinfoData",
+                  primaryinfoData.fileData[i],
+                  ConnectPRID
+                );
 
-
-  }else if(warningRes ===""){
-      let Type_Of_Order:string=samplecheckbox.join()
-  
-      let saveprimayData=[
-{
-   "PKID":pkid ,
-    "ConnectPRID":"0123456",
-    "Type_Of_Buy": selectRadioItems.buyRadio.text,
-    "PrepaidOrCapitalEquipment": selectRadioItems.prepaidcapitalRadio.text,
-    "EHS": changeStrToBool(selectRadioItems.ehsRadio.text),
-    "Title": null,
-    "RequestFor": GlobalStore.getName(),
-    "Type_Of_Order": Type_Of_Order,
-    "Order_Amount": null,
-    "CIP_Number":textbox.CIPNum ,
-    "UFID":textbox.UFID ,
-    "Supplier_Account_Number": null,
-    "Supplier_Name": null,
-    "Supplier_Address": null,
-    "Supplier_City": null,
-    "Supplier_State": null,
-    "Supplier_Zip": null,
-    "Supplier_Country": null,
-    "Manager": null,
-    "Manager1": null,
-    "Manager2": null,
-    "Manager3": null,
-    "GL_Account": null,
-    "Status": null,
-    "TaskCreatedFor": null,
-    "ApprovalInstance":null,
-    "Comments": null,
-    "Cost_Center": +costCenter,
-    "Location": null,
-    "IsDeleted": null,
-    "Special_Instructions": null,
-    "Shipping_Name": null,
-    "Shipping_Street": null,
-    "Shipping_Postal_Code": null,
-    "Shipping_Location": null,
-    "Shipping_Region": null,
-    "Shipping_Country": null,
-    "Shipping_ContactPhone": null,
-    "OldReqId": null,
-    "SAPPRId": null,
-    "LastWorkflowRun": null,
-    "CurrentApprovalStep": null,
-    "ManagerLevel": null,
-    "FinalApprovalDate": null,
-    "IsOtherCC": null,
-    "IsCFOApproved": null,
-    "CFO": null,
-    "AllApprovers": null,
-    "CreateDate": null,
-    "LastStatus": null,
-    "AllManagers": null,
-     "JLReminderCount": 0,
-    "FIReminderCount": 0,
-    "AesyntPRType": selectedItems.prOption.key,
-    "PONumber": null,
-    "IsCompleted":null,
-    "Company": null,
-    "ProjectNumber": null,
-    "ActCostCenter": +costCenter,
-    "CompanyCode": selectedItems.companyCode.text,
-    "FromCurrency": null,
-    "ToCurrency": null,
-    "RequesterCurrency": null,
-    "ExchangeRate": null,
-    "ExchangeRateV": null,
-    "ExchangeRateDate": null,
-    "ConvertedDollerAmount": null,
-    "CountryKey": null,
-    "HRADCompanyCode": null,
-    "QuickbookPO": null,
-    "CCDescription": null,
-    "IsProjectPR":changeStrToBool(selectRadioItems.prProjectRadio.text),
-    "ProjectDepartment": selectedItems.selectDepartment.text,
-    "ProjectCode": selectedItems.projectCode.text,
-    "Created": null,
-    "CreatedBy": null,
-    "Modified": null,
-    "ModifiedBy": null,
-    "PRNumber": null,
-    "DWCreateDate": null,
-    "PRId": null,
-    "OldAllApprovers": null,
-    "OldAllManagers": null,
-    "OldCFO": null,
-    "OldCreatedBy": null,
-    "OldManager": null,
-    "OldManager1": null,
-    "OldManager2": null,
-    "OldManager3": null,
-    "OldModifiedBy": null,
-    "OldRequestFor": null,
-    "OldTaskCreatedFor": null,
-   
-}
-];
-// restApiCall.insertPrimaryInfoData(saveprimayData,true).then((value:number)=>{
-//   dispatch(savePkid(value));
-
-  // let ConnectPRID:string="000000"+value;
-  // GlobalStore.storePrId(ConnectPRID);
-  // if(primaryinfoData.fileData.length !==0){
-  // for(let i:number=0;i<primaryinfoData.fileData.length;i++){
-  //   console.log("primaryinfoData-primaryinfoData=primaryinfoData",primaryinfoData.fileData[i]);
-    
-  //   let fileDatainfo={
-  //     "PKID":value ,
-  //     "ConnectPRID": ConnectPRID,
-  //     "Doc_Type":primaryinfoData.fileData[i].docType,
-  //     "Filename":primaryinfoData.fileData[i].fileName,
-  //     "Content":primaryinfoData.fileData[i].content,
-  //     "Modified_By":GlobalStore.getmainName(),
-  //     "Modified_Date":primaryinfoData.fileData[i].fileModifiedTime,   
-  //   };
-  //   console.log("DocData save.........  ",fileDatainfo)
-  //   fileInfo.push(fileDatainfo)
-
-  // }
-  // let fileDatapayload={
-  //    "Attachment":fileInfo
-  // }
-  // restApiCall.insertPrimaryInfoData(fileInfo,false).then((value)=>{
-  //   console.log(value)
-  //   console.log("Data Save Here ------------");
-  //   buttonContxtSave();
-  // });
-  //   }
-  // })
-  buttonContxtSave();
-}
-});
-    
+                let fileDatainfo = {
+                  PKID: value,
+                  ConnectPRID: ConnectPRID,
+                  Doc_Type: primaryinfoData.fileData[i].docType,
+                  Filename: primaryinfoData.fileData[i].fileName,
+                  Content: primaryinfoData.fileData[i].content,
+                  Modified_By: GlobalStore.getmainName(),
+                  Modified_Date: primaryinfoData.fileData[i].fileModifiedTime,
+                };
+                console.log("DocData save.........  ", fileDatainfo);
+                fileInfo.push(fileDatainfo);
+              }
+              let fileDatapayload = {
+                Attachment: fileInfo,
+              };
+              restApiCall
+                .insertPrimaryInfoData(fileInfo, false)
+                .then((value) => {
+                  console.log(value);
+                  console.log("Data Save Here ------------");
+                  buttonContxtSave();
+                });
+            }
+          });
+        // buttonContxtSave();
+      }
+    });
   };
   //select checkBox.............
   // const []=useState({
 
   // })
- const changeChakeBox = (ev?: React.FormEvent<HTMLElement | HTMLInputElement> | undefined,
-    checked?: boolean | undefined ) => {
+  const changeChakeBox = (
+    ev?: React.FormEvent<HTMLElement | HTMLInputElement> | undefined,
+    checked?: boolean | undefined
+  ) => {
     const id = (ev?.target as HTMLInputElement).id;
     let newTablename: ITableBuildProps = {
       name: id,
@@ -1103,11 +989,12 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
     dispatch(changeCheckbox(id));
     settypeofPurchases(id);
     setTableCreate(newTablename);
-
   };
 
-  const RightchangeCheckBox = (ev?: React.FormEvent<HTMLElement | HTMLInputElement> | undefined,
-    checked?: boolean | undefined ) => {
+  const RightchangeCheckBox = (
+    ev?: React.FormEvent<HTMLElement | HTMLInputElement> | undefined,
+    checked?: boolean | undefined
+  ) => {
     const id = (ev?.target as HTMLInputElement).id;
     let newTablename: ITableBuildProps = {
       name: id,
@@ -1116,7 +1003,6 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
     dispatch(rightchangeCheckbox(id));
     settypeofPurchases(id);
     setTableCreate(newTablename);
-
   };
 
   //handle file change ....
@@ -1156,10 +1042,10 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
   const hoverStyle: IStackStyles = {
     root: {
       textAlign: "left",
-      marginBottom:"-10px",
-      marginRight:"3px",
-      marginLeft:"2px",
-      paddingBottom:"-10px"
+      marginBottom: "-10px",
+      marginRight: "3px",
+      marginLeft: "2px",
+      paddingBottom: "-10px",
     },
   };
   const col2Style: IStackStyles = {
@@ -1169,14 +1055,14 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
       width: "70%",
     },
   };
-  
-//Onclick for ProjectCodeModal
+
+  //Onclick for ProjectCodeModal
   const linkClickEvent = () => {
     // showModal();
     showProjectCodeModal();
   };
 
-//Onclick for ProjectCodeModal
+  //Onclick for ProjectCodeModal
   const linkGLClickEvent = () => {
     showopenGLAccount();
   };
@@ -1249,7 +1135,13 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                 <div>Are you submitting PR for yourself?:</div>
               </Stack.Item>
               <Stack.Item styles={hoverStyle}>
-                <TooltipShow  context={"Select"+' "No" '+"if you are submitting this PR on behalf of someone else"}/>
+                <TooltipShow
+                  context={
+                    "Select" +
+                    ' "No" ' +
+                    "if you are submitting this PR on behalf of someone else"
+                  }
+                />
               </Stack.Item>
               <Stack.Item styles={col2Style}>
                 <ChoiceGroup
@@ -1265,8 +1157,8 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
           </Stack.Item>
 
           {/* ----------------------------------- */}
-         
-{isPRsubmit ? (
+
+          {isPRsubmit ? (
             <>
               <Stack.Item grow={12}>
                 <Stack horizontal horizontalAlign="baseline">
@@ -1276,7 +1168,8 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                   <Stack.Item styles={col2Style}>
                     <div style={{ width: 250 }}>
                       <PeoplePickerComponent
-                        companyCodeOptionSet={companyCodeOptionSet}/>
+                        companyCodeOptionSet={companyCodeOptionSet}
+                      />
                       {/* <PeopleComponent context={context} /> */}
                     </div>
                   </Stack.Item>
@@ -1285,29 +1178,27 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
             </>
           ) : null}
 
-
           {/* //yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy */}
-        { selectedItems.prOption.text==="SAP(Omnicell)"?
-        (
-          <Stack.Item grow={12}>
-            <Stack horizontal horizontalAlign="baseline">
-              <Stack.Item styles={col1Style}>
-                <div>Company Code: </div>
-              </Stack.Item>
-              <Stack.Item styles={col2Style}>
-                <Dropdown
-                  placeholder="Select an option"
-                  id="companyCode"
-                  onChange={changeDropdownOption}
-                  selectedKey={selectedItems["companyCode"]?.key}
-                  style={{ width: "200px" }}
-                  options={companyCodeOption}
-                  styles={dropdownStyles}
-                />
-              </Stack.Item>
-            </Stack>
-          </Stack.Item>)
-        :null}
+          {selectedItems.prOption.text === "SAP(Omnicell)" ? (
+            <Stack.Item grow={12}>
+              <Stack horizontal horizontalAlign="baseline">
+                <Stack.Item styles={col1Style}>
+                  <div>Company Code: </div>
+                </Stack.Item>
+                <Stack.Item styles={col2Style}>
+                  <Dropdown
+                    placeholder="Select an option"
+                    id="companyCode"
+                    onChange={changeDropdownOption}
+                    selectedKey={selectedItems["companyCode"]?.key}
+                    style={{ width: "200px" }}
+                    options={companyCodeOption}
+                    styles={dropdownStyles}
+                  />
+                </Stack.Item>
+              </Stack>
+            </Stack.Item>
+          ) : null}
           {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
 
           <Stack.Item grow={12}>
@@ -1327,21 +1218,21 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                   />
                   <Link
                     style={{ color: "blue", marginLeft: 15, marginTop: 10 }}
-                    onClick={()=>console.log("Hii")}
+                    onClick={() => console.log("Hii")}
                   >
                     View All Cost Center Details
                   </Link>
                   {openGLAccount ? (
-                        <>
-                          {/* <GLAccountComponent
+                    <>
+                      {/* <GLAccountComponent
                             isGLAccountOpen={openGLAccount}
                             // showGLAccount={setopenGLAccount}
                             showGLAccount={showopenGLAccount}
                             GLAccountType={selectRadioItems.prepaidcapitalRadio.text}
                             
                           /> */}
-                        </>
-                      ) : null}
+                    </>
+                  ) : null}
                 </Stack>
               </Stack.Item>
             </Stack>
@@ -1354,8 +1245,8 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                 <Stack horizontal horizontalAlign="baseline">
                   <Stack.Item styles={col1Style}>
                     <div>Select Other Cost Center: </div>
-                   </Stack.Item>
-                    <Stack.Item styles={col2Style}>
+                  </Stack.Item>
+                  <Stack.Item styles={col2Style}>
                     <Dropdown
                       placeholder="---Select Other Cost Center---"
                       id="SelectAltCostCenter"
@@ -1379,7 +1270,13 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                 <div>Is this PR related to a Project?: </div>
               </Stack.Item>
               <Stack.Item styles={hoverStyle}>
-                <TooltipShow context={"Some departments\n"+"(e.g. Engineering and Marketing) track\n "+"project-related expenses."}/>
+                <TooltipShow
+                  context={
+                    "Some departments\n" +
+                    "(e.g. Engineering and Marketing) track\n " +
+                    "project-related expenses."
+                  }
+                />
               </Stack.Item>
               <Stack.Item styles={col2Style}>
                 <ChoiceGroup
@@ -1460,7 +1357,12 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                 <div>Type of Buy: </div>
               </Stack.Item>
               <Stack.Item styles={hoverStyle}>
-                <TooltipShow  context={"Expense Buy:  "  + "One time Purchase/ One PO-One invoice to be processed against it, might be goods or one-time services expenses."}/>
+                <TooltipShow
+                  context={
+                    "Expense Buy:  " +
+                    "One time Purchase/ One PO-One invoice to be processed against it, might be goods or one-time services expenses."
+                  }
+                />
               </Stack.Item>
               <Stack.Item styles={col2Style}>
                 <ChoiceGroup
@@ -1474,7 +1376,11 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                 />
               </Stack.Item>
               <Stack.Item styles={hoverStyle}>
-                <TooltipShow  context={"Blanket PR:   Multiple payments to be processed, This should be used when payment of the PO total will be split into 2 or De more invoices and/or budgeted recurrent orders for a preferred vendor for a period of time."}/>
+                <TooltipShow
+                  context={
+                    "Blanket PR:   Multiple payments to be processed, This should be used when payment of the PO total will be split into 2 or De more invoices and/or budgeted recurrent orders for a preferred vendor for a period of time."
+                  }
+                />
               </Stack.Item>
             </Stack>
           </Stack.Item>
@@ -1487,10 +1393,13 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
               </Stack.Item>
               <Stack.Item styles={hoverStyle}>
                 {/* style={{ width: "150px" }} */}
-                <TooltipShow context={"Expense:  Standard Expense PR\n"+
-                  "Prepaid: Payment in advance for goods or services over $12,000  USD and services provided beyond one year. This type of PR will always use GL 141010 or 141020 or 141030.\n"+
-                 "Capital Equipment / Asset:   Anything tangible or intangible that is purchased and owned which adds economic value is considered an asset. An asset represents value or ownership that can be converted into cash."}/>
-               
+                <TooltipShow
+                  context={
+                    "Expense:  Standard Expense PR\n" +
+                    "Prepaid: Payment in advance for goods or services over $12,000  USD and services provided beyond one year. This type of PR will always use GL 141010 or 141020 or 141030.\n" +
+                    "Capital Equipment / Asset:   Anything tangible or intangible that is purchased and owned which adds economic value is considered an asset. An asset represents value or ownership that can be converted into cash."
+                  }
+                />
               </Stack.Item>
               <Stack.Item styles={col2Style}>
                 <ChoiceGroup
@@ -1508,7 +1417,8 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
               </Stack.Item>
             </Stack>
           </Stack.Item>
-          {  isPrepaidCapitalbuy && selectedItems.prOption.text==="SAP(Omnicell)" ? (
+          {isPrepaidCapitalbuy &&
+          selectedItems.prOption.text === "SAP(Omnicell)" ? (
             <>
               <Stack.Item grow={12}>
                 <Stack horizontal horizontalAlign="baseline">
@@ -1518,19 +1428,17 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                   <Stack.Item styles={col2Style}>
                     <Stack horizontal tokens={{ childrenGap: 10 }}>
                       <div style={{ width: 350 }}>
-                        <TextField 
-                           name="CIPNum"
-                           value={textbox.CIPNum}
-                           onChange={(e, newValue) =>
-                             newhandleInputChange(e, newValue as string)
-                           }
-                        
-                        placeholder="Provide a valid CIP number" 
-                        
+                        <TextField
+                          name="CIPNum"
+                          value={textbox.CIPNum}
+                          onChange={(e, newValue) =>
+                            newhandleInputChange(e, newValue as string)
+                          }
+                          placeholder="Provide a valid CIP number"
                         />
                       </div>
-                     <Link onClick={() => showCipNumberModal()}>
-                         View All CIP Numbers
+                      <Link onClick={() => showCipNumberModal()}>
+                        View All CIP Numbers
                       </Link>
                       {openCipNumberModal ? (
                         <>
@@ -1539,7 +1447,7 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                             showModal={showCipNumberModal}
                             companyCode={selectedItems.companyCode.text}
                           />
-                     </>
+                        </>
                       ) : null}
                     </Stack>
                   </Stack.Item>
@@ -1553,13 +1461,14 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                   </Stack.Item>
                   <Stack.Item styles={col2Style}>
                     <div style={{ width: 350 }}>
-                      <TextField 
+                      <TextField
                         name="UFID"
                         value={textbox.UFID}
                         onChange={(e, newValue) =>
                           newhandleInputChange(e, newValue as string)
                         }
-                        placeholder="Provide UFID number" />
+                        placeholder="Provide UFID number"
+                      />
                     </div>
                   </Stack.Item>
                 </Stack>
@@ -1567,7 +1476,7 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
             </>
           ) : null}
 
-  {/* ---------------------------------------------------------------------  */}
+          {/* ---------------------------------------------------------------------  */}
 
           <Stack.Item grow={12}>
             <Stack horizontal horizontalAlign="baseline">
@@ -1575,9 +1484,9 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                 <div>Type of Purchase: </div>
               </Stack.Item>
               <Stack.Item styles={hoverStyle}>
-                <TooltipShow  context={"Please select order type for this PR"}/>
+                <TooltipShow context={"Please select order type for this PR"} />
               </Stack.Item>
-              
+
               <Stack.Item style={{ marginTop: 5 }} styles={col2Style}>
                 <Stack horizontal tokens={{ childrenGap: 10 }}>
                   {/* <Stack.Item align="start">
@@ -1625,73 +1534,56 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                     </div>
                   </Stack.Item> */}
 
-                    <Stack.Item align="start">
-
+                  <Stack.Item align="start">
                     {primaryinfoData.leftCheckbox.map(
-
                       (checkBoxItem: CheckboxItem) => {
-
                         return (
-                          <Tippy content={
-                          <TableTooltipPurchases
-                            store={checkBoxItem.store}
-                          />} onShow={()=>hoverCallfunction(selectedItems.prOption.key as string,selectRadioItems.prepaidcapitalRadio.text,checkBoxItem.label)}>                         
+                          <Tippy
+                            content={
+                              <TableTooltipPurchases
+                                store={checkBoxItem.store}
+                              />
+                            }
+                            onShow={() =>
+                              hoverCallfunction(
+                                selectedItems.prOption.key as string,
+                                selectRadioItems.prepaidcapitalRadio.text,
+                                checkBoxItem.label
+                              )
+                            }
+                          >
                             <div className={styles.checkboxgroup}>
-
-                            <Checkbox
-
-                              label={checkBoxItem.label}
-                              id={checkBoxItem.id}
-                              checked={checkBoxItem.isChecked}
-                              disabled={checkBoxItem.isDisable}
-                               onChange={changeChakeBox}
-
-                            />
-
-                          </div>
+                              <Checkbox
+                                label={checkBoxItem.label}
+                                id={checkBoxItem.id}
+                                checked={checkBoxItem.isChecked}
+                                disabled={checkBoxItem.isDisable}
+                                onChange={changeChakeBox}
+                              />
+                            </div>
                           </Tippy>
- 
-
                         );
-
                       }
-
                     )}
-
                   </Stack.Item>
 
                   <Stack.Item align="start">
-
                     {primaryinfoData.rightCheckbox.map(
-
                       (checkBoxItem: CheckboxItem) => {
-
                         return (
-
                           <div className={styles.checkboxgroup}>
-
                             <Checkbox
-
                               label={checkBoxItem.label}
-
                               id={checkBoxItem.id}
-
                               checked={checkBoxItem.isChecked}
                               disabled={checkBoxItem.isDisable}
                               onChange={RightchangeCheckBox}
-
                             />
-
                           </div>
-
                         );
-
                       }
-
                     )}
-
                   </Stack.Item>
-
 
                   {/* <Stack.Item align="start">
                     <div className={styles.checkboxgroup}>
@@ -1737,23 +1629,26 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                       />
                     </div>
                   </Stack.Item> */}
-             {(selectRadioItems.prepaidcapitalRadio.text !== "Capital Equipment / Asset" &&
-             selectRadioItems.prepaidcapitalRadio.text !== "Lease")?
-                  <Link style={{ color: "blue" }} onClick={linkGLClickEvent}>
-                    View All GL Accounts
-                  </Link>:null}
+                  {selectRadioItems.prepaidcapitalRadio.text !==
+                    "Capital Equipment / Asset" &&
+                  selectRadioItems.prepaidcapitalRadio.text !== "Lease" ? (
+                    <Link style={{ color: "blue" }} onClick={linkGLClickEvent}>
+                      View All GL Accounts
+                    </Link>
+                  ) : null}
                   {openGLAccount ? (
-                        <>
-                          <GLAccountComponent
-                            isGLAccountOpen={openGLAccount}
-                            // showGLAccount={setopenGLAccount}
-                            showGLAccount={showopenGLAccount}
-                            GlPRType={selectedItems.prOption.key}
-                            GLAccountType={selectRadioItems.prepaidcapitalRadio.text}
-                            
-                          />
-                        </>
-                      ) : null}
+                    <>
+                      <GLAccountComponent
+                        isGLAccountOpen={openGLAccount}
+                        // showGLAccount={setopenGLAccount}
+                        showGLAccount={showopenGLAccount}
+                        GlPRType={selectedItems.prOption.key}
+                        GLAccountType={
+                          selectRadioItems.prepaidcapitalRadio.text
+                        }
+                      />
+                    </>
+                  ) : null}
                 </Stack>
               </Stack.Item>
             </Stack>
@@ -1767,7 +1662,13 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                 <div> Is this EHS relevant?: </div>
               </Stack.Item>
               <Stack.Item styles={hoverStyle}>
-                <TooltipShow  context={"Select "+'"Yes"'+" if the purchase or use of the material or chemical could cause harm to human health and/or the environment."}/>
+                <TooltipShow
+                  context={
+                    "Select " +
+                    '"Yes"' +
+                    " if the purchase or use of the material or chemical could cause harm to human health and/or the environment."
+                  }
+                />
               </Stack.Item>
               <Stack.Item styles={col2Style}>
                 <ChoiceGroup
@@ -1790,7 +1691,7 @@ WarningMessage.accept(warningCheckData).then((warningRes)=>{
                 <div>Upload Important Documents: </div>
               </Stack.Item>
               <Stack.Item styles={hoverStyle}>
-                <TooltipShow  context={"Please upload files"}/>
+                <TooltipShow context={"Please upload files"} />
               </Stack.Item>
               <Stack.Item styles={col2Style}>
                 {/* <input

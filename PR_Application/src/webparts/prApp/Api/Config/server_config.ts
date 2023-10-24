@@ -24,3 +24,7 @@ export const getTypeOfPurGLCodeOdrTypeUrl="getGLAccount_Result?pType=";
 
 export const getDocItems="getPRRequest_Result?pID=";
 export const insertPlantLocUrl="getPlantLocation_Result";
+
+export const insertDelegateUrl="postPRVacation_Result";
+
+export const getprrequestresultUrl="getPRRequest_Result?pID=";

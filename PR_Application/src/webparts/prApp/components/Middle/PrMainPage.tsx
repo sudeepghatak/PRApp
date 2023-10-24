@@ -4,19 +4,15 @@ import { RootState, store } from "../../../../app/store";
 import { MainPage } from "./MainPage";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { setsiteURL } from "../../../../features/reducers/extraSlice";
+import SetupMainPage from "./SetupMainPage";
 
 const PrMainPage = (props) => {
-  const {siteURL}=props;
+  const { siteURL } = props;
   console.log(siteURL);
-//   const dispatch=useDispatch();
-
-//   React.useEffect(()=>{
-// dispatch(setsiteURL(siteURL));
-//   },[]);
   return (
     <>
       <Provider store={store}>
-        <MainPage />
+        <SetupMainPage />
       </Provider>
     </>
   );

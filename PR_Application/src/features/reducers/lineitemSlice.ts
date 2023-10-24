@@ -7,13 +7,15 @@ interface tableinformation {
   selectDepartment:string;
   prProjectRadio:string;
   TypeofPurchaseDetailList:TypeofPurchaseDetail[];
+  Finalpage:boolean;
   }
   const initialState: tableinformation = {
     // projectCode:"",
     saveTable:0,
     selectDepartment:"",
     prProjectRadio:"",
-    TypeofPurchaseDetailList:[]
+    TypeofPurchaseDetailList:[],
+    Finalpage:false,
 
   };
 
@@ -44,11 +46,17 @@ export const lineitemSlice = createSlice({
         action: PayloadAction<number>){
           console.log("======= "+action.payload);
           state.saveTable=action.payload
+        },
+        updateFinalPage(state: tableinformation, 
+          action: PayloadAction<boolean>){
+            console.log("Update Fun Here -----  ",action.payload)
+            state.Finalpage=action.payload
+
         }
     },
   });
 
-  export const { setlineitemValue,deletetypePurchases,saveButtonClick } = lineitemSlice.actions;
+  export const { setlineitemValue,deletetypePurchases,saveButtonClick,updateFinalPage } = lineitemSlice.actions;
 
   // It is a convention to export reducer as a default export:
   export default lineitemSlice.reducer;

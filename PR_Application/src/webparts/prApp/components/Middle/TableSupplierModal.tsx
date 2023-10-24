@@ -382,7 +382,7 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
 
     });
 
-  }, []);;
+  }, []);
 
   return (
     <Modal

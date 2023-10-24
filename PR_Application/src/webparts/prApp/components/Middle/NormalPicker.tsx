@@ -1,31 +1,22 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
 import { IPersonaProps } from "@fluentui/react/lib/Persona";
 import { NormalPeoplePicker } from "@fluentui/react/lib/Pickers";
-import { EmployeeData } from "../../Api/employee_api";
-import { EmployeeDetails } from "../../Model/employee_details";
 import { restApiCall } from "../../Api/ApiCall";
-import { GlobalStore } from "../../../../app/globalStore";
+import { EmployeeDetails } from "../../Model/employee_details";
 
 interface IPeoplPickerProps {
   companyCodeOptionSet: (item) => void;
   // content?: string;
 }
-
-export const PeoplePickerComponent: React.FunctionComponent<
-  IPeoplPickerProps
-> = (props) => {
-  const [data, setdata] = useState("");
-
+export const NormalPicker: React.FunctionComponent<IPeoplPickerProps> = (
+  props
+) => {
   const { companyCodeOptionSet } = props;
-  const [delayResults, setDelayResults] = useState(false);
-  const [employeeList, setemployeeList] = useState<EmployeeDetails[]>([]);
-  console.log(
-    "kSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSXXXXXXXXXXXXXx ------- ",
-    employeeList
-  );
-  const picker = React.useRef(null);
+  const [data, setdata] = React.useState("");
+  const [delayResults, setDelayResults] = React.useState(false);
+  const [employeeList, setemployeeList] = React.useState<EmployeeDetails[]>([]);
 
+  const picker = React.useRef(null);
   const myDebounce = (callback: () => void, time: number) => {
     let timer: any;
 
@@ -52,26 +43,24 @@ export const PeoplePickerComponent: React.FunctionComponent<
   // Debounce the call to callFun when data changes
 
   const debouncedCallFun = myDebounce(callFun, 1000);
-  useEffect(() => {
+  React.useEffect(() => {
     console.log("I am Call Here =================");
 
     debouncedCallFun();
   }, [data]);
-
   const onFilterChanged = (
     filterText: string,
     currentPersonas: IPersonaProps[],
     limitResults?: number
   ): IPersonaProps[] | Promise<IPersonaProps[]> => {
-    console.log("filterText", filterText);
     setdata(filterText);
     if (picker.current.items.length !== 0) {
       console.log(
         "878787878787878787877-------------------- >",
         picker.current.items[0]
       );
-      GlobalStore.storeName(picker.current.items[0]["text"], false);
-      GlobalStore.storeEmail(picker.current.items[0]["email"], false);
+      //   GlobalStore.storeName(picker.current.items[0]["text"], false);
+      //   GlobalStore.storeEmail(picker.current.items[0]["email"], false);
     }
     console.log("This is Picker here ", picker.current.items);
 
@@ -108,6 +97,7 @@ export const PeoplePickerComponent: React.FunctionComponent<
   return (
     <div>
       <NormalPeoplePicker
+        // eslint-disable-next-line react/jsx-no-bind
         onResolveSuggestions={onFilterChanged}
         inputProps={{
           onBlur: (ev: React.FocusEvent<HTMLInputElement>) =>
@@ -117,8 +107,6 @@ export const PeoplePickerComponent: React.FunctionComponent<
           "aria-label": "People Picker",
         }}
         componentRef={picker}
-        itemLimit={1}
-        // onInputChange={onInputChange}
         resolveDelay={300}
       />
     </div>

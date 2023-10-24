@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl } from './Config/server_config'
+import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl } from './Config/server_config'
 import { EmployeeDetails } from '../Model/employee_details'
 
 export class restApiCall {
@@ -9,6 +9,7 @@ export class restApiCall {
     console.log(body)
     console.log(body)
        let res=await axios.post(`${apiEndpoint}${url}`,body);
+       console.log(res);
         return res;
 
     }
@@ -154,15 +155,23 @@ export class restApiCall {
     }
     // static async
 
+    static async storeDelegateTask(body){
+        
+        let res=await this.rest_apiCall(`${insertDelegateUrl}`,body);
+        console.log("Degelate Insert Succefully --- ",res)
+        return res;
+    }
+
+    static async getPrbasicInfoContent(cId){
+    
+        let res=await this.rest_apiCall(`${getprrequestresultUrl}${cId}`,{});
+        return res.data[0];
+
+
+    }
+
+    
 
 
 }
 
-// export class CIPApi {
-//     static async CIPDataApi(companyCode) {
-          
-//         let res = await axios.get(`https://spdev365api.omnicell.com/api/getPRCIP_Result?compCode=${companyCode}`)
-//         return res.data
-        
-//     }
-// }
