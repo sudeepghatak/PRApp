@@ -8,6 +8,31 @@ export class GlobalStore{
     private static mainName:string;
     private static connetPrId:string;
     private static Tooldata={};
+
+    private static uishowmode:string;
+    private static connectPRID:string;
+
+    static storeconnectPRID(cId:string){
+        this.connectPRID=cId;
+    }
+    static getconnectPRID(){
+        return this.connectPRID;
+
+    }
+
+    static storeUishowMode(uimode:string){
+        localStorage.setItem("uimode",uimode);
+        this.uishowmode=uimode;
+    }
+    static getUishowMode(){
+        let uishowmode:string;
+        if(localStorage.getItem('uimode')==null){
+            uishowmode=null;
+        }else{
+            uishowmode=localStorage.getItem('uimode')
+        }
+        return uishowmode;
+    }
     static storeEmail(email:string,status:boolean){
          console.log("email",email);
          

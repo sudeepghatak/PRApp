@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl } from './Config/server_config'
+import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl } from './Config/server_config'
 import { EmployeeDetails } from '../Model/employee_details'
 
 export class restApiCall {
@@ -146,7 +146,6 @@ export class restApiCall {
         console.log(res.data)
         console.log(res)
         console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-        
     }
     static async insertPlantLoc(body){
         let res= await this.rest_apiCall(`${insertPlantLocUrl}`,body);
@@ -168,6 +167,13 @@ export class restApiCall {
         return res.data[0];
 
 
+    }
+
+
+    static async getsearchByResponse(pid:string,cT:string){
+        
+        let res=await this.rest_apiCall(`${getsearchprrequestresultUrl}?pID=${pid}&cT=${cT}`,{});
+        return res.data;
     }
 
     

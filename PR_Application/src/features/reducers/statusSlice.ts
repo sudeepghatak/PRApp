@@ -37,11 +37,13 @@ interface IAttachments{
 
 }
 interface IStatus{
+    statusTitle:string;
     basicInfo:IBasicInfo;
     supplier:ISupplier;
     isLoading:boolean;
 }
 const initialState:IStatus={
+    statusTitle:"",
     basicInfo:{
         PR_Type: "",
         Total_Order_Amount: "",
@@ -76,8 +78,8 @@ export const fetchStatusContent = createAsyncThunk(
 
     'fetchStatusContent',
 
-    async () => {
-            var res=await restApiCall.getPrbasicInfoContent("0000000414");
+    async (pID:string) => {
+            var res=await restApiCall.getPrbasicInfoContent(pID);
             console.log("Data Here ",res);
             return res;
      
@@ -103,6 +105,7 @@ export const statusSlice=createSlice({
             state.isLoading=false;
             // state.isLoading = fal
             console.log("Response TOP-----------action.payload ::",action.payload);
+            state.statusTitle=(action.payload.Title==null)?" ":action.payload.Title;
             state.basicInfo.UFID=(action.payload.UFID==null)?" ":action.payload.UFID;
             state.basicInfo.Cost_Center=(action.payload.Cost_Center==null)?" ":action.payload.Cost_Center.toString();
             state.basicInfo.Status=(action.payload.Status==null)?" ":action.payload.Status;

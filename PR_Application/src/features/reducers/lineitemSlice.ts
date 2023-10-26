@@ -7,7 +7,7 @@ interface tableinformation {
   selectDepartment:string;
   prProjectRadio:string;
   TypeofPurchaseDetailList:TypeofPurchaseDetail[];
-  Finalpage:boolean;
+  Finalpage:string;
   }
   const initialState: tableinformation = {
     // projectCode:"",
@@ -15,7 +15,7 @@ interface tableinformation {
     selectDepartment:"",
     prProjectRadio:"",
     TypeofPurchaseDetailList:[],
-    Finalpage:false,
+    Finalpage:"",
 
   };
 
@@ -48,7 +48,7 @@ export const lineitemSlice = createSlice({
           state.saveTable=action.payload
         },
         updateFinalPage(state: tableinformation, 
-          action: PayloadAction<boolean>){
+          action: PayloadAction<string>){
             console.log("Update Fun Here -----  ",action.payload)
             state.Finalpage=action.payload
 

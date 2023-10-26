@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Stack, IStackTokens, IStackStyles } from "@fluentui/react/lib/Stack";
 import { DefaultButton, IconButton } from "@fluentui/react/lib/Button";
 import { Icon } from "@fluentui/react/lib/Icon";
@@ -30,7 +30,7 @@ import { ConnectPr } from "../../Api/api";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import PeopleComponent from "./PeopleComponent";
 import { CipModal } from "./TableCipModal";
-import { PeoplePickerComponent } from "./PeoplePickerComponent";
+import  PeoplePickerComponent  from "./PeoplePickerComponent";
 import { GLAccountComponent } from "./TableGLAccountComponent";
 import { RootState } from "../../../../app/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -59,6 +59,8 @@ import { TooltipPurchases } from "../../Utils/tooltipTypeofpurchases";
 import TableTooltipPurchases from "./TableTooltipPurchases";
 import { ModalModelessExample } from "./Modalwarning";
 import { IPrProjectCode } from "../../Model/IPrProjectCode";
+import { fetchStatusContent } from "../../../../features/reducers/statusSlice";
+import { EmployeeDetails } from "../../Model/employee_details";
 
 interface IFirstProps {
   buttonContxtSave: () => void;
@@ -69,6 +71,10 @@ interface IFirstProps {
 let costCenter: string = "";
 const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   const { buttonContxtSave, setTableCreate, setTile } = props;
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+
+  const primaryinfoData = useSelector((state: RootState) => state.primaryinfo);
+  const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
   //use for Modal Show ...........
   const [isModalOpen, setisModalOpen] = useState<boolean>(false);
   const showModal = () => {
@@ -133,68 +139,179 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     setTextbox(newtextBox);
     console.log("Textvalue ........", newtextBox);
   };
+  console.log("Call Here For Update ----- 137 -- PrimaryinfoComponent");
 
+  // useEffect(() => {
+  //   (
+  //     async()=>{
+  //       console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkk144", lineintemData.Finalpage);
+  //       console.log(`edit${GlobalStore.getconnectPRID()}`);
+
+  //   restApiCall.getDocTypeurl(GlobalStore.getPrId()).then((value) => {
+  //     if (value !== 0) {
+  //       for (let i: number = 0; i < value.length; i++) {
+  //         if (
+  //           !(
+  //             value[i].Content === primaryinfoData.fileData[i].content &&
+  //             value[i].Modified_Date ===
+  //               primaryinfoData.fileData[i].fileModifiedTime
+  //           )
+  //         ) {
+  //           let getfileData: fileInformation = {
+  //             key: value[i].ConnectPRID,
+  //             fileName: value[i].Filename,
+  //             fileType: "file",
+  //             modifiedBy: value[i].Modified_By,
+  //             fileModifiedTime: value[i].Modified_Date,
+  //             docType: value[i].Doc_Type,
+  //             content: value[i].Content,
+  //           };
+  //           console.log(
+  //             " get Doc type Data ---------------------- >> ",
+  //             getfileData
+  //           );
+
+  //           dispatch(saveFileDoc(getfileData));
+  //         }
+  //       }
+  //     }
+
+  // restApiCall.getCompanycode().then((value) => {
+  //   console.log("Company Code value", value);
+  //   let companyCodeList = [];
+  //   for (let i: number = 0; i < value.data.length; i++) {
+  //     let newcompany = {
+  //       Key: value.data[i].MappedCompanyCode.toLowerCase(),
+  //       text: value.data[i].MappedCompanyCode,
+  //     };
+  //     companyCodeList.push(newcompany);
+  //   }
+  //   setCompanyCodeOption(companyCodeList);
+  // });
+  // }
+  // )();
+
+  // });
+  // }, [lineintemData.Finalpage]);
+  console.log("--------------PrimaryInfoComponent ---");
   useEffect(() => {
-    //  ConnectPr.getInstance().GetPRCompanyCode().then((PrCompanyValue)=>{
+    (async () => {
+      if (lineintemData.Finalpage === `edit${GlobalStore.getconnectPRID()}`) {
+        let prInfo = await restApiCall.getPrbasicInfoContent(
+          GlobalStore.getconnectPRID()
+        );
 
-    //   let listData=[]
-    //     for(let i=0;i<PrCompanyValue.length;i++){
-    //       if(PrCompanyValue[i].IsValidSAPCompanyCode){
-    //       let newObj={
-    //         key:PrCompanyValue[i],text:PrCompanyValue[i].MappedCompanyCode
-    //       }
-    //       listData.push(newObj)
-    //     }
-    //     setCompanyCodeOption(listData)
+        console.log(prInfo);
 
-    //   }})
-    // setshowDialog(true);
+        let saveRadioGroupData: IradioSave[] = [
+          {
+            ehsRadio: {
+              key: prInfo.EHS ? "yes" : "no",
 
-    restApiCall.getDocTypeurl(GlobalStore.getPrId()).then((value) => {
-      if (value !== 0) {
-        for (let i: number = 0; i < value.length; i++) {
-          if (
-            !(
-              value[i].Content === primaryinfoData.fileData[i].content &&
-              value[i].Modified_Date ===
-                primaryinfoData.fileData[i].fileModifiedTime
-            )
-          ) {
-            let getfileData: fileInformation = {
-              key: value[i].ConnectPRID,
-              fileName: value[i].Filename,
-              fileType: "file",
-              modifiedBy: value[i].Modified_By,
-              fileModifiedTime: value[i].Modified_Date,
-              docType: value[i].Doc_Type,
-              content: value[i].Content,
-            };
-            console.log(
-              " get Doc type Data ---------------------- >> ",
-              getfileData
-            );
+              text: prInfo.EHS ? "Yes" : "No",
+            },
+          },
 
-            dispatch(saveFileDoc(getfileData));
-          }
-        }
-      }
-    });
+          {
+            prepaidcapitalRadio: {
+              key: prInfo.PrepaidOrCapitalEquipment.split(" ")
+                .join("")
+                .toLowerCase(),
 
-    restApiCall.getCompanycode().then((value) => {
-      console.log("Company Code value", value);
-      let companyCodeList = [];
-      for (let i: number = 0; i < value.data.length; i++) {
-        let newcompany = {
-          Key: value.data[i].MappedCompanyCode.toLowerCase(),
-          text: value.data[i].MappedCompanyCode,
+              text: prInfo.PrepaidOrCapitalEquipment,
+            },
+          },
+
+          {
+            constCenterRadio: {
+              key: selectRadioItems.constCenterRadio.key,
+
+              text: selectRadioItems.constCenterRadio.text,
+            },
+          },
+
+          {
+            prRadio: {
+              key: prInfo.RequestFor === null ? "yes" : "no",
+
+              text: prInfo.RequestFor === null ? "Yes" : "No",
+            },
+          },
+
+          {
+            buyRadio: {
+              key: prInfo.Type_Of_Buy.split(" ").join("").toLowerCase(),
+
+              text: prInfo.Type_Of_Buy,
+            },
+          },
+
+          {
+            prProjectRadio: {
+              key: selectRadioItems.prProjectRadio.key,
+
+              text: selectRadioItems.prProjectRadio.text,
+            },
+          },
+        ];
+        let saveOptionGroupData: IoptionSave[] = [
+          {
+            prOption: {
+              key: prInfo.AesyntPRType,
+
+              text: `${
+                prInfo.AesyntPRType
+              }(${prInfo.Company[0].toUpperCase()}${prInfo.Company.slice(1)})`,
+            },
+          },
+
+          {
+            companyCode: {
+              key: prInfo.CompanyCode,
+
+              text: prInfo.CompanyCode,
+            },
+          },
+
+          {
+            selectDepartment: {
+              key: prInfo.ProjectDepartment,
+
+              text: prInfo.ProjectDepartment,
+            },
+          },
+
+          {
+            projectCode: {
+              key: prInfo.ProjectCode,
+
+              text: prInfo.ProjectCode,
+            },
+          },
+        ];
+
+        let emp_details =
+          prInfo.RequestFor !== null
+            ? await restApiCall.getallEmployeList(prInfo.RequestFor)
+            : "";
+        console.log(
+          "EMp Details Here ----------------------",
+          emp_details,
+          prInfo.RequestFor
+        );
+        let saveData: ISaveData = {
+          radioGroup: saveRadioGroupData,
+
+          optionGroup: saveOptionGroupData,
+          requestfor: emp_details[0],
         };
-        companyCodeList.push(newcompany);
+        console.log(
+          "Insert This Here -----------------------------------------------------------------------------------------------------------------------"
+        );
+        dispatch(setValue(saveData));
       }
-      setCompanyCodeOption(companyCodeList);
-    });
-  }, []);
-
-  
+    })();
+  }, [lineintemData.Finalpage]);
 
   // .....................................................................
 
@@ -348,27 +465,13 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     SelectAltCostCenter: { key: "", text: "" },
   });
 
-  // const companyCodeOption: IDropdownOption[] = [
-  //   { key: "1", text: "OM01" },
-  //   { key: "2", text: "OM06" },
-  //   { key: "3", text: "OM31" },
-  //   { key: "4", text: "OM32" },
-  // ];
-
-  //Link for Project Code-------------------------------------
-
   const [ProCodeItem, setProCodeItem] = useState<IPrProjectCode>(
     new IPrProjectCode(" ", " ")
   );
-  // const ProCodeItemDatapick =(ProCode: IPrProjectCode) => {};
-  // console.log("ProCode.project_code---ProCode.project_code",ProCode.project_code);
-  // setProCodeItem(ProCode);
-  // };
-  // ................................................................
 
   const selectCostCenterOption: IChoiceGroupOption[] = [
-    { key: "1", text: "Department" },
-    { key: "2", text: "Alternate Cost Center" },
+    { key: "department", text: "Department" },
+    { key: "alternatecostcenter", text: "Alternate Cost Center" },
   ];
   const selectDepartmentOption: IDropdownOption[] = [
     { key: "engineering", text: "Engineering" },
@@ -390,9 +493,11 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   };
 
   //peoplepicker
-  const companyCodeOptionSet = (newItem) => {
+  const companyCodeOptionSet =useCallback(
+   (newItem) => {
+    console.log("This is Company Code Option Here ---- ", newItem);
     if (newItem.length !== 0) {
-      console.log(newItem[0].companyCode);
+      // console.log(newItem[0].companyCode);
 
       let itemTest = {
         key: newItem[0].EmployeeId,
@@ -403,7 +508,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       costCenter = newItem[0].costCenter;
       setCompanyCodeOption([itemTest]);
     }
-  };
+  },[]);
 
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
@@ -414,18 +519,8 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     console.log("------------------Sap===Sap", item);
     console.log(id);
     let newSelectedItem: IDropdownOption = { key: "", text: "" };
-    // let warningmsg={
-    //     "Click on Alternate Cost Center radio button and then select needed Cost Center.":
 
-    //   }
     newSelectedItem = { key: item?.key as string, text: item?.text as string };
-    // if (item.key==="SAP") {
-    //   newSelectedItem = { key: item?.key as string, text: item?.text as string };
-    // }
-    // else{
-    //   <ModalModelessExample/>
-    //   newSelectedItem = { key: item?.key as string, text: item?.text as string };
-    // }
     console.log(
       "------------------ newSelectedItem === newSelectedItem",
       newSelectedItem
@@ -441,19 +536,13 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   };
   //------------------------------------------
 
-  //company Code Using Redux
-
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-
-  const primaryinfoData = useSelector((state: RootState) => state.primaryinfo);
-  const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
-
+  //this is set all data in redux store ...
   useEffect(() => {
     console.log(
       "selectedItems.selectDepartment.text----",
       selectedItems.selectDepartment.text
     );
-
+    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkk499", lineintemData.Finalpage);
     for (let i = 0; i < Object.keys(primaryinfoData.optionGroup).length; i++) {
       let newSelectedItem = {
         key: primaryinfoData.optionGroup[
@@ -471,7 +560,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         [Object.keys(primaryinfoData.optionGroup)[i]]: newSelectedItem,
       }));
     }
-
+    // setCompanyCodeOption(() => [selectedItems.companyCode]);
     for (let i = 0; i < Object.keys(primaryinfoData.radioGroup).length; i++) {
       console.log(
         "       -------------------------------                       --------------------               ----------------------             ",
@@ -496,13 +585,9 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         [Object.keys(primaryinfoData.radioGroup)[i]]: newSelectedItem, // Update the specific option state key
       }));
     }
+    companyCodeOptionSet([primaryinfoData.requestfor]);
+  }, [lineintemData.Finalpage, primaryinfoData.dataInsert]);
 
-    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-
-    console.log(selectedItems["companyCode"]?.key);
-
-    console.log(selectRadioItems.buyRadio.key);
-  }, []);
   useEffect(() => {
     let prType: string = selectedItems.prOption.key as string;
 
@@ -626,6 +711,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   interface ISaveData {
     radioGroup: IradioSave[];
     optionGroup: IoptionSave[];
+    requestfor?: EmployeeDetails;
   }
 
   const changeStrToBool = (value: string) => {
@@ -636,6 +722,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   };
 
   const SaveandContinue = () => {
+    //------------- start storing- ---------------
     let saveRadioGroupData: IradioSave[] = [
       {
         ehsRadio: {
@@ -769,7 +856,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       selectDepartment: selectedItems["selectDepartment"]?.text,
       prProjectRadio: selectRadioItems["prProjectRadio"]?.text,
       TypeofPurchaseDetailList: ListofTypePurchases,
-      Finalpage: false,
+      Finalpage: lineintemData.Finalpage,
     };
     console.log("setlineItemData");
     console.log(setlineItemData);
@@ -783,10 +870,12 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     dispatch(setValue(saveData));
 
     console.log("1.SAVE PR ALL Values...........");
+    // ---------end storing ---------------------
     let samplecheckbox = [];
     for (let i: number = 0; i < checkboxList.length; i++) {
       samplecheckbox.push(checkboxList[i].label);
     }
+
     let warningCheckData = {};
     if (selectRadioItems["constCenterRadio"].text == "Alternate Cost Center") {
       let warningmsg = {
@@ -819,6 +908,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       //cip number, ufid,project code ,Select Other Cost Center,Upload Important Documents:,document type
     };
     console.log("warningCheckData", warningCheckData);
+
     let pkid: number = Math.floor(Math.random() * 100000000);
     let fileInfo = [];
 
@@ -1020,18 +1110,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     // }
   };
 
-  // const fileuploadhandleClick = (
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   const fileObj = event?.target.files && event?.target.files[0];
-  //   if (!fileObj) {
-  //     return;
-  //   }
-  //   event.target.value = "";
-  //   console.log(fileObj.name);
-  // };
-
-  //
   const col1Style: IStackStyles = {
     root: {
       padding: "10px",
@@ -1169,6 +1247,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                     <div style={{ width: 250 }}>
                       <PeoplePickerComponent
                         companyCodeOptionSet={companyCodeOptionSet}
+                        defaultValue={primaryinfoData.requestfor}
                       />
                       {/* <PeopleComponent context={context} /> */}
                     </div>
@@ -1489,51 +1568,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
               <Stack.Item style={{ marginTop: 5 }} styles={col2Style}>
                 <Stack horizontal tokens={{ childrenGap: 10 }}>
-                  {/* <Stack.Item align="start">
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Consulting"
-                        id="Consulting"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Engineering"
-                        id="Engineering"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Field Services"
-                        id="Field Services"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Manufacturing"
-                        id="Manufacturing"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Office Supply and Equipment"
-                        id="Office Supply and Equipment"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="GAAP"
-                        id="GAAP"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                  </Stack.Item> */}
-
                   <Stack.Item align="start">
                     {primaryinfoData.leftCheckbox.map(
                       (checkBoxItem: CheckboxItem) => {
@@ -1585,50 +1619,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                     )}
                   </Stack.Item>
 
-                  {/* <Stack.Item align="start">
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Corporate"
-                        id="Corporate"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Facilities or Lease"
-                        id="Facilities or Lease"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Computer Equipment"
-                        id="Computer Equipment"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Marketing"
-                        id="Marketing"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Software"
-                        id="Software"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                    <div className={styles.checkboxgroup}>
-                      <Checkbox
-                        label="Benefits"
-                        id="Benefits"
-                        onChange={changeChakeBox}
-                      />
-                    </div>
-                  </Stack.Item> */}
                   {selectRadioItems.prepaidcapitalRadio.text !==
                     "Capital Equipment / Asset" &&
                   selectRadioItems.prepaidcapitalRadio.text !== "Lease" ? (
@@ -1676,7 +1666,10 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                   options={ehsOption}
                   onChange={radioOnChange}
                   required={true}
-                  selectedKey={selectRadioItems["ehsRadio"]?.key}
+                  selectedKey={
+                    // primaryinfoData.radioGroup["ehsRadio"].key
+                    selectRadioItems["ehsRadio"]?.key
+                  }
                   styles={choiceGroupStyles}
                 />
               </Stack.Item>

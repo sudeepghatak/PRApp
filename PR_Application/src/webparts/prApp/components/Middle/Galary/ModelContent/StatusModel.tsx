@@ -17,11 +17,10 @@ interface IModalProps {
 }
 export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
   const { isModalOpen, showModal, backgroundcolor, title } = props;
-  const isLoading = useSelector(
-    (state: RootState) => state.statusreducer.isLoading
-  );
+  const statusInfo = useSelector((state: RootState) => state.statusreducer);
   console.log("-------------------");
-  console.log(isLoading);
+  console.log(statusInfo.isLoading);
+  console.log(statusInfo.statusTitle);
   console.log("llllllllllllllllllllll");
   const background_color = backgroundcolor as string;
   const modal_title = title as string;
@@ -56,9 +55,45 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
         </Stack>
         <div style={{ paddingLeft: 15, paddingRight: 15 }}>
           <div>
-            {!isLoading ? (
+            {!statusInfo.isLoading ? (
               <>
                 <div className="status-model">
+                  <div>
+                    <span>{statusInfo.statusTitle}</span>
+                    <span>
+                      {" "}
+                      <IconButton
+                        iconProps={{ iconName: "View" }}
+                        title="View"
+                        ariaLabel="View"
+                        // onClick={() => copyRow(rowIndex)}
+                      />
+                    </span>
+                    <span>
+                      <IconButton
+                        iconProps={{ iconName: "Edit" }}
+                        title="Edit"
+                        ariaLabel="Edit"
+                        // onClick={() => copyRow(rowIndex)}
+                      />
+                    </span>
+                    <span>
+                      <IconButton
+                        iconProps={{ iconName: "Delete" }}
+                        title="Delete"
+                        ariaLabel="Delete"
+                        // onClick={() => copyRow(rowIndex)}
+                      />
+                    </span>
+                    <span>
+                      <IconButton
+                        iconProps={{ iconName: "Copy" }}
+                        title="Copy"
+                        ariaLabel="Copy"
+                        // onClick={() => copyRow(rowIndex)}
+                      />
+                    </span>
+                  </div>
                   <BoxAccrodion
                     buttonName={"Basic Information"}
                     collapseContent={BasicInformationContent}

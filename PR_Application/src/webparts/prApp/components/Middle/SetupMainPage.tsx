@@ -7,24 +7,23 @@ import "./MainPage.css";
 import GalaryDashboard from "./GalaryDashboard";
 const SetupMainPage: React.FunctionComponent = () => {
   const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
+  console.log("Call Here For Update ----- 10 -- SetupMainPage");
   return (
     <>
-      <>
-        <div id="main-row">
-          <div className="main-first-row">
-            <GalaryDashboard />
-          </div>
-          <div className="main-second-row">
-            {!lineintemData.Finalpage ? (
-              <GalaryMain />
-            ) : (
-              <div id="main-page">
-                <MainPage />
-              </div>
-            )}
-          </div>
+      <div id="main-row">
+        <div className="main-first-row">
+          <GalaryDashboard />
         </div>
-      </>
+        <div className="main-second-row">
+          {lineintemData.Finalpage === "" ? (
+            <GalaryMain />
+          ) : (
+            <div id="main-page">
+              <MainPage />
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
 };

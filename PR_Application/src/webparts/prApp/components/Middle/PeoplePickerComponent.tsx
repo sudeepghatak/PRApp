@@ -1,7 +1,11 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { IPersonaProps } from "@fluentui/react/lib/Persona";
-import { NormalPeoplePicker } from "@fluentui/react/lib/Pickers";
+import {
+  IPeoplePickerItemSelectedProps,
+  NormalPeoplePicker,
+  PeoplePickerItem,
+} from "@fluentui/react/lib/Pickers";
 import { EmployeeData } from "../../Api/employee_api";
 import { EmployeeDetails } from "../../Model/employee_details";
 import { restApiCall } from "../../Api/ApiCall";
@@ -9,20 +13,22 @@ import { GlobalStore } from "../../../../app/globalStore";
 
 interface IPeoplPickerProps {
   companyCodeOptionSet: (item) => void;
+  defaultValue?: EmployeeDetails;
   // content?: string;
 }
 
-export const PeoplePickerComponent: React.FunctionComponent<
-  IPeoplPickerProps
-> = (props) => {
+const PeoplePickerComponent: React.FunctionComponent<IPeoplPickerProps> = (
+  props
+) => {
   const [data, setdata] = useState("");
 
-  const { companyCodeOptionSet } = props;
+  const { companyCodeOptionSet, defaultValue } = props;
   const [delayResults, setDelayResults] = useState(false);
   const [employeeList, setemployeeList] = useState<EmployeeDetails[]>([]);
   console.log(
     "kSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSXXXXXXXXXXXXXx ------- ",
-    employeeList
+    employeeList,
+    defaultValue
   );
   const picker = React.useRef(null);
 
@@ -53,8 +59,6 @@ export const PeoplePickerComponent: React.FunctionComponent<
 
   const debouncedCallFun = myDebounce(callFun, 1000);
   useEffect(() => {
-    console.log("I am Call Here =================");
-
     debouncedCallFun();
   }, [data]);
 
@@ -66,10 +70,6 @@ export const PeoplePickerComponent: React.FunctionComponent<
     console.log("filterText", filterText);
     setdata(filterText);
     if (picker.current.items.length !== 0) {
-      console.log(
-        "878787878787878787877-------------------- >",
-        picker.current.items[0]
-      );
       GlobalStore.storeName(picker.current.items[0]["text"], false);
       GlobalStore.storeEmail(picker.current.items[0]["email"], false);
     }
@@ -109,6 +109,7 @@ export const PeoplePickerComponent: React.FunctionComponent<
     <div>
       <NormalPeoplePicker
         onResolveSuggestions={onFilterChanged}
+        defaultSelectedItems={defaultValue == undefined ? [] : [defaultValue]}
         inputProps={{
           onBlur: (ev: React.FocusEvent<HTMLInputElement>) =>
             console.log("onBlur called"),
@@ -155,3 +156,5 @@ function convertResultsToPromise(
     setTimeout(() => resolve(results), 2000)
   );
 }
+
+export default memo(PeoplePickerComponent);

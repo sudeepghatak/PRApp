@@ -5,6 +5,7 @@ import { DefaultButton } from "@fluentui/react/lib/Button";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { useDispatch } from "react-redux";
 import { updateFinalPage } from "../../../../../../features/reducers/lineitemSlice";
+import { GlobalStore } from "../../../../../../app/globalStore";
 interface IGalaryProps {
   title: string;
 }
@@ -12,7 +13,7 @@ const GalaryBox: React.FunctionComponent<IGalaryProps> = (props) => {
   const { title } = props;
   const dispatch = useDispatch();
   const setUpApiFun = () => {
-    dispatch(updateFinalPage(true));
+    dispatch(updateFinalPage("prsubmit"));
   };
   return (
     <div>

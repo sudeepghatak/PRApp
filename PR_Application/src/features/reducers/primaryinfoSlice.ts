@@ -1,6 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { restApiCall } from "../../webparts/prApp/Api/ApiCall";
 import { GlobalStore } from "../../app/globalStore";
+import { EmployeeDetails } from "../../webparts/prApp/Model/employee_details";
 
 interface choiceGroup{
   key:string,
@@ -61,23 +62,26 @@ interface optionGroup{
 
 
  interface PrimaryPageinformation{
+  dataInsert:boolean;
   radioGroup:radioGroup;
   optionGroup:optionGroup;
 
   leftCheckbox:CheckboxItem[];
   rightCheckbox:CheckboxItem[];
   fileData:fileInformation[];
+  requestfor:EmployeeDetails
 }
 
 
 const initialState: PrimaryPageinformation = {
+  dataInsert:false,
   radioGroup:{
   buyRadio: { key: "expensebuy", text: "Expense Buy" },//type of buy
   prProjectRadio:{key:"no",text:"No"},//pr project
   prRadio: { key: "yes", text: "Yes" },
-  constCenterRadio: { key: "1", text: "Department" },//cost center 
+  constCenterRadio: { key: "department", text: "Department" },//cost center 
   prepaidcapitalRadio: { key: "expense", text: "Expense" },//is this Prepaid
-  ehsRadio: { key: "no", text: "No" },
+  ehsRadio: { key: "yes", text: "Yes" },
   },
   optionGroup:{
     prOption:  { key: "SAP", text: "SAP(Omnicell)" },
@@ -99,7 +103,14 @@ const initialState: PrimaryPageinformation = {
   {"label":"Marketing","id":"Marketing","isChecked":false,"isDisable":false,"store":[]},
   {"label":"Softwaret","id":"Software","isChecked":false,"isDisable":false,"store":[]},
   {"label":"Benefits","id":"Benefits","isChecked":false,"isDisable":false,"store":[]}],
-  fileData:[]
+  fileData:[],
+  requestfor:{
+    EmployeeId: "",
+    email: "",
+    text: "",
+    companyCode: "",
+    costCenter: ""
+  }
   };
 
   export const insertContent = createAsyncThunk(
@@ -168,12 +179,14 @@ const initialState: PrimaryPageinformation = {
           state.optionGroup[Object.keys(action.payload.optionGroup[i])[0]]=action.payload.optionGroup[i][Object.keys(action.payload.optionGroup[i])[0]]
 
         }
-        
+       
         for(let i=0;i<action.payload.radioGroup.length;i++){
           
           state.radioGroup[Object.keys(action.payload.radioGroup[i])[0]]=action.payload.radioGroup[i][Object.keys(action.payload.radioGroup[i])[0]]
 
         }
+        state.dataInsert=!state.dataInsert
+        state.requestfor=(!(action.payload.requestfor ==null || action.payload.requestfor ==undefined))?action.payload.requestfor:state.requestfor
 
       },
       changeCheckbox(state: PrimaryPageinformation, 

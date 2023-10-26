@@ -3,8 +3,21 @@ import * as React from "react";
 import { useDispatch } from "react-redux";
 import { fetchStatusContent } from "../../../../features/reducers/statusSlice";
 import { StatusModel } from "./Galary/ModelContent/StatusModel";
+import { ISearchResult } from "../../../../features/reducers/searchSlice";
+import { IconButton } from "@fluentui/react/lib/Button";
+import { GlobalStore } from "../../../../app/globalStore";
+import { updateFinalPage } from "../../../../features/reducers/lineitemSlice";
 
-const GalaryBoxCard: React.FunctionComponent = () => {
+interface IGBoxCard {
+  cardItem: ISearchResult;
+}
+const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
+  const { cardItem } = props;
+  // console.log(
+  //   "i am Here of CardItem In GalaryBoxCard",
+  //   cardItem,
+  //   cardItem.ConnectPRID
+  // );
   const [showDialogstatus, setshowDialogstatus] =
     React.useState<boolean>(false);
 
@@ -13,17 +26,22 @@ const GalaryBoxCard: React.FunctionComponent = () => {
   };
 
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const fetchIdInfo = () => {
+  const fetchIdInfo = (pId: string) => {
     showAlertDialogStatus();
-    dispatch(fetchStatusContent());
+    dispatch(fetchStatusContent(pId));
+  };
+  const galaryEdit = (pId: string) => {
+    GlobalStore.storeconnectPRID(pId);
+    //
+    dispatch(updateFinalPage(`edit${pId}`));
   };
   return (
     <>
       <div id="main-galary-box">
         <div className="box-card">
           <div>
-            <a href="#" onClick={() => fetchIdInfo()}>
-              0000027007
+            <a href="#" onClick={() => fetchIdInfo(cardItem.ConnectPRID)}>
+              {cardItem.ConnectPRID}
             </a>
             {showDialogstatus ? (
               <StatusModel
@@ -33,22 +51,47 @@ const GalaryBoxCard: React.FunctionComponent = () => {
                 title="General Information"
               />
             ) : null}
-            <span></span>
-            <span></span>
-            <span></span>
+            <span>
+              <IconButton
+                iconProps={{ iconName: "Edit" }}
+                title="Edit"
+                ariaLabel="Edit"
+                onClick={() => galaryEdit(cardItem.ConnectPRID)}
+              />
+            </span>
+            <span>
+              <IconButton
+                iconProps={{ iconName: "Delete" }}
+                title="Delete"
+                ariaLabel="Delete"
+                // onClick={() => copyRow(rowIndex)}
+              />
+            </span>
+            <span>
+              <IconButton
+                iconProps={{ iconName: "Copy" }}
+                title="Copy"
+                ariaLabel="Copy"
+                // onClick={() => copyRow(rowIndex)}
+              />
+            </span>
           </div>
-          <span>Date: 10/09/2023</span>
+          <span>Date: {cardItem.date}</span>
         </div>
         <br></br>
 
         <div className="box-card">
-          <span>
-            <span>Amount in (USD)</span>
-            <br></br>
-            <span>$0.00</span>
-          </span>
+          <div id="sup_name_ammount">
+            <div>{cardItem.supplierName}</div>
+            <span>
+              <span>Amount in (USD)</span>
+              <br></br>
+              <span>${cardItem.ammount}</span>
+            </span>
+          </div>
+
           <a href="#" className="galary-button">
-            Draft
+            {cardItem.Status}
           </a>
         </div>
       </div>

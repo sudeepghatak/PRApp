@@ -28,3 +28,4 @@ export const insertPlantLocUrl="getPlantLocation_Result";
 export const insertDelegateUrl="postPRVacation_Result";
 
 export const getprrequestresultUrl="getPRRequest_Result?pID=";
+export const getsearchprrequestresultUrl="getPRRequest_Result";

@@ -87,7 +87,7 @@
   background-color:#EFEFEF ;
 }
 .status-model{
-  width: 100%;
+  width: 100% !important;
   display: block;
   
 }
@@ -95,3 +95,10 @@
 .status-model > * {
   margin: 2px;
 }
+
+
+.box-card #sup_name_ammount{
+display: block;
+}
+
+

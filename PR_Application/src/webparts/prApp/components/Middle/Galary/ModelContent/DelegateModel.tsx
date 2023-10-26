@@ -2,7 +2,7 @@ import * as React from "react";
 // import { useState } from "react";
 import { Modal, IIconProps, Stack } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
-import { PeoplePickerComponent } from "../../PeoplePickerComponent";
+import  PeoplePickerComponent  from "../../PeoplePickerComponent";
 import { restApiCall } from "../../../../Api/ApiCall";
 import { GlobalStore } from "../../../../../../app/globalStore";
 interface IModalProps {
