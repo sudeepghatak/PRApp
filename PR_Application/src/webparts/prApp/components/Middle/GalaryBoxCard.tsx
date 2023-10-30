@@ -32,6 +32,7 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
   };
   const galaryEdit = (pId: string) => {
     GlobalStore.storeconnectPRID(pId);
+    GlobalStore.changeviewmodeOn(false)
     //
     dispatch(updateFinalPage(`edit${pId}`));
   };
@@ -48,7 +49,8 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
                 isModalOpen={showDialogstatus}
                 showModal={showAlertDialogStatus}
                 backgroundcolor="#1E3A2E"
-                title="General Information"
+                title={`[${cardItem.ConnectPRID}] Request Details (Status - ${cardItem.Status})`}
+                connectprID={`${cardItem.ConnectPRID}`}
               />
             ) : null}
             <span>

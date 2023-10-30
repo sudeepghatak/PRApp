@@ -19,7 +19,7 @@ const SetupMainPage: React.FunctionComponent = () => {
             <GalaryMain />
           ) : (
             <div id="main-page">
-              <MainPage />
+              <MainPage isViewMode={false} />
             </div>
           )}
         </div>

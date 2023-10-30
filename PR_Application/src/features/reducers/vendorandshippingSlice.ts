@@ -2,15 +2,30 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { VendorDetails } from "../../webparts/prApp/Model/vendor_details";
 
 
+interface otherDetails{
+    justificatiOnOrder:string,
+    downPaymentDetails:string
+}
+
+
 interface IvendorDetails{
     PKID:number,
-    vendorDetails:VendorDetails
+    vendorDetails:VendorDetails,
+    vendorOtherDetails:otherDetails
 
+}
+interface vendorAllData{
+    vendorDetails:VendorDetails,
+    vendorOtherDetails:otherDetails
 }
 
 const initialState:IvendorDetails={
     PKID:0,
-    vendorDetails: new VendorDetails(0, " ", " ", " ", " ", " ", " ", " ", " ")
+    vendorDetails: new VendorDetails(0, " ", " ", " ", " ", " ", " ", " ", " "),
+    vendorOtherDetails:{
+        justificatiOnOrder: "",
+        downPaymentDetails: ""
+    }
 }
 
 export const vendorandshippingSlice=createSlice({
@@ -19,9 +34,10 @@ export const vendorandshippingSlice=createSlice({
     reducers: {
         saveVendorandShippingData(
             state: IvendorDetails, 
-            action: PayloadAction<VendorDetails>
+            action: PayloadAction<vendorAllData>
         ){
-            state.vendorDetails=action.payload
+            state.vendorDetails=action.payload.vendorDetails,
+            state.vendorOtherDetails=action.payload.vendorOtherDetails
 
 
         },

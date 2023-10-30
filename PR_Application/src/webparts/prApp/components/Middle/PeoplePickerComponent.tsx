@@ -14,6 +14,7 @@ import { GlobalStore } from "../../../../app/globalStore";
 interface IPeoplPickerProps {
   companyCodeOptionSet: (item) => void;
   defaultValue?: EmployeeDetails;
+  isViewMode?: boolean;
   // content?: string;
 }
 
@@ -22,7 +23,7 @@ const PeoplePickerComponent: React.FunctionComponent<IPeoplPickerProps> = (
 ) => {
   const [data, setdata] = useState("");
 
-  const { companyCodeOptionSet, defaultValue } = props;
+  const { companyCodeOptionSet, defaultValue, isViewMode } = props;
   const [delayResults, setDelayResults] = useState(false);
   const [employeeList, setemployeeList] = useState<EmployeeDetails[]>([]);
   console.log(
@@ -109,6 +110,7 @@ const PeoplePickerComponent: React.FunctionComponent<IPeoplPickerProps> = (
     <div>
       <NormalPeoplePicker
         onResolveSuggestions={onFilterChanged}
+        disabled={isViewMode == undefined ? false : isViewMode}
         defaultSelectedItems={defaultValue == undefined ? [] : [defaultValue]}
         inputProps={{
           onBlur: (ev: React.FocusEvent<HTMLInputElement>) =>

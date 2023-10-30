@@ -200,12 +200,24 @@ const initialState: PrimaryPageinformation = {
       },
       rightchangeCheckbox(state: PrimaryPageinformation, 
         action: PayloadAction<string>){
+
+      
         for(let i=0;i<state.rightCheckbox.length;i++){
           if(state.rightCheckbox[i].id ===action.payload){
             state.rightCheckbox[i].isChecked=!state.rightCheckbox[i].isChecked
             break;
           }
         }
+      },
+      refreshCheckBox(state: PrimaryPageinformation, 
+       ){
+          for(let i=0;i<state.leftCheckbox.length;i++){
+            state.leftCheckbox[i].isChecked=false;
+          }
+          for(let i=0;i<state.rightCheckbox.length;i++){
+            state.rightCheckbox[i].isChecked=false;
+          }
+
       },
       //toolTip update
       toolTipUpdate(
@@ -280,7 +292,7 @@ console.log("iiiiiiiiiiiiiXXXXXXXXXXXXXXXXXXiiiiiiiiiiiiiiiiiiiiiii")
     }
   });
 
-  export const { setValue,changeCheckbox,rightchangeCheckbox ,saveFileDoc,deleteFileDoc,ChangeDisable,ChangeDisableToEdit,toolTipUpdate,modifyFileData} = primaryinfoSlice.actions;
+  export const { setValue,changeCheckbox,rightchangeCheckbox ,saveFileDoc,deleteFileDoc,ChangeDisable,ChangeDisableToEdit,toolTipUpdate,modifyFileData,refreshCheckBox} = primaryinfoSlice.actions;
 
   // It is a convention to export reducer as a default export:
   export default primaryinfoSlice.reducer;

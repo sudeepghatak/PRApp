@@ -11,7 +11,14 @@ export class GlobalStore{
 
     private static uishowmode:string;
     private static connectPRID:string;
-
+    private static viewmodeOn=false;
+    
+    static changeviewmodeOn(modeValue:boolean){
+        this.viewmodeOn=modeValue
+    }
+    static getviewmodeOn(){
+        return this.viewmodeOn
+    }
     static storeconnectPRID(cId:string){
         this.connectPRID=cId;
     }

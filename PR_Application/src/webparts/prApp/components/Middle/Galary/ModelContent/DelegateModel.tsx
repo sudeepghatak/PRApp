@@ -120,7 +120,7 @@ export const DelegateModel: React.FunctionComponent<IModalProps> = (props) => {
             <br></br>
             <div>
               <span>Delegate To:</span>
-              <PeoplePickerComponent
+                <PeoplePickerComponent
                 companyCodeOptionSet={companyCodeOptionSet}
               />
             </div>

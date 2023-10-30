@@ -1,11 +1,10 @@
-
 import * as React from "react";
 import { IStackStyles, Stack } from "@fluentui/react/lib/Stack";
 import { DefaultButton } from "@fluentui/react/lib/Button";
 import { DefaultPalette } from "@fluentui/react/lib/Styling";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { ITextFieldStyles, TextField } from "@fluentui/react/lib/TextField";
-import { useState, useEffect ,useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 // import styles from "../Style/style.scss";
 import {
   Dropdown,
@@ -37,15 +36,13 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   const { buttonContxtSave, buttonContxtBack } = props;
   const dispatch = useDispatch();
   const vendorandshippingData = useSelector(
-
     (state: RootState) => state.vendorandshipping
-
   );
-  //primary Info companycode 
-   const optionGroupData = useSelector(
+  //primary Info companycode
+  const optionGroupData = useSelector(
     (state: RootState) => state.primaryinfo.optionGroup
   );
-  
+
   const [selectshipAddress, setselectshipAddress] = useState<boolean>(false);
 
   const [openSupplierSearch, setopenSupplierSearch] = useState<boolean>(false);
@@ -53,17 +50,14 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     setopenSupplierSearch(!openSupplierSearch);
   };
 
-
   //Other Shipping Location Modal Design Here ...........................
   const [openOtherShipping, setopenOtherShipping] = useState<boolean>(false);
   const showOtherShipping = () => {
     setopenOtherShipping(!openOtherShipping);
   };
-//Redux save
+  //Redux save
   useEffect(() => {
-
     setvendorItem(vendorandshippingData.vendorDetails);
-
   }, []);
 
   const [vendorItem, setvendorItem] = useState<VendorDetails>(
@@ -72,7 +66,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   //insertOtherVendor api....
 
   const [otherLocInsert, setotherLocInsert] = useState<insertOtherVendor>(
-    new insertOtherVendor( " ",0, " ", " ", " ",true,true,true, " ")
+    new insertOtherVendor(" ", 0, " ", " ", " ", true, true, true, " ")
   );
 
   const venderItemDatapick = (vendor: VendorDetails) => {
@@ -81,23 +75,20 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     setvendorItem(vendor);
   };
 
- const [shippingItem, setShippingItem] = useState<IPROtherShippingLoc>(
-    new IPROtherShippingLoc(" "," ",0," ")
+  const [shippingItem, setShippingItem] = useState<IPROtherShippingLoc>(
+    new IPROtherShippingLoc(" ", " ", 0, " ")
   );
 
-  const ShippingDataPick =(otheradd:IPROtherShippingLoc)=>{
-      console.log(otheradd);
-      setShippingItem(otheradd);
-      
-      
-  }
+  const ShippingDataPick = (otheradd: IPROtherShippingLoc) => {
+    console.log(otheradd);
+    setShippingItem(otheradd);
+  };
 
-    //this is for all dropdown option....................
+  //this is for all dropdown option....................
   const [selectedItemsvendor, setSelectedItemsvendor] = useState<{
     [key: string]: IDropdownOption;
   }>({
-    VendorPlantMatch: { key: "", text: "" }
-    
+    VendorPlantMatch: { key: "", text: "" },
   });
 
   const [newshipAddress, setnewshipAddress] = useState<IDropdownOption>({
@@ -113,87 +104,83 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     setnewshipAddress(option as IDropdownOption);
   };
 
-  const [shipAddress,setshipAddress]=useState([]);
- const [countryOptions,setCountryOptions]=useState([]);
- const [regionOptions,setRegionOptions]=useState([]);
-
-  useEffect(()=>{
-
-  //Ship Address to Company Code Compare------------------------------------------------------
-    
-  // console.log("optionGroupData.companyCode.text---optionGroupData.companyCode.text",optionGroupData.companyCode.text);
-  
-  let listDataSupplierAdd=[]
-  
-  restApiCall.getShippingAddress(optionGroupData.companyCode.text).then((shipAddressValue)=>{
-
-    for(let i:number=0;i<shipAddressValue.length;i++){
-          let newObjSupplierAdd={
-          key: shipAddressValue[i].toLowerCase(),
-          text: shipAddressValue[i]
-          }
-          listDataSupplierAdd.push(newObjSupplierAdd)
-    }
-    setshipAddress([...listDataSupplierAdd])
-
-  })
-
-  //Shipping country ----------------------------------------------
-
-   ConnectPr.getInstance().GetPRCountry().then((PrCountry)=>{
-  
-    let listDataCountry=[]
-      for(let i=0;i<PrCountry.length;i++){
-        if(PrCountry[i].IsActive==true){
-          let newObjCountry={
-          key: PrCountry[i] ,
-          text: PrCountry[i].Title
-          }
-          listDataCountry.push(newObjCountry)
-        }
-      }
-      setCountryOptions([...listDataCountry])
-    })
-
-//Shipping Region ----------------------------------------------
-
-   ConnectPr.getInstance().GetPRRegion().then((PrRegion)=>{
-  
-    let listDataRegion=[]
-      for(let i=0;i<PrRegion.length;i++){
-        let newObjRegion={
-          key: PrRegion[i] ,
-          text: PrRegion[i].Title+ "(" + PrRegion[i].CountryKey + ")"
-        }
-        listDataRegion.push(newObjRegion)
-      }
-      setRegionOptions([...listDataRegion])
-    })
-
-  },[])
-
-  
+  const [shipAddress, setshipAddress] = useState([]);
+  const [countryOptions, setCountryOptions] = useState([]);
+  const [regionOptions, setRegionOptions] = useState([]);
 
   useEffect(() => {
+    //Ship Address to Company Code Compare------------------------------------------------------
 
+    // console.log("optionGroupData.companyCode.text---optionGroupData.companyCode.text",optionGroupData.companyCode.text);
+
+    let listDataSupplierAdd = [];
+
+    restApiCall
+      .getShippingAddress(optionGroupData.companyCode.text)
+      .then((shipAddressValue) => {
+        for (let i: number = 0; i < shipAddressValue.length; i++) {
+          let newObjSupplierAdd = {
+            key: shipAddressValue[i].toLowerCase(),
+            text: shipAddressValue[i],
+          };
+          listDataSupplierAdd.push(newObjSupplierAdd);
+        }
+        setshipAddress([...listDataSupplierAdd]);
+      });
+
+    //Shipping country ----------------------------------------------
+
+    ConnectPr.getInstance()
+      .GetPRCountry()
+      .then((PrCountry) => {
+        let listDataCountry = [];
+        for (let i = 0; i < PrCountry.length; i++) {
+          if (PrCountry[i].IsActive == true) {
+            let newObjCountry = {
+              key: PrCountry[i],
+              text: PrCountry[i].Title,
+            };
+            listDataCountry.push(newObjCountry);
+          }
+        }
+        setCountryOptions([...listDataCountry]);
+      });
+
+    //Shipping Region ----------------------------------------------
+
+    ConnectPr.getInstance()
+      .GetPRRegion()
+      .then((PrRegion) => {
+        let listDataRegion = [];
+        for (let i = 0; i < PrRegion.length; i++) {
+          let newObjRegion = {
+            key: PrRegion[i],
+            text: PrRegion[i].Title + "(" + PrRegion[i].CountryKey + ")",
+          };
+          listDataRegion.push(newObjRegion);
+        }
+        setRegionOptions([...listDataRegion]);
+      });
+  }, []);
+
+  useEffect(() => {
     if (newshipAddress.text === "Other Shipping Location") {
       setselectshipAddress(() => true);
     } else {
       setselectshipAddress(() => false);
     }
   }, [newshipAddress]);
-//text save fields.............
-const [textvalue, settextvalue] = useState({
-    suppliername: " ",
-    justificatiOnOrder: " ",
-    downPaymentDetails: " ",
-    Name:" ",
-    HouseNumber:" ",
-    StreetName:" ",
-    PostalCode:" ",
-    City:" ",
-    ContactName:" "
-
+  //text save fields.............
+  const [textvalue, settextvalue] = useState({
+    suppliername: "",
+    justificatiOnOrder: "",
+    downPaymentDetails: "",
+    Name: "",
+    HouseNumber: "",
+    StreetName: "",
+    PostalCode: "",
+    City: "",
+    ContactName: "",
   });
 
   const textContext = (
@@ -201,11 +188,11 @@ const [textvalue, settextvalue] = useState({
     newValue?: Object | undefined
   ) => {
     // console.log("textvalue---textvalue",textvalue);
-  //   console.log("text__Name---",textvalue.Name);
-  // console.log("text__Comments---",textvalue.justificatiOnOrder,textvalue.downPaymentDetails);
-  // console.log("text__HouseNumber---",textvalue.HouseNumber,textvalue.StreetName);
-  // console.log("text__PostalCode---",textvalue.PostalCode,textvalue.City);
-  // console.log("text__ContactName---",textvalue.ContactName);
+    //   console.log("text__Name---",textvalue.Name);
+    // console.log("text__Comments---",textvalue.justificatiOnOrder,textvalue.downPaymentDetails);
+    // console.log("text__HouseNumber---",textvalue.HouseNumber,textvalue.StreetName);
+    // console.log("text__PostalCode---",textvalue.PostalCode,textvalue.City);
+    // console.log("text__ContactName---",textvalue.ContactName);
     const id = (e.target as HTMLInputElement).id;
     console.log(id);
     settextvalue((prevValue) => ({
@@ -215,143 +202,174 @@ const [textvalue, settextvalue] = useState({
     console.log(id);
   };
 
-   
   const saveVendorandSupplierDetails = () => {
-    dispatch(saveVendorandShippingData(vendorItem));
+    dispatch(
+      saveVendorandShippingData({
+        vendorDetails: vendorItem,
+        vendorOtherDetails: {
+          justificatiOnOrder: "",
+          downPaymentDetails: "",
+        },
+      })
+    );
     buttonContxtSave();
-
   };
-const saveVendorDetails=()=>{
-  dispatch(saveVendorandShippingData(vendorItem));
-  let saveDetails=[
-{
-    "PKID": vendorandshippingData.PKID,
-    "ConnectPRID": null,
-    "Type_Of_Buy": null,
-    "PrepaidOrCapitalEquipment": null,
-    "EHS": null,
-    "Title": null,
-    "RequestFor": null,
-    "Type_Of_Order": null,
-    "Order_Amount": null,
-    "CIP_Number": null,
-    "UFID": null,
-    "Supplier_Account_Number": vendorItem.vendorNumber,
-    "Supplier_Name": vendorItem.vendorName,
-    "Supplier_Address": vendorItem.vendorAddress,
-    "Supplier_City": vendorItem.vendorCity,
-    "Supplier_State": vendorItem.vendorState,
-    "Supplier_Zip": vendorItem.vendorZip,
-    "Supplier_Country": vendorItem.vendorCountry,
-    "Manager": null,
-    "Manager1": null,
-    "Manager2": null,
-    "Manager3": null,
-    "GL_Account": null,
-    "Status": null,
-    "TaskCreatedFor": null,
-    "ApprovalInstance": null,
-    "Comments": textvalue.justificatiOnOrder,
-    "Cost_Center": null,
-    "Location": null,
-    "IsDeleted": null,
-    "Special_Instructions": textvalue.downPaymentDetails,
-    "Shipping_Name": null,
-    "Shipping_Street": null,
-    "Shipping_Postal_Code": null,
-    "Shipping_Location": null,
-    "Shipping_Region": null,
-    "Shipping_Country": null,
-    "Shipping_ContactPhone": null,
-    "OldReqId": null,
-    "SAPPRId": null,
-    "LastWorkflowRun": null,
-    "CurrentApprovalStep": null,
-    "ManagerLevel": null,
-    "FinalApprovalDate": null,
-    "IsOtherCC": null,
-    "IsCFOApproved": null,
-    "CFO": null,
-    "AllApprovers": null,
-    "CreateDate": null,
-    "LastStatus": null,
-    "AllManagers": null,
-     "JLReminderCount": null,
-    "FIReminderCount": null,
-    "AesyntPRType": null,
-    "PONumber": null,
-    "IsCompleted": null,
-    "Company": null,
-    "ProjectNumber": null,
-    "ActCostCenter": null,
-    "CompanyCode": null,
-    "FromCurrency": null,
-    "ToCurrency": null,
-    "RequesterCurrency": null,
-    "ExchangeRate": null,
-    "ExchangeRateV": null,
-    "ExchangeRateDate": null,
-    "ConvertedDollerAmount": null,
-    "CountryKey": null,
-    "HRADCompanyCode": null,
-    "QuickbookPO": null,
-    "CCDescription": null,
-    "IsProjectPR":null,
-    "ProjectDepartment": null,
-    "ProjectCode": null,
-    "Created": null,
-    "CreatedBy": null,
-    "Modified": null,
-    "ModifiedBy": null,
-    "PRNumber": null,
-    "DWCreateDate": null,
-    "PRId": null,
-    "OldAllApprovers": null,
-    "OldAllManagers": null,
-    "OldCFO": null,
-    "OldCreatedBy": null,
-    "OldManager": null,
-    "OldManager1": null,
-    "OldManager2": null,
-    "OldManager3": null,
-    "OldModifiedBy": null,
-    "OldRequestFor": null,
-    "OldTaskCreatedFor": null
-}
-];
-// restApiCall.insertVendorDetails(saveDetails);
-  // buttonContxtSave();
- 
+  const saveVendorDetails = () => {
+    dispatch(
+      saveVendorandShippingData({
+        vendorDetails: vendorItem,
+        vendorOtherDetails: {
+          justificatiOnOrder: textvalue.justificatiOnOrder,
+          downPaymentDetails: textvalue.downPaymentDetails,
+        },
+      })
+    );
+    let saveDetails = [
+      {
+        PKID: vendorandshippingData.PKID,
+        ConnectPRID: null,
+        Type_Of_Buy: null,
+        PrepaidOrCapitalEquipment: null,
+        EHS: null,
+        Title: null,
+        RequestFor: null,
+        Type_Of_Order: null,
+        Order_Amount: null,
+        CIP_Number: null,
+        UFID: null,
+        Supplier_Account_Number: vendorItem.vendorNumber,
+        Supplier_Name: vendorItem.vendorName,
+        Supplier_Address: vendorItem.vendorAddress,
+        Supplier_City: vendorItem.vendorCity,
+        Supplier_State: vendorItem.vendorState,
+        Supplier_Zip: vendorItem.vendorZip,
+        Supplier_Country: vendorItem.vendorCountry,
+        Manager: null,
+        Manager1: null,
+        Manager2: null,
+        Manager3: null,
+        GL_Account: null,
+        Status: null,
+        TaskCreatedFor: null,
+        ApprovalInstance: null,
+        Comments: textvalue.justificatiOnOrder,
+        Cost_Center: null,
+        Location: null,
+        IsDeleted: null,
+        Special_Instructions: textvalue.downPaymentDetails,
+        Shipping_Name: null,
+        Shipping_Street: null,
+        Shipping_Postal_Code: null,
+        Shipping_Location: null,
+        Shipping_Region: null,
+        Shipping_Country: null,
+        Shipping_ContactPhone: null,
+        OldReqId: null,
+        SAPPRId: null,
+        LastWorkflowRun: null,
+        CurrentApprovalStep: null,
+        ManagerLevel: null,
+        FinalApprovalDate: null,
+        IsOtherCC: null,
+        IsCFOApproved: null,
+        CFO: null,
+        AllApprovers: null,
+        CreateDate: null,
+        LastStatus: null,
+        AllManagers: null,
+        JLReminderCount: null,
+        FIReminderCount: null,
+        AesyntPRType: null,
+        PONumber: null,
+        IsCompleted: null,
+        Company: null,
+        ProjectNumber: null,
+        ActCostCenter: null,
+        CompanyCode: null,
+        FromCurrency: null,
+        ToCurrency: null,
+        RequesterCurrency: null,
+        ExchangeRate: null,
+        ExchangeRateV: null,
+        ExchangeRateDate: null,
+        ConvertedDollerAmount: null,
+        CountryKey: null,
+        HRADCompanyCode: null,
+        QuickbookPO: null,
+        CCDescription: null,
+        IsProjectPR: null,
+        ProjectDepartment: null,
+        ProjectCode: null,
+        Created: null,
+        CreatedBy: null,
+        Modified: null,
+        ModifiedBy: null,
+        PRNumber: null,
+        DWCreateDate: null,
+        PRId: null,
+        OldAllApprovers: null,
+        OldAllManagers: null,
+        OldCFO: null,
+        OldCreatedBy: null,
+        OldManager: null,
+        OldManager1: null,
+        OldManager2: null,
+        OldManager3: null,
+        OldModifiedBy: null,
+        OldRequestFor: null,
+        OldTaskCreatedFor: null,
+      },
+    ];
+    // restApiCall.insertVendorDetails(saveDetails);
+    // buttonContxtSave();
 
+    let otherShippingAdd = [
+      {
+        Title:
+          textvalue.Name +
+          textvalue.HouseNumber +
+          textvalue.StreetName +
+          textvalue.PostalCode +
+          textvalue.City +
+          textvalue.ContactName,
+        PlantNumber: null,
+        StorageLocation: null,
+        P2PBuy: null,
+        NPIBuy: null,
+        IsAvailable: true,
+        IsAvlblShpToLocation: true,
+        IsAesyntLocation: false,
+        Country: "India",
+      },
+    ];
+    console.log("otherShippingAdd__otherShippingAdd--", otherShippingAdd);
 
-  let otherShippingAdd=[{
-        "Title": textvalue.Name + textvalue.HouseNumber + textvalue.StreetName
-               + textvalue.PostalCode+textvalue.City+ textvalue.ContactName,
-        "PlantNumber": null,
-        "StorageLocation": null,
-        "P2PBuy": null,
-        "NPIBuy": null,
-        "IsAvailable": true,
-        "IsAvlblShpToLocation": true,
-        "IsAesyntLocation": false,
-        "Country": "India",
-        
-  }]
-  console.log("otherShippingAdd__otherShippingAdd--",otherShippingAdd);
+    // restApiCall.insertPlantLoc(otherShippingAdd);
+    buttonContxtSave();
+  };
 
-  
-
-// restApiCall.insertPlantLoc(otherShippingAdd);
-buttonContxtSave();
-
-}
-  
-
-useEffect(() => {
-    
-
+  useEffect(() => {
     setvendorItem(vendorandshippingData.vendorDetails);
-
+    for (
+      let i = 0;
+      i < Object.keys(vendorandshippingData.vendorOtherDetails).length;
+      i++
+    ) {
+      console.log(
+        "Key Key ----",
+        Object.keys(vendorandshippingData.vendorOtherDetails)[i],
+        vendorandshippingData.vendorOtherDetails[
+          Object.keys(vendorandshippingData.vendorOtherDetails)[i]
+        ]
+      );
+      settextvalue((prevValue) => ({
+        ...prevValue,
+        [Object.keys(vendorandshippingData.vendorOtherDetails)[i]]:
+          vendorandshippingData.vendorOtherDetails[
+            Object.keys(vendorandshippingData.vendorOtherDetails)[i]
+          ] || " ",
+      }));
+    }
   }, []);
 
   // where are you based....
@@ -377,10 +395,10 @@ useEffect(() => {
   const hoverStyle: IStackStyles = {
     root: {
       textAlign: "left",
-      marginBottom:"-10px",
-      marginRight:"3px",
-      marginLeft:"2px",
-      paddingBottom:"-10px"
+      marginBottom: "-10px",
+      marginRight: "3px",
+      marginLeft: "2px",
+      paddingBottom: "-10px",
     },
   };
   const col2Style: IStackStyles = {
@@ -431,7 +449,7 @@ useEffect(() => {
                     borderRadius: 5,
                     height: "40px",
                   }}
-                  onClick={() =>saveVendorDetails()}
+                  onClick={() => saveVendorDetails()}
                 >
                   <Stack horizontal>
                     <span style={{ marginRight: 10, marginTop: 2 }}>
@@ -451,9 +469,13 @@ useEffect(() => {
                   <div>Supplier Name: </div>
                 </Stack.Item>
                 <Stack.Item styles={hoverStyle}>
-                <TooltipShow  context={"Is my supplier already in SAP?\n\n"+
-                                      "If we have previously sent the supplier an Omnicell PO, then yes they are in SAP. (Click On Magnifying Glass To Search By VendorName)"}/>
-              </Stack.Item>
+                  <TooltipShow
+                    context={
+                      "Is my supplier already in SAP?\n\n" +
+                      "If we have previously sent the supplier an Omnicell PO, then yes they are in SAP. (Click On Magnifying Glass To Search By VendorName)"
+                    }
+                  />
+                </Stack.Item>
                 <Stack.Item styles={col2Style}>
                   <Stack horizontal tokens={{ childrenGap: 5 }}>
                     <TextField
@@ -471,7 +493,6 @@ useEffect(() => {
                           isModalOpen={openSupplierSearch}
                           showModal={showSupplierSearchModal}
                           venderItemDatapick={venderItemDatapick}
-                          
                         />
                       ) : null}
                     </DefaultButton>
@@ -522,7 +543,7 @@ useEffect(() => {
               </Stack>
             </Stack.Item>
 
- {/* ____________________________________________________________________ */}
+            {/* ____________________________________________________________________ */}
 
             {buttonState ? (
               <>
@@ -619,13 +640,18 @@ useEffect(() => {
                   <div>Justification/Reason for Order: </div>
                 </Stack.Item>
                 <Stack.Item styles={hoverStyle}>
-                <TooltipShow  context={"Please provide an explanation for the purchase."+
-                                      "Note:  Only the first 100 characters will be submitted to SAP and included in all correspondence."}/>
-              </Stack.Item>
+                  <TooltipShow
+                    context={
+                      "Please provide an explanation for the purchase." +
+                      "Note:  Only the first 100 characters will be submitted to SAP and included in all correspondence."
+                    }
+                  />
+                </Stack.Item>
                 <Stack.Item styles={col2Style}>
                   <div style={{ width: "450px" }}>
                     <TextField
                       id="justificatiOnOrder"
+                      value={textvalue.justificatiOnOrder}
                       onChange={textContext}
                       multiline
                       rows={2}
@@ -635,7 +661,7 @@ useEffect(() => {
               </Stack>
             </Stack.Item>
 
-           {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
+            {/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */}
 
             <Stack.Item grow={12}>
               <Stack horizontal horizontalAlign="baseline">
@@ -646,13 +672,18 @@ useEffect(() => {
                   <div>Add Special Instructions/Down payment details:</div>
                 </Stack.Item>
                 <Stack.Item styles={hoverStyle}>
-                <TooltipShow  context={"Please provide additional information as needed.\n "+
-                                      "Note: Only the first 100 characters will be submitted to SAP and included in all correspondence."}/>
-              </Stack.Item>
+                  <TooltipShow
+                    context={
+                      "Please provide additional information as needed.\n " +
+                      "Note: Only the first 100 characters will be submitted to SAP and included in all correspondence."
+                    }
+                  />
+                </Stack.Item>
                 <Stack.Item styles={col2Style}>
                   <div style={{ width: "450px" }}>
                     <TextField
                       id="downPaymentDetails"
+                      value={textvalue.downPaymentDetails}
                       onChange={textContext}
                       multiline
                       rows={2}
@@ -671,8 +702,8 @@ useEffect(() => {
                   <div>Ship To Address: </div>
                 </Stack.Item>
                 <Stack.Item styles={hoverStyle}>
-                <TooltipShow  context={"Where will the item be delivered?"}/>
-              </Stack.Item>
+                  <TooltipShow context={"Where will the item be delivered?"} />
+                </Stack.Item>
                 <Stack.Item styles={col2Style}>
                   <Stack horizontal tokens={{ childrenGap: 5 }}>
                     <Dropdown
@@ -682,21 +713,24 @@ useEffect(() => {
                       styles={dropdownStyles}
                     />
                     {selectshipAddress ? (
-                    <div>
-                      <Link style={{ color: "blue", marginLeft: 10 }} onClick={showOtherShipping}>
-                        Select from existing address list
-                      </Link>
-                       {openOtherShipping? (
-                        <>
-                          <OtherShippingAddComponent
+                      <div>
+                        <Link
+                          style={{ color: "blue", marginLeft: 10 }}
+                          onClick={showOtherShipping}
+                        >
+                          Select from existing address list
+                        </Link>
+                        {openOtherShipping ? (
+                          <>
+                            <OtherShippingAddComponent
                               isShippingAddOpen={openOtherShipping}
-                              showShippingAdd={showOtherShipping} 
-                              ShippingDataPick={ShippingDataPick}                                                  
-                            
-                          />
-                        </>
-                      ) : null}
-                    </div>):null}
+                              showShippingAdd={showOtherShipping}
+                              ShippingDataPick={ShippingDataPick}
+                            />
+                          </>
+                        ) : null}
+                      </div>
+                    ) : null}
                   </Stack>
                 </Stack.Item>
               </Stack>
@@ -760,12 +794,12 @@ useEffect(() => {
                           style={{ width: 100 }}
                         />
                         <span>/</span>
-                        <TextField 
-                        placeholder="City" 
-                        id="City"
-                        style={{ width: 250 }}
-                        onChange={textContext}
-                         />
+                        <TextField
+                          placeholder="City"
+                          id="City"
+                          style={{ width: 250 }}
+                          onChange={textContext}
+                        />
                       </Stack>
                     </Stack.Item>
                   </Stack>
@@ -782,7 +816,6 @@ useEffect(() => {
                           onChange={changeshipDropdownOption}
                           options={regionOptions}
                           styles={dropdownStyles}
-                          
                         />
                       </Stack>
                     </Stack.Item>
@@ -854,4 +887,3 @@ export default VendorandShippingComponent;
 function listDataSupplierComCode(): any {
   throw new Error("Function not implemented.");
 }
-

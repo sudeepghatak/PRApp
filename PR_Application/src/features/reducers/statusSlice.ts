@@ -116,7 +116,26 @@ export const statusSlice=createSlice({
             state.basicInfo.Prepaid_or_Capital_buy=(action.payload.PrepaidOrCapitalEquipment==null)?" ":action.payload.PrepaidOrCapitalEquipment;
             state.basicInfo.Type_Of_Buy=(action.payload.Type_Of_Buy==null)?" ":action.payload.Type_Of_Buy;
             state.basicInfo.Connect_PR_Request_ID=(action.payload.ConnectPRID==null)?" ":action.payload.ConnectPRID;
-          
+
+            state.supplier.Supplier_Number=(action.payload.Supplier_Account_Number ==null)?"":action.payload.Supplier_Account_Number
+
+            state.supplier.Supplier_Name=(action.payload.Supplier_Name==null)?"":action.payload.Supplier_Name
+
+            state.supplier.Supplier_Address=(action.payload.Supplier_Address==null)?"":action.payload.Supplier_Address
+
+            state.supplier.Supplier_Zip=(action.payload.Supplier_Zip==null)?"":action.payload.Supplier_Zip
+
+            state.supplier.Supplier_Country=(action.payload.Supplier_Country==null)?"":action.payload.Supplier_Country
+
+            state.supplier.Supplier_State=(action.payload.Supplier_State==null)?"":action.payload.Supplier_Stat
+
+            state.supplier.Supplier_City=(action.payload.Supplier_City==null)?"":action.payload.Supplier_City
+            state.supplier.Special_Instructions=(action.payload.Comments==null)?"":action.payload.Comments
+            state.supplier.Justification_Reason_for_Order=(action.payload.Special_Instructions==null)?"":action.payload.Special_Instructions
+            // state.supplier.Supplier_Number=(action.payload)?"":
+            // state.supplier.Supplier_Number=(action.payload)?"":
+            // state.supplier.Supplier_Number=(action.payload)?"":
+            
         
         })
     

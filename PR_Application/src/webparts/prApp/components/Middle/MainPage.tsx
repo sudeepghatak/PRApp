@@ -10,9 +10,9 @@ import PrimaryInfoComponent from "./PrimaryInfoComponent";
 import VendorandShippingComponent from "./VendorandShippingComponent";
 import LineItemComponent from "./LineItemComponent";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import {lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 
-const LazyFourth= lazy(() => import('./FourthComponent'));
+const LazyFourth = lazy(() => import("./FourthComponent"));
 
 export interface ITableBuildProps {
   name: string;
@@ -30,20 +30,23 @@ export const tableDeleteContext = createContext<
   IPDeleteTableContent | undefined
 >(undefined);
 
-interface IPMainComponent{
-  context:WebPartContext
+interface IPMainComponent {
+  context: WebPartContext;
 }
-export const MainPage:React.FunctionComponent = (props) => {
-  // const {siteUrl}=props;
+interface IMainPage {
+  isViewMode: boolean;
+}
+export const MainPage: React.FunctionComponent<IMainPage>= (props) => {
+  const {isViewMode}=props;
   let userDisplayName: string = " Blank";
-    const [title,settitle]=useState({
-    "name":"",
-    "countryKey":"",
-    "currencyKey":"",
-    "costCenter":"",
-    "TypeofbuyOption":"",
-    "IsPrepaidCapital":"",
-  })
+  const [title, settitle] = useState({
+    name: "",
+    countryKey: "",
+    currencyKey: "",
+    costCenter: "",
+    TypeofbuyOption: "",
+    IsPrepaidCapital: "",
+  });
 
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [tableCreate, settableCreate] = useState<ITableBuildProps[]>([]);
@@ -55,16 +58,14 @@ export const MainPage:React.FunctionComponent = (props) => {
 
   const deleteTableContent = (index: number) => {
     console.log(index);
-    
+
     let copytableCreate = [...tableCreate];
     settableCreate(
       copytableCreate.filter((item, item_index) => item_index != index)
     );
 
     console.log(tableCreate);
-    
   };
-  
 
   const buttonContxtSave = () => {
     if (pageNumber < 4) {
@@ -79,11 +80,9 @@ export const MainPage:React.FunctionComponent = (props) => {
     }
   };
 
-  const setTile=(value)=>{
+  const setTile = (value) => {
     settitle(value);
-
-  }
-
+  };
 
   const sectionStackTokens: IStackTokens = { childrenGap: 15 };
   const customButtonStyles = mergeStyles({
@@ -103,7 +102,23 @@ export const MainPage:React.FunctionComponent = (props) => {
           />
         ) : null} */}
         <Stack tokens={sectionStackTokens}>
-          <ComponentHeader title={"["+ title.TypeofbuyOption+"]["+title.IsPrepaidCapital+"] for- "+title.name+"["+title.countryKey+"]"+"["+title.currencyKey+"] - "+ title.costCenter }/>
+          <ComponentHeader
+            title={
+              "[" +
+              title.TypeofbuyOption +
+              "][" +
+              title.IsPrepaidCapital +
+              "] for- " +
+              title.name +
+              "[" +
+              title.countryKey +
+              "]" +
+              "[" +
+              title.currencyKey +
+              "] - " +
+              title.costCenter
+            }
+          />
           <Stack horizontal disableShrink>
             <Stack.Item order={1}>
               <span>
@@ -190,8 +205,10 @@ export const MainPage:React.FunctionComponent = (props) => {
               <PrimaryInfoComponent
                 buttonContxtSave={buttonContxtSave}
                 setTableCreate={setTableCreate}
-                setTile={setTile}
-                // context={context}
+                setTile={setTile} 
+                isViewMode={isViewMode}
+               
+              
               />
             ) : null}
             {pageNumber === 2 ? (
@@ -206,19 +223,15 @@ export const MainPage:React.FunctionComponent = (props) => {
                 buttonContxtBack={buttonContxtBack}
               />
             ) : null}
-             {pageNumber === 4 ? (
+            {pageNumber === 4 ? (
               <>
-              <Suspense fallback={"Loading .."} >
-                {/* <Spinner label= "Please wait .."> */}
-               <LazyFourth
-                  buttonContxtBack={buttonContxtBack}
-                /> 
-                {/* </Spinner> */}
-              </Suspense>
+                <Suspense fallback={"Loading .."}>
+                  {/* <Spinner label= "Please wait .."> */}
+                  <LazyFourth buttonContxtBack={buttonContxtBack} />
+                  {/* </Spinner> */}
+                </Suspense>
               </>
-              ):null
-            }
-
+            ) : null}
           </tableBuildContext.Provider>
         </tableDeleteContext.Provider>
       </div>

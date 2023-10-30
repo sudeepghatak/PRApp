@@ -30,7 +30,7 @@ import { ConnectPr } from "../../Api/api";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import PeopleComponent from "./PeopleComponent";
 import { CipModal } from "./TableCipModal";
-import  PeoplePickerComponent  from "./PeoplePickerComponent";
+import PeoplePickerComponent from "./PeoplePickerComponent";
 import { GLAccountComponent } from "./TableGLAccountComponent";
 import { RootState } from "../../../../app/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,6 +41,7 @@ import {
   changeCheckbox,
   fileInformation,
   insertContent,
+  refreshCheckBox,
   rightchangeCheckbox,
   saveFileDoc,
   setValue,
@@ -49,7 +50,10 @@ import {
 import { setlineitemValue } from "../../../../features/reducers/lineitemSlice";
 import { TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
 import { restApiCall } from "../../Api/ApiCall";
-import { savePkid } from "../../../../features/reducers/vendorandshippingSlice";
+import {
+  savePkid,
+  saveVendorandShippingData,
+} from "../../../../features/reducers/vendorandshippingSlice";
 import { WarningMessage } from "../../Utils/WarningBox";
 import { GlobalStore } from "../../../../app/globalStore";
 import TooltipShow from "./TooltipShow";
@@ -61,16 +65,19 @@ import { ModalModelessExample } from "./Modalwarning";
 import { IPrProjectCode } from "../../Model/IPrProjectCode";
 import { fetchStatusContent } from "../../../../features/reducers/statusSlice";
 import { EmployeeDetails } from "../../Model/employee_details";
+import LoadingBox from "./LoadingBox";
+import { VendorDetails } from "../../Model/vendor_details";
 
 interface IFirstProps {
   buttonContxtSave: () => void;
   setTableCreate: (value: ITableBuildProps) => void;
   setTile: (value) => void;
+  isViewMode: boolean;
   // context:WebPartContext;
 }
 let costCenter: string = "";
 const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
-  const { buttonContxtSave, setTableCreate, setTile } = props;
+  const { buttonContxtSave, setTableCreate, setTile, isViewMode } = props;
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const primaryinfoData = useSelector((state: RootState) => state.primaryinfo);
@@ -194,14 +201,23 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   // });
   // }, [lineintemData.Finalpage]);
   console.log("--------------PrimaryInfoComponent ---");
+  const [isLoadingComp, setisLoadingComp] = useState(false);
   useEffect(() => {
     (async () => {
-      if (lineintemData.Finalpage === `edit${GlobalStore.getconnectPRID()}`) {
+      if (
+        lineintemData.Finalpage === `edit${GlobalStore.getconnectPRID()}` ||
+        lineintemData.Finalpage === `view${GlobalStore.getconnectPRID()}`
+      ) {
+        setisLoadingComp(true);
         let prInfo = await restApiCall.getPrbasicInfoContent(
           GlobalStore.getconnectPRID()
         );
 
-        console.log(prInfo);
+        console.log(
+          "------------------------ 207 ",
+          prInfo,
+          prInfo.Type_Of_Order
+        );
 
         let saveRadioGroupData: IradioSave[] = [
           {
@@ -297,8 +313,12 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         console.log(
           "EMp Details Here ----------------------",
           emp_details,
-          prInfo.RequestFor
+          prInfo.RequestFor,
+          emp_details[0].text,
+          emp_details[0].email
         );
+        GlobalStore.storeName(emp_details[0].text, false);
+        GlobalStore.storeEmail(emp_details[0].email, false);
         let saveData: ISaveData = {
           radioGroup: saveRadioGroupData,
 
@@ -308,7 +328,70 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         console.log(
           "Insert This Here -----------------------------------------------------------------------------------------------------------------------"
         );
+
+        let fileValue = await restApiCall.getDocTypeurl(
+          GlobalStore.getconnectPRID()
+        );
+        console.log(
+          "Insert This Here -----------------------------------------------------------------------------------------------------------------------",
+          fileValue
+        );
+        let getfileData;
+        if (fileValue.length !== 0) {
+          for (let i: number = 0; i < fileValue.length; i++) {
+            if (
+              !(
+                fileValue[i].Content === primaryinfoData.fileData[i].content &&
+                fileValue[i].Modified_Date ===
+                  primaryinfoData.fileData[i].fileModifiedTime
+              )
+            ) {
+              getfileData = {
+                key: fileValue[i].ConnectPRID,
+                fileName: fileValue[i].Filename,
+                fileType: "file",
+                modifiedBy: fileValue[i].Modified_By,
+                fileModifiedTime: fileValue[i].Modified_Date,
+                docType: fileValue[i].Doc_Type,
+                content: fileValue[i].Content,
+              };
+              console.log(
+                " get Doc type Data ---------------------- >> ",
+                getfileData
+              );
+            }
+          }
+        }
+
+        dispatch(
+          saveVendorandShippingData({
+            vendorDetails: new VendorDetails(
+              0,
+              prInfo.Supplier_Name,
+              prInfo.Supplier_Account_Number,
+              prInfo.Supplier_Address,
+              prInfo.Supplier_City,
+              prInfo.Supplier_State,
+              prInfo.Supplier_Zip,
+              prInfo.Supplier_Country,
+              prInfo.CompanyCode
+            ),
+            vendorOtherDetails: {
+              justificatiOnOrder: prInfo.Comments,
+              downPaymentDetails: prInfo.Special_Instructions,
+            },
+          })
+        );
+
         dispatch(setValue(saveData));
+        dispatch(refreshCheckBox());
+        dispatch(changeCheckbox(prInfo.Type_Of_Order));
+        dispatch(rightchangeCheckbox(prInfo.Type_Of_Order));
+        setisLoadingComp(false);
+        console.log("----------------Insert Data ", getfileData);
+        if (getfileData !== undefined) {
+          dispatch(saveFileDoc(getfileData));
+        }
       }
     })();
   }, [lineintemData.Finalpage]);
@@ -493,8 +576,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   };
 
   //peoplepicker
-  const companyCodeOptionSet =useCallback(
-   (newItem) => {
+  const companyCodeOptionSet = useCallback((newItem) => {
     console.log("This is Company Code Option Here ---- ", newItem);
     if (newItem.length !== 0) {
       // console.log(newItem[0].companyCode);
@@ -508,7 +590,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       costCenter = newItem[0].costCenter;
       setCompanyCodeOption([itemTest]);
     }
-  },[]);
+  }, []);
 
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
@@ -615,7 +697,8 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     WarningMessage.firstWarningCheck().then((value) => {
       console.log(
         "selectRadioItems.buyRadio.text:::--",
-        selectRadioItems.buyRadio.text
+        selectRadioItems.buyRadio.text,
+        value
       );
 
       let titledata = {
@@ -1016,50 +1099,50 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             OldTaskCreatedFor: null,
           },
         ];
-        restApiCall
-          .insertPrimaryInfoData(saveprimayData, true)
-          .then((value: number) => {
-            dispatch(savePkid(value));
+        // restApiCall
+        //   .insertPrimaryInfoData(saveprimayData, true)
+        //   .then((value: number) => {
+        //     dispatch(savePkid(value));
 
-            let ConnectPRID: string = "000000" + value;
-            GlobalStore.storePrId(ConnectPRID);
-            if (primaryinfoData.fileData.length !== 0) {
-              for (
-                let i: number = 0;
-                i < primaryinfoData.fileData.length;
-                i++
-              ) {
-                console.log(
-                  "primaryinfoData-primaryinfoData=primaryinfoData",
-                  primaryinfoData.fileData[i],
-                  ConnectPRID
-                );
+        //     let ConnectPRID: string = "000000" + value;
+        //     GlobalStore.storePrId(ConnectPRID);
+        //     if (primaryinfoData.fileData.length !== 0) {
+        //       for (
+        //         let i: number = 0;
+        //         i < primaryinfoData.fileData.length;
+        //         i++
+        //       ) {
+        //         console.log(
+        //           "primaryinfoData-primaryinfoData=primaryinfoData",
+        //           primaryinfoData.fileData[i],
+        //           ConnectPRID
+        //         );
 
-                let fileDatainfo = {
-                  PKID: value,
-                  ConnectPRID: ConnectPRID,
-                  Doc_Type: primaryinfoData.fileData[i].docType,
-                  Filename: primaryinfoData.fileData[i].fileName,
-                  Content: primaryinfoData.fileData[i].content,
-                  Modified_By: GlobalStore.getmainName(),
-                  Modified_Date: primaryinfoData.fileData[i].fileModifiedTime,
-                };
-                console.log("DocData save.........  ", fileDatainfo);
-                fileInfo.push(fileDatainfo);
-              }
-              let fileDatapayload = {
-                Attachment: fileInfo,
-              };
-              restApiCall
-                .insertPrimaryInfoData(fileInfo, false)
-                .then((value) => {
-                  console.log(value);
-                  console.log("Data Save Here ------------");
-                  buttonContxtSave();
-                });
-            }
-          });
-        // buttonContxtSave();
+        //         let fileDatainfo = {
+        //           PKID: value,
+        //           ConnectPRID: ConnectPRID,
+        //           Doc_Type: primaryinfoData.fileData[i].docType,
+        //           Filename: primaryinfoData.fileData[i].fileName,
+        //           Content: primaryinfoData.fileData[i].content,
+        //           Modified_By: GlobalStore.getmainName(),
+        //           Modified_Date: primaryinfoData.fileData[i].fileModifiedTime,
+        //         };
+        //         console.log("DocData save.........  ", fileDatainfo);
+        //         fileInfo.push(fileDatainfo);
+        //       }
+        //       let fileDatapayload = {
+        //         Attachment: fileInfo,
+        //       };
+        //       restApiCall
+        //         .insertPrimaryInfoData(fileInfo, false)
+        //         .then((value) => {
+        //           console.log(value);
+        //           console.log("Data Save Here ------------");
+        //           buttonContxtSave();
+        //         });
+        // }
+        // });
+        buttonContxtSave();
       }
     });
   };
@@ -1072,6 +1155,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     checked?: boolean | undefined
   ) => {
     const id = (ev?.target as HTMLInputElement).id;
+    console.log("This is The Id Here --------------", id);
     let newTablename: ITableBuildProps = {
       name: id,
     };
@@ -1147,6 +1231,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
   return (
     <>
+      {isLoadingComp ? <LoadingBox /> : null}
       {showDialog ? (
         <ModalComponent
           isModalOpen={showDialog}
@@ -1196,6 +1281,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 <Dropdown
                   placeholder="Select an option"
                   id="prOption"
+                  disabled={isViewMode}
                   onChange={changeDropdownOption}
                   options={PrOption}
                   selectedKey={selectedItems["prOption"]?.key}
@@ -1224,6 +1310,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               <Stack.Item styles={col2Style}>
                 <ChoiceGroup
                   name="prRadio"
+                  disabled={isViewMode}
                   options={prOption}
                   onChange={radioOnChange}
                   required={true}
@@ -1248,6 +1335,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                       <PeoplePickerComponent
                         companyCodeOptionSet={companyCodeOptionSet}
                         defaultValue={primaryinfoData.requestfor}
+                        isViewMode={isViewMode}
                       />
                       {/* <PeopleComponent context={context} /> */}
                     </div>
@@ -1268,6 +1356,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                   <Dropdown
                     placeholder="Select an option"
                     id="companyCode"
+                    disabled={isViewMode}
                     onChange={changeDropdownOption}
                     selectedKey={selectedItems["companyCode"]?.key}
                     style={{ width: "200px" }}
@@ -1289,6 +1378,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 <Stack horizontal tokens={{ childrenGap: 10 }}>
                   <ChoiceGroup
                     name="constCenterRadio"
+                    disabled={isViewMode}
                     options={selectCostCenterOption}
                     onChange={radioOnChange}
                     selectedKey={selectRadioItems["constCenterRadio"]?.key}
@@ -1329,6 +1419,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                     <Dropdown
                       placeholder="---Select Other Cost Center---"
                       id="SelectAltCostCenter"
+                      disabled={isViewMode}
                       onChange={changeDropdownOption}
                       style={{ width: "200px" }}
                       selectedKey={selectedItems["SelectAltCostCenter"]?.key}
@@ -1360,6 +1451,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               <Stack.Item styles={col2Style}>
                 <ChoiceGroup
                   name="prProjectRadio"
+                  disabled={isViewMode}
                   options={prProjectOption}
                   onChange={radioOnChange}
                   selectedKey={selectRadioItems["prProjectRadio"]?.key}
@@ -1387,6 +1479,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                       <Dropdown
                         placeholder="Select an option"
                         id="selectDepartment"
+                        disabled={isViewMode}
                         onChange={changeDropdownOption}
                         style={{ width: "150px" }}
                         selectedKey={selectedItems["selectDepartment"]?.key}
@@ -1396,6 +1489,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                       <Dropdown
                         placeholder="Select an option"
                         id="projectCode"
+                        disabled={isViewMode}
                         onChange={changeDropdownOption}
                         style={{ width: "200px" }}
                         selectedKey={selectedItems["projectCode"]?.key}
@@ -1446,6 +1540,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               <Stack.Item styles={col2Style}>
                 <ChoiceGroup
                   name="buyRadio"
+                  disabled={isViewMode}
                   options={buyOption}
                   onChange={radioOnChange}
                   required={true}
@@ -1483,6 +1578,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               <Stack.Item styles={col2Style}>
                 <ChoiceGroup
                   name="prepaidcapitalRadio"
+                  disabled={isViewMode}
                   options={
                     isBlanketPrSelect
                       ? prepaidcapitalOption
@@ -1664,6 +1760,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 <ChoiceGroup
                   name="ehsRadio"
                   options={ehsOption}
+                  disabled={isViewMode}
                   onChange={radioOnChange}
                   required={true}
                   selectedKey={
