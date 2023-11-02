@@ -2,6 +2,7 @@ import { Stack } from "@fluentui/react";
 import * as React from "react";
 import ComponentHeader from "./ComponentHeader";
 import { CapitalExpenseModel } from "../ModelContent/CapitalExpenseModel";
+import { VendorSupplierModel } from "../ModelContent/VendorSupplierModel";
 interface IPoliciesProceduresProps {
   title: string;
 }
@@ -13,6 +14,13 @@ const PoliciesProceduresBox: React.FunctionComponent<
 
   const showAlertDialogCE = () => {
     setshowDialogce(!showDialogce);
+  };
+
+  const [showDialogvendorIndirect, setshowDialogvendorIndirect] =
+    React.useState<boolean>(false);
+
+  const showAlertDialogvendorIndirect = () => {
+    setshowDialogvendorIndirect(!showDialogvendorIndirect);
   };
   return (
     <div>
@@ -61,12 +69,28 @@ const PoliciesProceduresBox: React.FunctionComponent<
               </a>
             </li>
             <li>
-              <a href="#" className="getStartanchor">
+              <a
+                href="#"
+                className="getStartanchor"
+                onClick={() => showAlertDialogvendorIndirect()}
+              >
                 Add Vendor – Indirect Supplier
               </a>
+              {showDialogvendorIndirect ? (
+                <VendorSupplierModel
+                  isModalOpen={showDialogvendorIndirect}
+                  showModal={showAlertDialogvendorIndirect}
+                  title={"Add Vendor - Indirect Supplier"}
+                  backgroundcolor="black"
+                />
+              ) : null}
             </li>
             <li>
-              <a href="#" className="getStartanchor">
+              <a
+                href="https://omnicell.sharepoint.com/teams/secure/QA2007archive/QSD/Integrated QMS/Quality Documents/QSP-21/QF-21.10.8.docx"
+                target="_blank"
+                className="getStartanchor"
+              >
                 Vendor Add – Direct Supplier
               </a>
             </li>
@@ -81,10 +105,8 @@ const PoliciesProceduresBox: React.FunctionComponent<
             </li>
             <li>
               <a
-                href={
-                  "https://omnicell.sharepoint.com/sites/ConnectPRDev/_layouts/15/workbench.aspx/src/webparts/prApp/assets/system.docx"
-                }
-                download="system.docx"
+                href="https://connectdev.omnicell.com/pr/SiteAssets/SyteLine%20Vendor%20Add%20and%20Change%20Request%20Form%20060817.docx"
+                target="_blank"
                 className="getStartanchor"
               >
                 SyteLine Vendor Add and Change

@@ -1,15 +1,17 @@
-.iconDesign{
-border-radius: 50px;
-color: white;
-background-color: black;
-font-size: 10px;
-size: 10px;
-margin-top: 10px;
-font-weight: bold;
-cursor: pointer;
-display: flex;
-outline: none;
+.iconDesign {
+    border-radius: 20px;
+    size: 10px;
+    color: white;
+    background-color: #737373;
+    margin-top: -60px;
+    margin-left: -9px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    outline: none;
 }
+
 .iconRightDesign {
     border-radius: 50px;
     color: white;
@@ -22,16 +24,46 @@ outline: none;
     display: flex;
     outline: none;
 }
-.myContainer{
-    width: 100;
-    display:flex;
-    /* mask-type: white; */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    /* border-bottom: 1px dotted black; */
+    margin-top: 70px;
 }
-.tooltiHover{
-    background-color: brown;
-}
-.tooltip{
-    background-color: black;
-    color: white;
 
+.tooltip .tooltiptext {
+    visibility: hidden;
+    display: flex;
+    width: max-content;
+    max-width: 400px;
+    font-size: 12px;
+    height: auto;
+    /* background-color: 00FFFFFF; */
+    /* background-color:rgb(204, 77, 77); */
+    background-color: #f2f2f2;
+    color: #000;
+    text-align: center;
+    border-radius: 6px;
+    margin-bottom: 69px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 250%;
+    left: -134%;
+    margin-left: auto;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 3px;
+    right: auto;
+    border-width: 10px;
+    border-style: solid;
+    border-color: #f2f2f2 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }

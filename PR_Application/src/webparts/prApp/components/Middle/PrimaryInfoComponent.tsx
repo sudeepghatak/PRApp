@@ -67,6 +67,9 @@ import { fetchStatusContent } from "../../../../features/reducers/statusSlice";
 import { EmployeeDetails } from "../../Model/employee_details";
 import LoadingBox from "./LoadingBox";
 import { VendorDetails } from "../../Model/vendor_details";
+import { fetchSearchContent } from "../../../../features/reducers/searchSlice";
+import { Functionality } from "../../Utils/Functionality";
+import { CostCenterComponent } from "./TableCostCenter";
 
 interface IFirstProps {
   buttonContxtSave: () => void;
@@ -213,11 +216,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           GlobalStore.getconnectPRID()
         );
 
-        console.log(
-          "------------------------ 207 ",
-          prInfo,
-          prInfo.Type_Of_Order
-        );
+        console.log("------------------------ 207 ", prInfo);
 
         let saveRadioGroupData: IradioSave[] = [
           {
@@ -325,26 +324,41 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           optionGroup: saveOptionGroupData,
           requestfor: emp_details[0],
         };
+
         console.log(
-          "Insert This Here -----------------------------------------------------------------------------------------------------------------------"
+          "This is The Save Data Here ---------------------",
+          saveData
         );
 
         let fileValue = await restApiCall.getDocTypeurl(
           GlobalStore.getconnectPRID()
         );
-        console.log(
-          "Insert This Here -----------------------------------------------------------------------------------------------------------------------",
-          fileValue
-        );
+
         let getfileData;
         if (fileValue.length !== 0) {
           for (let i: number = 0; i < fileValue.length; i++) {
-            if (
+            console.log(
+              "Data Data ----------------------------",
+              primaryinfoData
+            );
+            if (primaryinfoData.fileData.length === 0) {
+              getfileData = {
+                key: fileValue[i].ConnectPRID,
+                fileName: fileValue[i].Filename,
+                fileType: "file",
+                modifiedBy: fileValue[i].Modified_By,
+                fileModifiedTime: fileValue[i].Modified_Date,
+                docType: fileValue[i].Doc_Type,
+                content: fileValue[i].Content,
+              };
+              dispatch(saveFileDoc(getfileData));
+            } else if (
               !(
                 fileValue[i].Content === primaryinfoData.fileData[i].content &&
                 fileValue[i].Modified_Date ===
                   primaryinfoData.fileData[i].fileModifiedTime
-              )
+              ) &&
+              primaryinfoData.fileData.length !== 0
             ) {
               getfileData = {
                 key: fileValue[i].ConnectPRID,
@@ -355,6 +369,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 docType: fileValue[i].Doc_Type,
                 content: fileValue[i].Content,
               };
+              dispatch(saveFileDoc(getfileData));
               console.log(
                 " get Doc type Data ---------------------- >> ",
                 getfileData
@@ -389,9 +404,9 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         dispatch(rightchangeCheckbox(prInfo.Type_Of_Order));
         setisLoadingComp(false);
         console.log("----------------Insert Data ", getfileData);
-        if (getfileData !== undefined) {
-          dispatch(saveFileDoc(getfileData));
-        }
+        // if (getfileData !== undefined) {
+
+        // }
       }
     })();
   }, [lineintemData.Finalpage]);
@@ -667,6 +682,9 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         [Object.keys(primaryinfoData.radioGroup)[i]]: newSelectedItem, // Update the specific option state key
       }));
     }
+    console.log("Primary info Component here ----685", [
+      primaryinfoData.requestfor,
+    ]);
     companyCodeOptionSet([primaryinfoData.requestfor]);
   }, [lineintemData.Finalpage, primaryinfoData.dataInsert]);
 
@@ -684,10 +702,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         prType,
         primaryinfoData.leftCheckbox[i].label
       );
-    }
-    for (let j: number = 0; j < primaryinfoData.rightCheckbox.length; j++) {
-      // TooltipPurchases.expenseTooltipdata(selectedItems.prOption.text,primaryinfoData.rightCheckbox[i].label);
-      // TooltipPurchases.prepaidTooltipdata(selectedItems.prOption.text,primaryinfoData.rightCheckbox[i].label);
     }
   }, [selectedItems.prOption]);
 
@@ -709,6 +723,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         TypeofbuyOption: selectRadioItems.buyRadio.text,
         IsPrepaidCapital: selectRadioItems.prepaidcapitalRadio.text,
       };
+      GlobalStore.storeTitledata(titledata);
       setTile(titledata);
 
       if (value.warningMsg !== " ") {
@@ -920,11 +935,15 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           item.label
         ) {
           newpurchaseItem = lineintemData.TypeofPurchaseDetailList[index];
+          newpurchaseItem.typeofPurchaseOption=selectRadioItems["prepaidcapitalRadio"]?.key
+          newpurchaseItem.typeofPurchaseName=item.label;
+          newpurchaseItem.prType=selectedItems["prOption"]?.key as string;
+          newpurchaseItem.CFID=textbox.CIPNum;
         } else {
-          newpurchaseItem = new TypeofPurchaseDetail(item.label);
+          newpurchaseItem=new TypeofPurchaseDetail(item.label,selectedItems["prOption"]?.key as string,selectRadioItems["prepaidcapitalRadio"]?.key,textbox.CIPNum);
         }
       } else {
-        newpurchaseItem = new TypeofPurchaseDetail(item.label);
+        newpurchaseItem=new TypeofPurchaseDetail(item.label,selectedItems["prOption"]?.key as string,selectRadioItems["prepaidcapitalRadio"]?.key,textbox.CIPNum);
       }
       newpurchaseItem.costCenter = costCenter;
       newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
@@ -992,7 +1011,9 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     };
     console.log("warningCheckData", warningCheckData);
 
-    let pkid: number = Math.floor(Math.random() * 100000000);
+    let pkid: string | number = Math.floor(Math.random() * 100000000);
+    let conecctPkid: string | number = Math.floor(Math.random() * 100000000);
+    conecctPkid = "00" + conecctPkid;
     let fileInfo = [];
 
     WarningMessage.accept(warningCheckData).then((warningRes) => {
@@ -1005,13 +1026,13 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         let saveprimayData = [
           {
             PKID: pkid,
-            ConnectPRID: "0123456",
+            ConnectPRID: conecctPkid,
             Type_Of_Buy: selectRadioItems.buyRadio.text,
             PrepaidOrCapitalEquipment:
               selectRadioItems.prepaidcapitalRadio.text,
             EHS: changeStrToBool(selectRadioItems.ehsRadio.text),
             Title: null,
-            RequestFor: GlobalStore.getName(),
+            RequestFor: GlobalStore.getEmail(),
             Type_Of_Order: Type_Of_Order,
             Order_Amount: null,
             CIP_Number: textbox.CIPNum,
@@ -1028,7 +1049,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             Manager2: null,
             Manager3: null,
             GL_Account: null,
-            Status: null,
+            Status: "Draft",
             TaskCreatedFor: null,
             ApprovalInstance: null,
             Comments: null,
@@ -1061,7 +1082,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             AesyntPRType: selectedItems.prOption.key,
             PONumber: null,
             IsCompleted: null,
-            Company: null,
+            Company: "omnicell",
             ProjectNumber: null,
             ActCostCenter: +costCenter,
             CompanyCode: selectedItems.companyCode.text,
@@ -1080,7 +1101,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             ProjectDepartment: selectedItems.selectDepartment.text,
             ProjectCode: selectedItems.projectCode.text,
             Created: null,
-            CreatedBy: null,
+            CreatedBy: GlobalStore.getmainEmail(),
             Modified: null,
             ModifiedBy: null,
             PRNumber: null,
@@ -1099,50 +1120,95 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             OldTaskCreatedFor: null,
           },
         ];
-        // restApiCall
-        //   .insertPrimaryInfoData(saveprimayData, true)
-        //   .then((value: number) => {
-        //     dispatch(savePkid(value));
 
-        //     let ConnectPRID: string = "000000" + value;
-        //     GlobalStore.storePrId(ConnectPRID);
-        //     if (primaryinfoData.fileData.length !== 0) {
-        //       for (
-        //         let i: number = 0;
-        //         i < primaryinfoData.fileData.length;
-        //         i++
-        //       ) {
-        //         console.log(
-        //           "primaryinfoData-primaryinfoData=primaryinfoData",
-        //           primaryinfoData.fileData[i],
-        //           ConnectPRID
-        //         );
+        if (lineintemData.Finalpage === `edit${GlobalStore.getconnectPRID()}`) {
+          console.log(
+            "This is PrimaryInfoComponent tsx file ---------",
+            GlobalStore.getconnectPRID()
+          );
+          saveprimayData[0].PKID = GlobalStore.getconnectPRID();
+          saveprimayData[0].ConnectPRID = GlobalStore.getconnectPRID();
+          restApiCall.insertVendorDetails(saveprimayData).then((_) => {
+            if (primaryinfoData.fileData.length !== 0) {
+              for (
+                let i: number = 0;
+                i < primaryinfoData.fileData.length;
+                i++
+              ) {
+                let fileDatainfo = {
+                  PKID: GlobalStore.getconnectPRID(),
+                  ConnectPRID: GlobalStore.getconnectPRID(),
+                  Doc_Type: primaryinfoData.fileData[i].docType,
+                  Filename: primaryinfoData.fileData[i].fileName,
+                  Content: primaryinfoData.fileData[i].content,
+                  Modified_By: GlobalStore.getmainName(),
+                  Modified_Date: primaryinfoData.fileData[i].fileModifiedTime,
+                };
 
-        //         let fileDatainfo = {
-        //           PKID: value,
-        //           ConnectPRID: ConnectPRID,
-        //           Doc_Type: primaryinfoData.fileData[i].docType,
-        //           Filename: primaryinfoData.fileData[i].fileName,
-        //           Content: primaryinfoData.fileData[i].content,
-        //           Modified_By: GlobalStore.getmainName(),
-        //           Modified_Date: primaryinfoData.fileData[i].fileModifiedTime,
-        //         };
-        //         console.log("DocData save.........  ", fileDatainfo);
-        //         fileInfo.push(fileDatainfo);
-        //       }
-        //       let fileDatapayload = {
-        //         Attachment: fileInfo,
-        //       };
-        //       restApiCall
-        //         .insertPrimaryInfoData(fileInfo, false)
-        //         .then((value) => {
-        //           console.log(value);
-        //           console.log("Data Save Here ------------");
-        //           buttonContxtSave();
-        //         });
-        // }
-        // });
-        buttonContxtSave();
+                fileInfo.push(fileDatainfo);
+              }
+
+              restApiCall
+                .insertPrimaryInfoData(fileInfo, false)
+                .then((value) => {
+                  console.log(value);
+                  dispatch(fetchSearchContent("MyOrder"));
+                  console.log("Data Save Here ------------");
+                  buttonContxtSave();
+                });
+            }
+          });
+        } else {
+          restApiCall
+            .insertPrimaryInfoData(saveprimayData, true)
+            .then((ConnectPRIDvalue) => {
+              let ConnectPRIDvaluestr: String = ConnectPRIDvalue.toString();
+              let totalLoop = 10 - ConnectPRIDvaluestr.length;
+
+              for (let k = 0; k < totalLoop; k++) {
+                console.log("This is The Dta Fun --7", ConnectPRIDvaluestr);
+                ConnectPRIDvaluestr = "0" + ConnectPRIDvaluestr;
+              }
+              // Functionality.findConnectPrId(ConnectPRIDvalue);
+              dispatch(savePkid(ConnectPRIDvaluestr));
+
+              // let ConnectPRID: string =value;
+              GlobalStore.storePrId(ConnectPRIDvaluestr);
+
+              if (primaryinfoData.fileData.length !== 0) {
+                for (
+                  let i: number = 0;
+                  i < primaryinfoData.fileData.length;
+                  i++
+                ) {
+                  let fileDatainfo = {
+                    PKID: ConnectPRIDvaluestr,
+                    ConnectPRID: ConnectPRIDvaluestr,
+                    Doc_Type: primaryinfoData.fileData[i].docType,
+                    Filename: primaryinfoData.fileData[i].fileName,
+                    Content: primaryinfoData.fileData[i].content,
+                    Modified_By: GlobalStore.getmainName(),
+                    Modified_Date: primaryinfoData.fileData[i].fileModifiedTime,
+                  };
+
+                  fileInfo.push(fileDatainfo);
+                }
+                // let fileDatapayload = {
+                //   Attachment: fileInfo,
+                // };
+
+                restApiCall
+                  .insertPrimaryInfoData(fileInfo, false)
+                  .then((value) => {
+                    console.log(value);
+                    dispatch(fetchSearchContent("MyOrder"));
+                    console.log("Data Save Here ------------");
+                    buttonContxtSave();
+                  });
+              }
+            });
+        }
+        // buttonContxtSave();
       }
     });
   };
@@ -1228,11 +1294,15 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   const linkGLClickEvent = () => {
     showopenGLAccount();
   };
+  //Onclick for View All Cost Center Modal
+  const linkCostCenterClickEvent = () => {
+    showopenCostCenter();
+  };
 
   return (
     <>
       {isLoadingComp ? <LoadingBox /> : null}
-      {showDialog ? (
+      {showDialog && !isViewMode ? (
         <ModalComponent
           isModalOpen={showDialog}
           showModal={showAlertDialog}
@@ -1301,9 +1371,11 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               <Stack.Item styles={hoverStyle}>
                 <TooltipShow
                   context={
-                    "Select" +
-                    ' "No" ' +
-                    "if you are submitting this PR on behalf of someone else"
+                    <p>
+                      {" "}
+                      Select "No" if you are submitting this PR <br /> on behalf
+                      of someone else{" "}
+                    </p>
                   }
                 />
               </Stack.Item>
@@ -1387,19 +1459,20 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                   />
                   <Link
                     style={{ color: "blue", marginLeft: 15, marginTop: 10 }}
-                    onClick={() => console.log("Hii")}
+                    disabled={isViewMode}
+                    onClick={() => linkCostCenterClickEvent()}
                   >
                     View All Cost Center Details
                   </Link>
-                  {openGLAccount ? (
+                  {openCostCenter ? (
                     <>
-                      {/* <GLAccountComponent
-                            isGLAccountOpen={openGLAccount}
-                            // showGLAccount={setopenGLAccount}
-                            showGLAccount={showopenGLAccount}
-                            GLAccountType={selectRadioItems.prepaidcapitalRadio.text}
-                            
-                          /> */}
+                      <CostCenterComponent
+                        isCostCenterOpen={openCostCenter}
+                        showCostCenter={showopenCostCenter}
+                        companyCode={selectedItems.companyCode.text}
+                        // CostCenterDatapick={CostCenterDatapick}
+                        // GlPRType={""}
+                      />
                     </>
                   ) : null}
                 </Stack>
@@ -1442,9 +1515,11 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               <Stack.Item styles={hoverStyle}>
                 <TooltipShow
                   context={
-                    "Some departments\n" +
-                    "(e.g. Engineering and Marketing) track\n " +
-                    "project-related expenses."
+                    <p>
+                      Some departments <br />
+                      (e.g. Engineering and Marketing) track <br />
+                      project-related expenses.
+                    </p>
                   }
                 />
               </Stack.Item>
@@ -1532,8 +1607,13 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               <Stack.Item styles={hoverStyle}>
                 <TooltipShow
                   context={
-                    "Expense Buy:  " +
-                    "One time Purchase/ One PO-One invoice to be processed against it, might be goods or one-time services expenses."
+                    <p>
+                      <b>
+                        <u>Expense Buy: </u>
+                      </b>{" "}
+                      One time Purchase/ One PO-One invoice to be processed
+                      against it, might be goods or one-time services expenses.{" "}
+                    </p>
                   }
                 />
               </Stack.Item>
@@ -1552,7 +1632,15 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               <Stack.Item styles={hoverStyle}>
                 <TooltipShow
                   context={
-                    "Blanket PR:   Multiple payments to be processed, This should be used when payment of the PO total will be split into 2 or De more invoices and/or budgeted recurrent orders for a preferred vendor for a period of time."
+                    <p>
+                      <b>
+                        <u> Blanket PR: </u>
+                      </b>{" "}
+                      Multiple payments to be processed, This should be used
+                      when payment of the PO total will be split into 2 or De
+                      more invoices and/or budgeted recurrent orders for a
+                      preferred vendor for a period of time.
+                    </p>
                   }
                 />
               </Stack.Item>
@@ -1569,9 +1657,27 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 {/* style={{ width: "150px" }} */}
                 <TooltipShow
                   context={
-                    "Expense:  Standard Expense PR\n" +
-                    "Prepaid: Payment in advance for goods or services over $12,000  USD and services provided beyond one year. This type of PR will always use GL 141010 or 141020 or 141030.\n" +
-                    "Capital Equipment / Asset:   Anything tangible or intangible that is purchased and owned which adds economic value is considered an asset. An asset represents value or ownership that can be converted into cash."
+                    <p>
+                      <b>
+                        <u> Expense: </u>
+                      </b>{" "}
+                      Standard Expense PR <br />
+                      <br />
+                      <b>
+                        <u>Prepaid: </u>
+                      </b>{" "}
+                      Payment in advance for goods or services over $12,000 USD
+                      and services provided beyond one year. This type of PR
+                      will always use GL 141010 or 141020 or 141030. <br />
+                      <br />
+                      <b>
+                        <u>Capital Equipment / Asset: </u>
+                      </b>{" "}
+                      Anything tangible or intangible that is purchased and
+                      owned which adds economic value is considered an asset. An
+                      asset represents value or ownership that can be converted
+                      into cash.{" "}
+                    </p>
                   }
                 />
               </Stack.Item>
@@ -1687,7 +1793,11 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                                 label={checkBoxItem.label}
                                 id={checkBoxItem.id}
                                 checked={checkBoxItem.isChecked}
-                                disabled={checkBoxItem.isDisable}
+                                disabled={
+                                  isViewMode
+                                    ? isViewMode
+                                    : checkBoxItem.isDisable
+                                }
                                 onChange={changeChakeBox}
                               />
                             </div>
@@ -1706,7 +1816,9 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                               label={checkBoxItem.label}
                               id={checkBoxItem.id}
                               checked={checkBoxItem.isChecked}
-                              disabled={checkBoxItem.isDisable}
+                              disabled={
+                                isViewMode ? isViewMode : checkBoxItem.isDisable
+                              }
                               onChange={RightchangeCheckBox}
                             />
                           </div>
@@ -1718,7 +1830,11 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                   {selectRadioItems.prepaidcapitalRadio.text !==
                     "Capital Equipment / Asset" &&
                   selectRadioItems.prepaidcapitalRadio.text !== "Lease" ? (
-                    <Link style={{ color: "blue" }} onClick={linkGLClickEvent}>
+                    <Link
+                      style={{ color: "blue" }}
+                      disabled={isViewMode}
+                      onClick={linkGLClickEvent}
+                    >
                       View All GL Accounts
                     </Link>
                   ) : null}
@@ -1793,6 +1909,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 <IconButton
                   iconProps={{ iconName: "Upload" }}
                   title="Upload"
+                  disabled={isViewMode}
                   ariaLabel="Upload"
                   onClick={handleFileChange}
                 />

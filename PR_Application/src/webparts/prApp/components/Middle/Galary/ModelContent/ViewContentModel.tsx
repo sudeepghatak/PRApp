@@ -1,6 +1,6 @@
 import * as React from "react";
 // import { useState } from "react";
-import { Modal, IIconProps, Stack } from "@fluentui/react";
+import { Modal, IIconProps, Stack, mergeStyleSets } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { MainPage } from "../../MainPage";
 
@@ -18,7 +18,12 @@ export const ViewContentModel: React.FunctionComponent<IModalProps> = (
   const modal_title = title as string;
   return (
     <div style={{ maxWidth: 500 }}>
-      <Modal isOpen={isModalOpen} onDismiss={showModal} isBlocking={false}>
+      <Modal
+        isOpen={isModalOpen}
+        onDismiss={showModal}
+        isBlocking={false}
+        containerClassName={contentStyles.container}
+      >
         <Stack
           horizontal
           horizontalAlign="space-between"
@@ -52,5 +57,18 @@ export const ViewContentModel: React.FunctionComponent<IModalProps> = (
     </div>
   );
 };
+
+const contentStyles = mergeStyleSets({
+  container: {
+    display: "flex",
+    minWidth: 900,
+    width: 900,
+    minHeight: 600,
+    height: 600,
+    textAlign: "center",
+    flexFlow: "column nowrap",
+    alignItems: "stretch",
+  },
+});
 
 const cancelIcon: IIconProps = { iconName: "Cancel" };

@@ -4,7 +4,7 @@ import {
   DetailsList,
   IColumn,
 } from "@fluentui/react/lib/DetailsList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../../../app/store";
 
@@ -14,7 +14,7 @@ interface TableRow {
   date: string;
   glAccount: string;
   qty: string;
-  uOM: string;
+  UOM: string;
   uintprice: string;
   unitpriceper: string;
   totalAmount: number;
@@ -32,61 +32,98 @@ const BasicInformationContent: React.FunctionComponent = () => {
       date: "",
       glAccount: "",
       qty: "",
-      uOM: "",
+      UOM: "",
       uintprice: "",
       unitpriceper: "",
       totalAmount: 0,
     },
   ]);
+
+  useEffect(() => {
+    if (basicInfo.lineInfoList !== 0) {
+      console.log(
+        "Here This is The Data Of BasicinformationContent ----",
+        basicInfo.lineInfoList
+      );
+      let lineinfoList = [];
+      for (let i = 0; i < basicInfo.lineInfoList.length; i++) {
+        console.log(
+          "BasicInformationContent --------- -- -- ---- ---- - ---- ---- ---- - - ",
+          i
+        );
+        let newitemLineinfo = {
+          description: basicInfo.lineInfoList[i].description,
+          costCenter: basicInfo.lineInfoList[i].cost_center,
+          date: basicInfo.lineInfoList[i].date_required,
+          glAccount: basicInfo.lineInfoList[i].gl_account,
+          qty: basicInfo.lineInfoList[i].qty,
+          UOM: basicInfo.lineInfoList[i].uom,
+          uintprice: basicInfo.lineInfoList[i].unit_price,
+          unitpriceper: basicInfo.lineInfoList[i].unit_price_per,
+          totalAmount: basicInfo.lineInfoList[i].total_amount,
+        };
+
+        lineinfoList.push(newitemLineinfo);
+      }
+
+      settableItem(lineinfoList);
+    }
+  }, []);
   const columns = [
     {
       key: "description",
       name: "Description",
       fieldName: "description",
-      onRender: (rowIndex: number) => {
-        return <span></span>;
+      onRender: (item: TableRow, rowIndex: number) => {
+        console.log(
+          "Basicinformation Here ------ ",
+          tableItem,
+          rowIndex,
+          tableItem[rowIndex]
+        );
+        return <span>{tableItem[rowIndex].description}</span>;
       },
     },
     {
       key: "cost_center",
       name: "Cost Center",
       fieldName: "cost_center",
-      onRender: (rowIndex: number) => {
-        return <span></span>;
+      onRender: (item: TableRow, rowIndex: number) => {
+        return <span>{tableItem[rowIndex].costCenter}</span>;
       },
     },
     {
       key: "date_required",
       name: "Date Required",
       fieldName: "date_required",
-      onRender: (rowIndex: number) => {
-        return <span></span>;
+      onRender: (item: TableRow, rowIndex: number) => {
+        return <span>{tableItem[rowIndex].date}</span>;
       },
     },
     {
       key: "gl_account",
       name: "GL Account",
       fieldName: "gl_account",
-      onRender: (rowIndex: number) => {
-        return <span></span>;
+      onRender: (item: TableRow, rowIndex: number) => {
+        return <span>{tableItem[rowIndex].glAccount}</span>;
       },
     },
     {
       key: "qty",
       name: "Qty",
       fieldName: "qty",
-      onRender: (rowIndex: number) => {
-        return <span></span>;
+      onRender: (item: TableRow, rowIndex: number) => {
+        return <span>{tableItem[rowIndex].qty}</span>;
       },
     },
     {
       key: "uom",
       name: "UOM",
       fieldName: "uom",
-      onRender: (rowIndex: number) => {
+      onRender: (item: TableRow, rowIndex: number) => {
         return (
           <>
-            <span></span>
+            <span>{tableItem[rowIndex].UOM}</span>
           </>
         );
       },
@@ -95,24 +132,24 @@ const BasicInformationContent: React.FunctionComponent = () => {
       key: "unit_price",
       name: "Unit Price ($)",
       fieldName: "unit_price",
-      onRender: (rowIndex: number) => {
-        return <span></span>;
+      onRender: (item: TableRow, rowIndex: number) => {
+        return <span>{tableItem[rowIndex].uintprice}</span>;
       },
     },
     {
       key: "unit_price_per",
       name: "Unit Price Per",
       fieldName: "unit_price_perom",
-      onRender: (rowIndex: number) => {
-        return <span></span>;
+      onRender: (item: TableRow, rowIndex: number) => {
+        return <span>{tableItem[rowIndex].unitpriceper}</span>;
       },
     },
     {
       key: "total_amount",
       name: "Total Amount ($)",
       fieldName: "total_amount",
-      onRender: (rowIndex: number) => {
-        return <span></span>;
+      onRender: (item: TableRow, rowIndex: number) => {
+        return <span>{tableItem[rowIndex].totalAmount}</span>;
       },
     },
   ];

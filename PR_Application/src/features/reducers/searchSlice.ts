@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { restApiCall } from "../../webparts/prApp/Api/ApiCall";
+import { GlobalStore } from "../../app/globalStore";
 
 
 export interface ISearchResult{
@@ -19,7 +20,19 @@ export const fetchSearchContent = createAsyncThunk(
     'fetchSearchContent',
 
     async (cT:string) => {
-        let searchRes=await restApiCall.getsearchByResponse("Lisa.Jordan@omnicell.com",cT)
+        while(true){
+            console.log("---Email -- ",GlobalStore.getmainEmail())
+           
+            if(GlobalStore.getmainEmail()!==undefined){
+                break;
+            }
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+        
+        let searchRes=await restApiCall.getsearchByResponse(
+            GlobalStore.getmainEmail()
+        //    "Lisa.Jordan@omnicell.com"
+            ,cT)
        
         return searchRes;
      
@@ -45,10 +58,12 @@ export const searchSlice=createSlice({
           builder.addCase(fetchSearchContent.fulfilled, (state, action) => {
             state.isLoading=false;
             // state.isLoading = fal
-            console.log("Response TOP-----------action.payload ::",action.payload);
+            console.log("Response TOP-----------action.payload  61 searchSlice::",action.payload);
+            
+            state.listSearchResult=[];
             if(action.payload.length !==0){
                 for(let i=0;i<action.payload.length;i++){
-                    var dateString = "Feb  9 2017 12:00AM";
+                    var dateString = action.payload[i].CreateDate!==null?action.payload[i].CreateDate :"2017-02-09T18:06:55";
                     var correctedDateString = dateString.replace(/(\d{1,2}:\d{2})([APM]+)$/, "$1 $2");
                     var date = new Date(correctedDateString);
 
@@ -67,9 +82,9 @@ export const searchSlice=createSlice({
                         Status: action.payload[i].Status ,
                         date: formattedDate,
                         supplierName:action.payload[i].Supplier_Name,
-                        ammount: action.payload[i].ConvertedDollerAmount
+                        ammount: action.payload[i].ConvertedDollerAmount===null?0.00:action.payload[i].ConvertedDollerAmount
                     }
-                state.listSearchResult.push(searchResultItem)
+                state.listSearchResult.splice(0,0,searchResultItem)
                 }
 
             }

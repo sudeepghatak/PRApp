@@ -3,7 +3,7 @@ import BasicInformationContent from "../galary_box/got_answer_content/BasicInfor
 import SupplierInformationContent from "../galary_box/got_answer_content/SupplierInformationContent";
 import * as React from "react";
 // import { useState } from "react";
-import { Modal, IIconProps, Stack } from "@fluentui/react";
+import { Modal, IIconProps, Stack, mergeStyleSets } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../../app/store";
@@ -12,6 +12,7 @@ import { ViewContentModel } from "./ViewContentModel";
 import { GlobalStore } from "../../../../../../app/globalStore";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { updateFinalPage } from "../../../../../../features/reducers/lineitemSlice";
+import AttatchmentContent from "../galary_box/got_answer_content/AttatchmentContent";
 
 interface IModalProps {
   isModalOpen: boolean;
@@ -45,7 +46,12 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
   const modal_title = title as string;
   return (
     <div style={{ maxWidth: 500 }}>
-      <Modal isOpen={isModalOpen} onDismiss={showModal} isBlocking={false}>
+      <Modal
+        isOpen={isModalOpen}
+        onDismiss={showModal}
+        isBlocking={false}
+        containerClassName={contentStyles.container}
+      >
         <Stack
           horizontal
           horizontalAlign="space-between"
@@ -77,50 +83,53 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
             {!statusInfo.isLoading ? (
               <>
                 <div className="status-model">
-                  <div>
-                    <span>{statusInfo.statusTitle}</span>
-                    <span>
-                      {" "}
-                      <IconButton
-                        iconProps={{ iconName: "View" }}
-                        title="View"
-                        ariaLabel="View"
-                        onClick={() => viewContent()}
-                        // onClick={() => copyRow(rowIndex)}
-                      />
-                      {showDialogview ? (
-                        <ViewContentModel
-                          isModalOpen={showDialogview}
-                          showModal={showAlertDialogView}
-                          backgroundcolor="#DEDBDE"
-                          title={`[${connectprID}] Request Details (Read Only)`}
+                  <div style={{ width: "100%", display: "flex" }}>
+                    <div style={{ width: "60%", textAlign: "left" }}>
+                      <span>{statusInfo.statusTitle}</span>
+                    </div>
+                    <div style={{ width: "40%", textAlign: "right" }}>
+                      <span>
+                        <IconButton
+                          iconProps={{ iconName: "View" }}
+                          title="View"
+                          ariaLabel="View"
+                          onClick={() => viewContent()}
+                          // onClick={() => copyRow(rowIndex)}
                         />
-                      ) : null}
-                    </span>
-                    <span>
-                      <IconButton
-                        iconProps={{ iconName: "Edit" }}
-                        title="Edit"
-                        ariaLabel="Edit"
-                        // onClick={() => copyRow(rowIndex)}
-                      />
-                    </span>
-                    <span>
-                      <IconButton
-                        iconProps={{ iconName: "Delete" }}
-                        title="Delete"
-                        ariaLabel="Delete"
-                        // onClick={() => copyRow(rowIndex)}
-                      />
-                    </span>
-                    <span>
-                      <IconButton
-                        iconProps={{ iconName: "Copy" }}
-                        title="Copy"
-                        ariaLabel="Copy"
-                        // onClick={() => copyRow(rowIndex)}
-                      />
-                    </span>
+                        {showDialogview ? (
+                          <ViewContentModel
+                            isModalOpen={showDialogview}
+                            showModal={showAlertDialogView}
+                            backgroundcolor="#DEDBDE"
+                            title={`[${connectprID}] Request Details (Read Only)`}
+                          />
+                        ) : null}
+                      </span>
+                      <span>
+                        <IconButton
+                          iconProps={{ iconName: "Edit" }}
+                          title="Edit"
+                          ariaLabel="Edit"
+                          // onClick={() => copyRow(rowIndex)}
+                        />
+                      </span>
+                      <span>
+                        <IconButton
+                          iconProps={{ iconName: "Delete" }}
+                          title="Delete"
+                          ariaLabel="Delete"
+                          // onClick={() => copyRow(rowIndex)}
+                        />
+                      </span>
+                      <span>
+                        <IconButton
+                          iconProps={{ iconName: "Copy" }}
+                          title="Copy"
+                          ariaLabel="Copy"
+                          // onClick={() => copyRow(rowIndex)}
+                        />
+                      </span>
+                    </div>
                   </div>
                   <BoxAccrodion
                     buttonName={"Basic Information"}
@@ -128,7 +137,7 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
                   />
                   <BoxAccrodion
                     buttonName={"Attachments"}
-                    collapseContent={BasicInformationContent}
+                    collapseContent={AttatchmentContent}
                   />
                   <BoxAccrodion
                     buttonName={"Supplier Information"}
@@ -147,5 +156,16 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
     </div>
   );
 };
-
+const contentStyles = mergeStyleSets({
+  container: {
+    display: "flex",
+    minWidth: 800,
+    width: 800,
+    minHeight: 400,
+    height: 500,
+    textAlign: "center",
+    flexFlow: "column nowrap",
+    alignItems: "stretch",
+  },
+});
 const cancelIcon: IIconProps = { iconName: "Cancel" };

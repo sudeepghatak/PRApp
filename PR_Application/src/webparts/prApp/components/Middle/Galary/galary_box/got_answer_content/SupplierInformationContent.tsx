@@ -39,16 +39,37 @@ const SupplierInformationContent = () => {
         <div className="basic-status back-hover">
           <span>Justification/Reason for Order:</span>
           <span>{supplierInfo.Special_Instructions}</span>
-          {/* <span>Consulting; Other</span>
-          <span>EHS Relevant?:</span>
-          <span>No</span> */}
         </div>
         <div className="basic-status">
-          {/* <span>Shipping Location:</span>
-          <span></span>
-          <span>Project Code:</span>
-          <span></span> */}
+          <span>Shipping Location:</span>
+          <span>{supplierInfo.Location}</span>
         </div>
+        {supplierInfo.Location === "Other Shipping Location" ? (
+          <>
+            <div className="basic-status back-hover">
+              <span>Name:</span>
+              <span>{supplierInfo.Shipping_Name}</span>
+              <span>Street/House Number:</span>
+              <span>{supplierInfo.Shipping_Street}</span>
+            </div>
+            <div className="basic-status">
+              <span>Postal Code/City:</span>
+              <span>{supplierInfo.Shipping_Postal_Code}</span>
+              <span>Region:</span>
+              <span>{supplierInfo.Shipping_Region}</span>
+            </div>
+            <div className="basic-status back-hover">
+              <span>Country:</span>
+              <span>{supplierInfo.Shipping_Country}</span>
+              <span>Where are you based?:</span>
+              <span>{supplierInfo.Shipping_Location}</span>
+            </div>
+            <div className="basic-status">
+              <span>Contact with Phone Number:</span>
+              <span>{supplierInfo.Shipping_ContactPhone}</span>
+            </div>
+          </>
+        ) : null}
       </div>
     </>
   );

@@ -1,29 +1,18 @@
-
 import * as React from "react";
-import Tippy from "@tippyjs/react";
-import './TooltipShow.css'
-import 'tippy.js/dist/tippy.css';
+import "./TooltipShow.css";
 
-
-interface  tooltipType{
-  context:string
-}
-
-
-const TooltipShow = (props:tooltipType) => {
-const {context}=props;
+const TooltipShow = (props: any) => {
+  const { context } = props;
   return (
-    <>
-    <div className="myContainer" >
-      <Tippy content={context} className="tooltip"  >
-        <button id="question-button" className="iconDesign">?</button>
-       </Tippy>
+    <div>
+      {/* <h2>Top Tooltip w/ Bottom Arrow</h2> */}
+      <div className="tooltip">
+        <button id="question-button" className="iconDesign">
+          ?
+        </button>
+        <span className="tooltiptext">{context}</span>
       </div>
-     
-      
-    </>
-  )
-}
-
-export default TooltipShow
-
+    </div>
+  );
+};
+export default TooltipShow;

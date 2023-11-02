@@ -36,8 +36,8 @@ interface IPMainComponent {
 interface IMainPage {
   isViewMode: boolean;
 }
-export const MainPage: React.FunctionComponent<IMainPage>= (props) => {
-  const {isViewMode}=props;
+export const MainPage: React.FunctionComponent<IMainPage> = (props) => {
+  const { isViewMode } = props;
   let userDisplayName: string = " Blank";
   const [title, settitle] = useState({
     name: "",
@@ -205,16 +205,15 @@ export const MainPage: React.FunctionComponent<IMainPage>= (props) => {
               <PrimaryInfoComponent
                 buttonContxtSave={buttonContxtSave}
                 setTableCreate={setTableCreate}
-                setTile={setTile} 
+                setTile={setTile}
                 isViewMode={isViewMode}
-               
-              
               />
             ) : null}
             {pageNumber === 2 ? (
               <VendorandShippingComponent
                 buttonContxtSave={buttonContxtSave}
                 buttonContxtBack={buttonContxtBack}
+                isViewMode={isViewMode}
               />
             ) : null}
             {pageNumber === 3 ? (

@@ -1,5 +1,6 @@
 import { log } from "sp-pnp-js";
 import { IPRPrepaidGLLoc } from "../webparts/prApp/Model/IPrGLAccountLoc";
+import { IPRTitleData } from "../webparts/prApp/Model/IprTitleData";
 
 export class GlobalStore{
     private static  Email:string ;
@@ -12,6 +13,14 @@ export class GlobalStore{
     private static uishowmode:string;
     private static connectPRID:string;
     private static viewmodeOn=false;
+    private static titledata:IPRTitleData={
+        name: "",
+        countryKey: "",
+        currencyKey: "",
+        costCenter: "",
+        TypeofbuyOption: "",
+        IsPrepaidCapital: ""
+    };
     
     static changeviewmodeOn(modeValue:boolean){
         this.viewmodeOn=modeValue
@@ -87,6 +96,15 @@ export class GlobalStore{
     }
     static getmainName(){
         return this.mainName;
+    }
+    static storeTitledata(titleData){
+        this.titledata=titleData,
+        console.log("storeTitledata titledata-- ",this.titledata);
+    }
+    static getTitledata(){   
+        console.log("getTitledata titledata-- ",this.titledata);
+        return this.titledata;
+        
     }
     static storeTooltipData(prType:string,ebuy:string,tooltipName:string,data:IPRPrepaidGLLoc[]){//SAP,prepaid,Enginner,data
         if(this.Tooldata[prType]!==undefined){

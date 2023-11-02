@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { VendorDetails } from "../../webparts/prApp/Model/vendor_details";
+import { AnyAsyncThunk } from "@reduxjs/toolkit/dist/matchers";
 
 
 interface otherDetails{
@@ -9,7 +10,7 @@ interface otherDetails{
 
 
 interface IvendorDetails{
-    PKID:number,
+    PKID:String,
     vendorDetails:VendorDetails,
     vendorOtherDetails:otherDetails
 
@@ -20,7 +21,7 @@ interface vendorAllData{
 }
 
 const initialState:IvendorDetails={
-    PKID:0,
+    PKID:"0",
     vendorDetails: new VendorDetails(0, " ", " ", " ", " ", " ", " ", " ", " "),
     vendorOtherDetails:{
         justificatiOnOrder: "",
@@ -42,7 +43,7 @@ export const vendorandshippingSlice=createSlice({
 
         },
         savePkid(state: IvendorDetails, 
-            action: PayloadAction<number>){
+            action: PayloadAction<any>){
                 state.PKID=action.payload
 
         }

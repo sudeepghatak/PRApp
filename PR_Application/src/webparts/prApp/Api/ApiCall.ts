@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl } from './Config/server_config'
+import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl, getprrequestiteminforesultUrl, getUserDeptUrl, getRegionUrl, getCountryUrl, getUOMUrl, getCurrencyChangeUrl, getExpenseGLUrl } from './Config/server_config'
 import { EmployeeDetails } from '../Model/employee_details'
 
 export class restApiCall {
@@ -27,7 +27,11 @@ export class restApiCall {
         let res=await this.rest_apiCall(`${getCostCenterUrl}${comCode}`,{});
         return res.data;
     }
-
+    static async getUserDeptList(cost:string,company:string){
+        let res=await this.rest_apiCall(`${getUserDeptUrl}${cost}&company=${company}`,{});
+        // console.log("getUserDeptList== ",res);   
+        return res.data;
+    }
     static async getShipToAddList(comCode){
         let res=await this.rest_apiCall(`${getPlantCodeUrl}${comCode}`,{});
         return res.data;
@@ -101,6 +105,31 @@ export class restApiCall {
         return res.data;
     }
 
+    static async GetRegionUrl(cKey){
+        
+        let res=await this.rest_apiCall(`${getRegionUrl}${cKey}`,{});
+        return res.data;
+    }    
+     static async GetCountryUrl(){
+        
+        let res=await this.rest_apiCall(`${getCountryUrl}`,{});
+        return res.data;
+    }
+
+    static async GetUOMUrl(){
+        
+        let res=await this.rest_apiCall(`${getUOMUrl}`,{});
+        return res.data;
+    }
+     static async GetCurrencyChangeUrl(fromCurr,toCurr){
+        let res=await this.rest_apiCall(`${getCurrencyChangeUrl}${fromCurr}&to=${toCurr}`,{});
+        return res.data;
+    }
+    static async GetExpenseGL(pPGL:string){
+        let res=await this.rest_apiCall(`${getExpenseGLUrl}${pPGL}`,{})
+        return res.data;
+    }
+
     static async getallEmployeList(empname:string){
         let employeeDetailsList=[];
         if(empname!==""){
@@ -164,9 +193,14 @@ export class restApiCall {
     static async getPrbasicInfoContent(cId){
     
         let res=await this.rest_apiCall(`${getprrequestresultUrl}${cId}`,{});
+        console.log("This is basicInfo data Here ----",res.data)
         return res.data[0];
+    }
 
-
+    static async getPrlineItemContent(cId){
+        
+        let res=await this.rest_apiCall(`${getprrequestiteminforesultUrl}${cId}`,{});
+        return res.data;
     }
 
 

@@ -52,7 +52,7 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
                 title={`[${cardItem.ConnectPRID}] Request Details (Status - ${cardItem.Status})`}
                 connectprID={`${cardItem.ConnectPRID}`}
               />
-            ) : null}
+            ) : null} 
             <span>
               <IconButton
                 iconProps={{ iconName: "Edit" }}

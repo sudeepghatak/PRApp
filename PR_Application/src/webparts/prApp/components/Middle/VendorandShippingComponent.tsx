@@ -24,16 +24,18 @@ import { RootState } from "../../../../app/store";
 import { restApiCall } from "../../Api/ApiCall";
 import TooltipShow from "./TooltipShow";
 import { insertOtherVendor } from "../../Model/InsertotherVendor";
+import { GlobalStore } from "../../../../app/globalStore";
 
 // import SupplierModal from "./SupplierModal";
 interface ISecondprops {
   buttonContxtSave: () => void;
   buttonContxtBack: () => void;
+  isViewMode: boolean;
 }
 const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   props
 ) => {
-  const { buttonContxtSave, buttonContxtBack } = props;
+  const { buttonContxtSave, buttonContxtBack, isViewMode } = props;
   const dispatch = useDispatch();
   const vendorandshippingData = useSelector(
     (state: RootState) => state.vendorandshipping
@@ -96,11 +98,37 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     text: " ",
   });
 
+  const [selectedItems, setselectedItems] = useState<{
+    [key: string]: IDropdownOption;
+  }>({
+    regionoption: { key: "", text: "" },
+    countryoption: { key: "", text: "" },
+    basedOn: { key: "", text: "" },
+  });
+
+  const changeDropdownOption = (
+    event: React.FormEvent<HTMLDivElement>,
+    item: IDropdownOption | undefined,
+    index: number
+  ): void => {
+    const { id } = event.target as HTMLDivElement;
+    let newSelectedItem: IDropdownOption = { key: "", text: "" };
+
+    newSelectedItem = { key: item?.key as string, text: item?.text as string };
+
+    console.log("newSelectedItem === newSelectedItem", newSelectedItem);
+    setselectedItems((prevSelectedItems) => ({
+      ...prevSelectedItems,
+      [id]: newSelectedItem,
+    }));
+  };
+
   const changeshipDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
     option?: IDropdownOption | undefined,
     index?: number | undefined
   ) => {
+    console.log("This is Shipping To Addres ----", option);
     setnewshipAddress(option as IDropdownOption);
   };
 
@@ -130,32 +158,38 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
 
     //Shipping country ----------------------------------------------
 
-    ConnectPr.getInstance()
-      .GetPRCountry()
-      .then((PrCountry) => {
-        let listDataCountry = [];
-        for (let i = 0; i < PrCountry.length; i++) {
-          if (PrCountry[i].IsActive == true) {
-            let newObjCountry = {
-              key: PrCountry[i],
-              text: PrCountry[i].Title,
-            };
-            listDataCountry.push(newObjCountry);
-          }
-        }
-        setCountryOptions([...listDataCountry]);
-      });
+    //Shipping Region ----------------------------------------------
+    console.log(
+      "This Currency Key ---- ",
+      GlobalStore.getTitledata().currencyKey
+    );
+    //  ConnectPr.getInstance().GetPRCountry().then((PrCountry)=>{
+    restApiCall.GetCountryUrl().then((PrCountry) => {
+      let listDataCountry = [];
+      for (let i = 0; i < PrCountry.length; i++) {
+        let newObjCountry = {
+          key: PrCountry[i],
+          text: PrCountry[i].Title,
+        };
+        listDataCountry.push(newObjCountry);
+      }
+      setCountryOptions([...listDataCountry]);
+    });
 
     //Shipping Region ----------------------------------------------
-
-    ConnectPr.getInstance()
-      .GetPRRegion()
+    console.log(
+      "This Currency Key ---- ",
+      GlobalStore.getTitledata().currencyKey
+    );
+    restApiCall
+      .GetRegionUrl(GlobalStore.getTitledata().currencyKey)
       .then((PrRegion) => {
+        console.log("REGIONNNNNNNNNNNNNNNNNNNNNNNN ---", PrRegion);
         let listDataRegion = [];
         for (let i = 0; i < PrRegion.length; i++) {
           let newObjRegion = {
             key: PrRegion[i],
-            text: PrRegion[i].Title + "(" + PrRegion[i].CountryKey + ")",
+            text: PrRegion[i].Title + "(" + PrRegion[i].StateKey + ")",
           };
           listDataRegion.push(newObjRegion);
         }
@@ -176,6 +210,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     justificatiOnOrder: "",
     downPaymentDetails: "",
     Name: "",
+    ShippingAdrress: "",
     HouseNumber: "",
     StreetName: "",
     PostalCode: "",
@@ -214,6 +249,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     );
     buttonContxtSave();
   };
+
   const saveVendorDetails = () => {
     dispatch(
       saveVendorandShippingData({
@@ -227,7 +263,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     let saveDetails = [
       {
         PKID: vendorandshippingData.PKID,
-        ConnectPRID: null,
+        ConnectPRID: vendorandshippingData.PKID,
         Type_Of_Buy: null,
         PrepaidOrCapitalEquipment: null,
         EHS: null,
@@ -254,16 +290,16 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
         ApprovalInstance: null,
         Comments: textvalue.justificatiOnOrder,
         Cost_Center: null,
-        Location: null,
+        Location: textvalue.ShippingAdrress,
         IsDeleted: null,
         Special_Instructions: textvalue.downPaymentDetails,
-        Shipping_Name: null,
-        Shipping_Street: null,
-        Shipping_Postal_Code: null,
-        Shipping_Location: null,
-        Shipping_Region: null,
-        Shipping_Country: null,
-        Shipping_ContactPhone: null,
+        Shipping_Name: textvalue.Name,
+        Shipping_Street: textvalue.StreetName + "#" + textvalue.HouseNumber,
+        Shipping_Postal_Code: textvalue.PostalCode + "#" + textvalue.City,
+        Shipping_Location: selectedItems.basedOn.text,
+        Shipping_Region: selectedItems.regionoption.text,
+        Shipping_Country: selectedItems.countryoption.text,
+        Shipping_ContactPhone: textvalue.ContactName,
         OldReqId: null,
         SAPPRId: null,
         LastWorkflowRun: null,
@@ -320,18 +356,23 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
         OldTaskCreatedFor: null,
       },
     ];
-    // restApiCall.insertVendorDetails(saveDetails);
+    console.log("This is The Second Page Save And Continue ", saveDetails);
+    restApiCall.insertVendorDetails(saveDetails);
     // buttonContxtSave();
 
     let otherShippingAdd = [
       {
         Title:
           textvalue.Name +
+          "(" +
           textvalue.HouseNumber +
           textvalue.StreetName +
           textvalue.PostalCode +
           textvalue.City +
-          textvalue.ContactName,
+          textvalue.ContactName +
+          selectedItems.countryoption.text +
+          selectedItems.basedOn.text +
+          ")",
         PlantNumber: null,
         StorageLocation: null,
         P2PBuy: null,
@@ -339,12 +380,12 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
         IsAvailable: true,
         IsAvlblShpToLocation: true,
         IsAesyntLocation: false,
-        Country: "India",
+        Country: selectedItems.countryoption.text,
       },
     ];
     console.log("otherShippingAdd__otherShippingAdd--", otherShippingAdd);
 
-    // restApiCall.insertPlantLoc(otherShippingAdd);
+    restApiCall.insertPlantLoc(otherShippingAdd);
     buttonContxtSave();
   };
 
@@ -480,10 +521,12 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                   <Stack horizontal tokens={{ childrenGap: 5 }}>
                     <TextField
                       id="suppliername"
+                      disabled={isViewMode ? true : false}
                       value={vendorItem.vendorName}
                       onChange={textContext}
                     />
                     <DefaultButton
+                      disabled={isViewMode ? true : false}
                       style={{ minWidth: 0 }}
                       onClick={() => showSupplierSearchModal()}
                     >
@@ -651,6 +694,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                   <div style={{ width: "450px" }}>
                     <TextField
                       id="justificatiOnOrder"
+                      disabled={isViewMode ? true : false}
                       value={textvalue.justificatiOnOrder}
                       onChange={textContext}
                       multiline
@@ -683,6 +727,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                   <div style={{ width: "450px" }}>
                     <TextField
                       id="downPaymentDetails"
+                      disabled={isViewMode ? true : false}
                       value={textvalue.downPaymentDetails}
                       onChange={textContext}
                       multiline
@@ -708,6 +753,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                   <Stack horizontal tokens={{ childrenGap: 5 }}>
                     <Dropdown
                       placeholder="Select an option"
+                      disabled={isViewMode ? true : false}
                       onChange={changeshipDropdownOption}
                       options={shipAddress}
                       styles={dropdownStyles}
@@ -715,6 +761,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                     {selectshipAddress ? (
                       <div>
                         <Link
+                          disabled={isViewMode ? true : false}
                           style={{ color: "blue", marginLeft: 10 }}
                           onClick={showOtherShipping}
                         >
@@ -747,6 +794,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <TextField
                           id="Name"
+                          disabled={isViewMode ? true : false}
                           placeholder="Provide Company/Recipient Name.Maximum length"
                           style={{ width: 350 }}
                           onChange={textContext}
@@ -764,6 +812,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <TextField
                           id="HouseNumber"
+                          disabled={isViewMode ? true : false}
                           placeholder={"House No."}
                           onChange={textContext}
                           // value={shippingItem.HouseNumber}
@@ -772,6 +821,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                         <span style={{ marginTop: 10 }}>/</span>
                         <TextField
                           id="StreetName"
+                          disabled={isViewMode ? true : false}
                           placeholder="Street Name"
                           onChange={textContext}
                           style={{ width: 300 }}
@@ -789,6 +839,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <TextField
                           id="PostalCode"
+                          disabled={isViewMode ? true : false}
                           placeholder="Postal Code"
                           onChange={textContext}
                           style={{ width: 100 }}
@@ -797,6 +848,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                         <TextField
                           placeholder="City"
                           id="City"
+                          disabled={isViewMode ? true : false}
                           style={{ width: 250 }}
                           onChange={textContext}
                         />
@@ -813,7 +865,10 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <Dropdown
                           placeholder="Select an option"
-                          onChange={changeshipDropdownOption}
+                          id="regionoption"
+                          disabled={isViewMode ? true : false}
+                          onChange={changeDropdownOption}
+                          selectedKey={selectedItems["regionoption"]?.key}
                           options={regionOptions}
                           styles={dropdownStyles}
                         />
@@ -830,7 +885,13 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <Dropdown
                           placeholder="Select an option"
-                          onChange={changeshipDropdownOption}
+                          id="countryoption"
+                          disabled={isViewMode ? true : false}
+                          onChange={changeDropdownOption}
+                          selectedKey={selectedItems["countryoption"]?.key}
+                          defaultSelectedKey={
+                            GlobalStore.getTitledata().countryKey
+                          }
                           options={countryOptions}
                           styles={dropdownStyles}
                         />
@@ -847,7 +908,10 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <Dropdown
                           placeholder="Select an option"
-                          onChange={changeshipDropdownOption}
+                          id="basedOn"
+                          disabled={isViewMode ? true : false}
+                          onChange={changeDropdownOption}
+                          selectedKey={selectedItems["basedOn"]?.key}
                           options={shipAddress}
                           styles={dropdownStyles}
                         />
@@ -864,6 +928,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                       <Stack horizontal tokens={{ childrenGap: 5 }}>
                         <TextField
                           id="ContactName"
+                          disabled={isViewMode ? true : false}
                           onChange={textContext}
                           placeholder="Maximum length is 50 characters"
                           style={{ width: 300 }}
