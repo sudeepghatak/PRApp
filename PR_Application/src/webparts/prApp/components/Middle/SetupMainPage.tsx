@@ -5,9 +5,13 @@ import { MainPage } from "./MainPage";
 import { GalaryMain } from "./Galary/galary_box/GalaryMain";
 import "./MainPage.css";
 import GalaryDashboard from "./GalaryDashboard";
+import { GlobalStore } from "../../../../app/globalStore";
 const SetupMainPage: React.FunctionComponent = () => {
   const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
-  console.log("Call Here For Update ----- 10 -- SetupMainPage");
+  console.log(
+    "I Am Here So I Just Check This Topic Here --- ",
+    lineintemData.Finalpage
+  );
   return (
     <>
       <div id="main-row">
@@ -15,7 +19,9 @@ const SetupMainPage: React.FunctionComponent = () => {
           <GalaryDashboard />
         </div>
         <div className="main-second-row">
-          {lineintemData.Finalpage === "" ? (
+          {lineintemData.Finalpage === "" ||
+          (lineintemData.Finalpage.includes("view") &&
+            !GlobalStore.getEnterMainpage()) ? (
             <GalaryMain />
           ) : (
             <div id="main-page">

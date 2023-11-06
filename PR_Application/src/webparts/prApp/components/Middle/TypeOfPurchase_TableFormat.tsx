@@ -638,10 +638,7 @@ import { restApiCall } from "../../Api/ApiCall";
 import ProjectCodeComponent from "./TableProjectCodeComponent";
 import { IPrProjectCode } from "../../Model/IPrProjectCode";
 import TooltipShow from "./TooltipShow";
-import {
-  // defaultprepaidFromDatePickerStrings,
-  // defaultprepaidToDatePickerStrings,
-} from "@fluentui/react/lib/DatePicker";
+// import { defaultprepaidFromDatePickerStrings, defaultprepaidToDatePickerStrings } from "@fluentui/react/lib/DatePicker";
 // Initialize Fluent UI icons (required)
 interface TableRow {
   CIPNumber: string;
@@ -655,12 +652,15 @@ interface TableRow {
   uintprice: string;
   unitpriceper: string;
   totalAmount: number;
+  prepaid_to_date: string;
+  prepaid_from_date: string;
   // glaccount:[]
 }
 interface IThirdProps {
   tableviewItem: TypeofPurchaseDetail;
   id: number;
   addTotalAmount: (total: any) => void;
+  isViewMode: boolean;
 }
 
 //date required.....
@@ -677,7 +677,7 @@ const checkboxStyles = {
 const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   // const{Title}=props;
   const dispatch = useDispatch();
-  const { tableviewItem, id, addTotalAmount } = props;
+  const { tableviewItem, id, addTotalAmount, isViewMode } = props;
   //date Required....
   const [firstDayOfWeek, setFirstDayOfWeek] = React.useState(DayOfWeek.Sunday);
 
@@ -689,13 +689,15 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       projectCode: "",
       description: "",
       costCenter: "",
-      date: "",
+      date: "04/18/2017",
       glAccount: "",
       qty: "",
       uOM: "",
       uintprice: "",
       unitpriceper: "",
       totalAmount: 0,
+      prepaid_to_date: "04/18/2017",
+      prepaid_from_date: "04/18/2017",
       // glaccount:[]
     },
   ]);
@@ -771,6 +773,8 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       uintprice: "",
       unitpriceper: "",
       totalAmount: 0,
+      prepaid_to_date: "",
+      prepaid_from_date: "",
       // glaccount:[]
     };
     const typOfPuchaseCreateNew = new TypeLineItem(
@@ -784,7 +788,9 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       newRow.uOM,
       newRow.uintprice,
       newRow.unitpriceper,
-      newRow.totalAmount
+      newRow.totalAmount,
+      newRow.prepaid_to_date,
+      newRow.prepaid_from_date
     );
     tableviewItem.demotypeOfPurchaseInfoList = [
       ...tableviewItem.typeOfPurchaseInfoList,
@@ -820,6 +826,8 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       unitPrice: copyItem.uintprice,
       unitPricePer: copyItem.unitpriceper,
       totalAmount: copyItem.totalAmount,
+      prepaid_to_date: copyItem.prepaid_to_date,
+      prepaid_from_date: copyItem.prepaid_from_date,
     };
     const copyTypeOfPurchase = new TypeLineItem(
       newRow.CIPNumber,
@@ -832,7 +840,9 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       newRow.uOM,
       newRow.unitPrice,
       newRow.unitPricePer,
-      newRow.totalAmount
+      newRow.totalAmount,
+      newRow.prepaid_to_date,
+      newRow.prepaid_from_date
     );
     tableviewItem.demotypeOfPurchaseInfoList = [
       ...tableviewItem.typeOfPurchaseInfoList,
@@ -880,7 +890,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
           "/" +
           (date.getFullYear() % 100);
   };
-  console.log("Date ::", onFormatDate);
+  console.log("Date ::", onFormatDate());
 
   //For save ---------------------------------------------------
   const newhandleInputChange = (
@@ -895,16 +905,13 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       ...newItem[rowIndex],
       [name]: newValue,
     };
-    // console.log("rowIndex--");
-    // console.log(name);
-    // console.log(newItem[rowIndex]);
-    // console.log("kkkkkkkkkkkkkkk");
     let qtynumber: number = +newItem[rowIndex].qty;
     let uintpricenumber: number = +newItem[rowIndex].uintprice;
     let unitpricepernumber: number = +newItem[rowIndex].unitpriceper;
     let totalAmount: number =
       (qtynumber * uintpricenumber) / unitpricepernumber;
     newItem[rowIndex].totalAmount = totalAmount;
+    // newItem[rowIndex].prepaid_to_date=
 
     const changeTypeOfPurchase = new TypeLineItem(
       newItem[rowIndex].CIPNumber,
@@ -917,7 +924,9 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       newItem[rowIndex].uOM,
       newItem[rowIndex].uintprice,
       newItem[rowIndex].unitpriceper,
-      newItem[rowIndex].totalAmount
+      newItem[rowIndex].totalAmount,
+      newItem[rowIndex].prepaid_to_date,
+      newItem[rowIndex].prepaid_from_date
     );
     tableviewItem.demotypeOfPurchaseInfoList[rowIndex] = changeTypeOfPurchase;
     settableItem([...newItem]);
@@ -945,6 +954,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       };
       console.log(
         "glPickID--glPickID",
+
         newSelectedItem.key,
         newSelectedItem.text
       );
@@ -954,6 +964,38 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       ...prevSelectedItems,
       [id]: newSelectedItem,
     }));
+
+    let newItem = tableItem;
+    newItem[index] = {
+      ...newItem[index],
+      [id]: newSelectedItem.key,
+    };
+    const changeTypeOfPurchase = new TypeLineItem(
+      newItem[index].CIPNumber,
+      newItem[index].projectCode,
+      newItem[index].description,
+      newItem[index].costCenter,
+      newItem[index].date,
+      newItem[index].glAccount,
+      newItem[index].qty,
+      newItem[index].uOM,
+      newItem[index].uintprice,
+      newItem[index].unitpriceper,
+      newItem[index].totalAmount,
+      newItem[index].prepaid_to_date,
+      newItem[index].prepaid_from_date
+    );
+    tableviewItem.demotypeOfPurchaseInfoList[index] = changeTypeOfPurchase;
+    // newItem[index].glAccount = newSelectedItem.key as string;
+    settableItem([...newItem]);
+
+    console.log(
+      "AAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRR-----------------",
+      id,
+      newItem[index].glAccount,
+      index,
+      newItem
+    );
   };
   //GL account Details---------------------------------------
   // console.log("selectedItems[expenseGL]?.key",selectedItems["expensegl"]?.key,selectedItems["glAccount"]?.key);
@@ -1031,68 +1073,74 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   useEffect(() => {
     let simpleList = [];
     // console.log("tableviewItem==",tableviewItem);
-    if (lineinfoData.saveTable === 0) {
+    // if (lineinfoData.saveTable === 0) {
+    //   let newRow = {
+    //     CIPNumber: tableviewItem.CFID,
+    //     projectCode: tableviewItem.projectCode,
+    //     description: "",
+    //     costCenter: tableviewItem.costCenter,
+    //     date: "04/18/2017",
+    //     glAccount: "",
+    //     qty: "",
+    //     uOM: " ",
+    //     uintprice: "",
+    //     unitpriceper: "",
+    //     totalAmount: 0,
+    //     prepaid_to_date: "",
+    //     prepaid_from_date: "",
+    //   };
+    //   const typeItem = new TypeLineItem(
+    //     newRow.CIPNumber,
+    //     newRow.projectCode,
+    //     newRow.description,
+    //     newRow.costCenter,
+    //     newRow.date,
+    //     newRow.glAccount,
+    //     newRow.qty,
+    //     newRow.uOM,
+    //     newRow.uintprice,
+    //     newRow.unitpriceper,
+    //     newRow.totalAmount,
+    //     newRow.prepaid_to_date,
+    //     newRow.prepaid_from_date
+    //   );
+    //   tableviewItem.demotypeOfPurchaseInfoList = [typeItem];
+    //   simpleList = [newRow];
+    //   // console.log("if NewRow===",newRow);
+    // } else {
+    // console.log("typeOfPurchaseInfoList");
+    // console.log(tableviewItem.typeOfPurchaseInfoList);
+    for (
+      let i: number = 0;
+      i < tableviewItem.typeOfPurchaseInfoList.length;
+      i++
+    ) {
       let newRow = {
-        CIPNumber: tableviewItem.CFID,
-        projectCode: tableviewItem.projectCode,
-        description: "",
-        costCenter: tableviewItem.costCenter,
-        date: "",
-        glAccount: "",
-        qty: "",
-        uOM: " ",
-        uintprice: "",
-        unitpriceper: "",
-        totalAmount: 0,
+        CIPNumber: tableviewItem.typeOfPurchaseInfoList[i].CFID,
+        projectCode: tableviewItem.typeOfPurchaseInfoList[i].projectCode,
+        description: tableviewItem.typeOfPurchaseInfoList[i].des,
+        costCenter: tableviewItem.typeOfPurchaseInfoList[i].CostCenter,
+        date: tableviewItem.typeOfPurchaseInfoList[i].date,
+        glAccount: tableviewItem.typeOfPurchaseInfoList[i].glAccount,
+        qty: tableviewItem.typeOfPurchaseInfoList[i].qty,
+        uOM: tableviewItem.typeOfPurchaseInfoList[i].uOM,
+        uintprice: tableviewItem.typeOfPurchaseInfoList[i].unitPrice,
+        unitpriceper: tableviewItem.typeOfPurchaseInfoList[i].unitPricePer,
+        totalAmount: +tableviewItem.typeOfPurchaseInfoList[i].totalamount,
       };
-      const typeItem = new TypeLineItem(
-        newRow.CIPNumber,
-        newRow.projectCode,
-        newRow.description,
-        newRow.costCenter,
-        newRow.date,
-        newRow.glAccount,
-        newRow.qty,
-        newRow.uOM,
-        newRow.uintprice,
-        newRow.unitpriceper,
-        newRow.totalAmount
-      );
-      tableviewItem.demotypeOfPurchaseInfoList = [typeItem];
-      simpleList = [newRow];
-      // console.log("if NewRow===",newRow);
-    } else {
-      // console.log("typeOfPurchaseInfoList");
-      // console.log(tableviewItem.typeOfPurchaseInfoList);
-      for (
-        let i: number = 0;
-        i < tableviewItem.typeOfPurchaseInfoList.length;
-        i++
-      ) {
-        let newRow = {
-          CIPNumber: tableviewItem.typeOfPurchaseInfoList[i].CFID,
-          projectCode: tableviewItem.typeOfPurchaseInfoList[i].projectCode,
-          description: tableviewItem.typeOfPurchaseInfoList[i].des,
-          costCenter: tableviewItem.typeOfPurchaseInfoList[i].CostCenter,
-          date: tableviewItem.typeOfPurchaseInfoList[i].date,
-          glAccount: tableviewItem.typeOfPurchaseInfoList[i].glAccount,
-          qty: tableviewItem.typeOfPurchaseInfoList[i].qty,
-          uOM: tableviewItem.typeOfPurchaseInfoList[i].uOM,
-          uintprice: tableviewItem.typeOfPurchaseInfoList[i].unitPrice,
-          unitpriceper: tableviewItem.typeOfPurchaseInfoList[i].unitPricePer,
-          totalAmount: +tableviewItem.typeOfPurchaseInfoList[i].totalamount,
-        };
-        // console.log("newRow --",newRow);
+      console.log("newRow --1132 1132", newRow);
 
-        simpleList.push(newRow);
-        tableviewItem.demotypeOfPurchaseInfoList[i] =
-          tableviewItem.typeOfPurchaseInfoList[i];
-      }
+      simpleList.push(newRow);
+      tableviewItem.demotypeOfPurchaseInfoList[i] =
+        tableviewItem.typeOfPurchaseInfoList[i];
     }
+    // }
 
     settableItem(simpleList);
   }, []);
-
+  const pickDate = (date) => {
+    console.log("Date Here ", date);
+  };
   React.useMemo(() => {
     let totalNumber = {
       id,
@@ -1114,6 +1162,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
           <IconButton
             iconProps={{ iconName: "Copy" }}
             title="Copy"
+            disabled={isViewMode}
             ariaLabel="Copy"
             onClick={() => copyRow(rowIndex)}
           />
@@ -1169,17 +1218,19 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
           >
             <Checkbox
               name="CIPCheck"
+              disabled={isViewMode}
               checked={isPickerRemove}
               onChange={onCheckedButtonClick}
               styles={checkboxStyles}
             />
             {isPickerRemove === true ? (
               <TextField
+              disabled={isViewMode}
                 name="CIPNumber"
                 value={tableItem[rowIndex].CIPNumber}
               />
             ) : (
-              <TextField name="CIPNumber" value="" />
+              <TextField  disabled={isViewMode} name="CIPNumber" value="" />
             )}
           </Stack>
         );
@@ -1216,13 +1267,20 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         return (
           <div className={rootClass}>
             <DatePicker
+            disabled={isViewMode}
               firstDayOfWeek={firstDayOfWeek}
               firstWeekOfYear={1}
               placeholder="MM/DD/YY"
-              strings={defaultDatePickerStrings}
+              // strings={defaultprepaidFromDatePickerStrings}
               formatDate={onFormatDate}
               showMonthPickerAsOverlay={true}
-              value={PrepaidFromvalue}
+              value={
+                tableItem[rowIndex].date === ""
+                  ? new Date()
+                  : new Date(tableItem[rowIndex].prepaid_from_date)
+              }
+              // PrepaidFromvalue
+
               componentRef={datePickerRef}
               onSelectDate={
                 setPrepaidFromvalue as (date: Date | null | undefined) => void
@@ -1260,12 +1318,19 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
           <div className={rootClass}>
             <DatePicker
               firstDayOfWeek={firstDayOfWeek}
+              disabled={isViewMode}
               firstWeekOfYear={1}
               placeholder="MM/DD/YY"
-              strings={defaultDatePickerStrings}
+              // strings={defaultprepaidToDatePickerStrings}
               formatDate={onFormatDate}
               showMonthPickerAsOverlay={true}
-              value={PrepaidTovalue}
+              value={
+                tableItem[rowIndex].date === ""
+                  ? new Date()
+                  : new Date(tableItem[rowIndex].prepaid_to_date)
+              }
+              // PrepaidTovalue
+
               componentRef={datePickerRef}
               onSelectDate={
                 setPrepaidTovalue as (date: Date | null | undefined) => void
@@ -1319,6 +1384,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
             />
             <IconButton
               iconProps={{ iconName: "Add" }}
+              disabled={isViewMode}
               title="Add"
               ariaLabel="Add"
               onClick={linkClickEvent}
@@ -1362,7 +1428,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         },
       },
       onRender: (item: TableRow, rowIndex: number) => {
-        return <TextField />;
+        return <TextField disabled={isViewMode} value={tableItem[rowIndex].description} />;
       },
     },
     {
@@ -1429,15 +1495,23 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         return (
           <div className={rootClass}>
             <DatePicker
+            disabled={isViewMode}
               firstDayOfWeek={firstDayOfWeek}
               firstWeekOfYear={1}
               placeholder="MM/DD/YY"
               strings={defaultDatePickerStrings}
               formatDate={onFormatDate}
               showMonthPickerAsOverlay={true}
-              value={value}
+              value={
+                tableItem[rowIndex].date === ""
+                  ? new Date()
+                  : new Date(tableItem[rowIndex].date)
+              }
               componentRef={datePickerRef}
-              onSelectDate={setValue as (date: Date | null | undefined) => void}
+              onSelectDate={
+                (date) => pickDate(date)
+                // setValue as (date: Date | null | undefined) => void
+              }
             />
           </div>
         );
@@ -1473,8 +1547,13 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
             isPickerRemove === false ? (
               <Dropdown
                 placeholder="- Select GL Account -"
+                disabled={isViewMode}
                 id="glAccount"
-                onChange={changeDropdownOption}
+                onChange={(
+                  event: React.FormEvent<HTMLDivElement>,
+                  option?: IDropdownOption<any>,
+                  index?: number
+                ) => changeDropdownOption(event, option, index)}
                 selectedKey={tableItem[rowIndex].glAccount}
                 options={tableviewItem.glaccount}
                 styles={dropdownStyles}
@@ -1484,7 +1563,12 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
               <Dropdown
                 placeholder="- Select GL Account -"
                 id="glAccount"
-                onChange={changeDropdownOption}
+                disabled={isViewMode}
+                onChange={(
+                  event: React.FormEvent<HTMLDivElement>,
+                  option?: IDropdownOption<any>,
+                  index?: number
+                ) => changeDropdownOption(event, option, index)}
                 selectedKey={tableItem[rowIndex].glAccount}
                 options={tableviewItem.glaccount}
                 // options={}
@@ -1522,6 +1606,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         return (
           <Dropdown
             placeholder="- Select Expense GL -"
+            disabled={isViewMode}
             id="expensegl"
             onChange={changeDropdownOption}
             selectedKey={selectedItems["expensegl"]?.key}
@@ -1558,6 +1643,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         return (
           <TextField
             name="qty"
+            disabled={isViewMode}
             value={tableItem[rowIndex].qty}
             onChange={(e, newValue) =>
               newhandleInputChange(e, newValue as string, rowIndex)
@@ -1595,11 +1681,19 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
           <>
             <Dropdown
               placeholder="- Select UOM -"
-              id="uom"
+              id="uOM"
+              disabled={isViewMode}
               options={UOMOption}
-              onChange={changeDropdownOption}
+              onChange={(
+                event: React.FormEvent<HTMLDivElement>,
+                option?: IDropdownOption<any>,
+                index?: number
+              ) => changeDropdownOption(event, option, rowIndex)}
               styles={dropdownStyles}
-              selectedKey={selectedItems["uom"]?.key}
+              selectedKey={
+                tableItem[rowIndex].uOM
+                // selectedItems["uom"]?.key
+              }
             />
           </>
         );
@@ -1632,6 +1726,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         return (
           <TextField
             name="uintprice"
+            disabled={isViewMode}
             value={tableItem[rowIndex].uintprice}
             onChange={(e, newValue) =>
               newhandleInputChange(e, newValue as string, rowIndex)
@@ -1667,6 +1762,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         return (
           <TextField
             name="unitpriceper"
+            disabled={isViewMode}
             value={tableItem[rowIndex].unitpriceper}
             onChange={(e, newValue) =>
               newhandleInputChange(e, newValue as string, rowIndex)
@@ -1713,6 +1809,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         <IconButton
           iconProps={{ iconName: "Add" }}
           title="Add"
+          disabled={isViewMode}
           ariaLabel="Add"
           onClick={() => createNewRow()}
         />
@@ -1725,6 +1822,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
           <IconButton
             iconProps={{ iconName: "Delete" }}
             title="Delete"
+            disabled={isViewMode}
             ariaLabel="Delete"
             onClick={() => deleteRow(rowIndex)}
           />
@@ -1755,34 +1853,32 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
     SelectPrProjectRadio,
     tableviewItem.typeofPurchaseOption
   );
-  // let columnss=(SelectPrProjectRadio==="No")?columns.filter((columnsValue)=>columnsValue.name !=="Project Code"):columns
-  // let columnssPrepaid=(tableviewItem.typeofPurchaseOption!=="prepaid")?
-  // columnss.filter((columnsVal)=>(columnsVal.name !=="Prepaid To Date" &&
-  // columnsVal.key !== "Prepaid_From_Date" && columnsVal.key !=="expense_gl"))
-  // :columnss
-  // let columnssCapital=(tableviewItem.typeofPurchaseOption!=="capitalequipmentasset")
-  // ?columnss.filter((columnsVal)=>(columnsVal.name !=="CIPCheck" && columnsVal.key !== "CIPNumber"))
-  // :columnssPrepaid
 
   let MainColumn;
-
-  if (SelectPrProjectRadio === "No") {
+  if (tableviewItem.typeofPurchaseOption === "expense") {
     MainColumn = columns.filter(
-      (columnsValue) => columnsValue.name !== "Project Code"
+      (columnsVal) =>
+        columnsVal.name !== "Prepaid To Date" &&
+        columnsVal.name !== "Prepaid From Date" &&
+        columnsVal.name !== "Expense GL" &&
+        columnsVal.name !== "CIPCheck" &&
+        columnsVal.key !== "CIPNumber"
     );
-    if (tableviewItem.typeofPurchaseOption === "expense") {
-      MainColumn = MainColumn.filter(
-        (columnsVal) =>
-          columnsVal.name !== "Prepaid To Date" &&
-          columnsVal.name !== "Prepaid From Date" &&
-          columnsVal.name !== "Expense GL" &&
-          columnsVal.name !== "CIPCheck" &&
-          columnsVal.key !== "CIPNumber"
-      );
-    }
-    // if(tableviewItem.typeofPurchaseOption==="capitalequipmentasset"){
-    //   MainColumn= columns.filter((columnsVal)=>(columnsVal.name ==="CIPCheck" && columnsVal.key === "CIPNumber"))
-    // }
+  } else if (tableviewItem.typeofPurchaseOption === "prepaid") {
+    MainColumn = columns.filter(
+      (columnsVal) =>
+        columnsVal.name !== "CIPCheck" && columnsVal.key !== "CIPNumber"
+    );
+  } else if (tableviewItem.typeofPurchaseOption === "capitalequipmentasset") {
+    MainColumn = columns.filter(
+      (columnsVal) =>
+        columnsVal.name !== "Prepaid To Date" &&
+        columnsVal.name !== "Prepaid From Date" &&
+        columnsVal.name !== "Expense GL"
+    );
+  }
+  if (SelectPrProjectRadio === "No") {
+    MainColumn = MainColumn.filter((value) => value.name !== "Project Code");
   }
 
   return (

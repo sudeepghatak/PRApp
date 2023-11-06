@@ -181,7 +181,6 @@
 
 //       }
 
-
 //     }
 //     restApiCall.insertLineItem(saveList);
 //     buttonContxtSave();
@@ -307,6 +306,7 @@ import { GlobalStore } from "../../../../app/globalStore";
 interface IThirdprops {
   buttonContxtSave: () => void;
   buttonContxtBack: () => void;
+  isViewMode: boolean;
 }
 interface IAmountProps {
   id: number;
@@ -317,17 +317,19 @@ let listOftotalAmount: IAmountProps[] = [];
 
 const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
   const tableContent = useContext(tableBuildContext);
-  const { buttonContxtSave, buttonContxtBack} = props;
-const dispatch = useDispatch();
+  const { buttonContxtSave, buttonContxtBack, isViewMode } = props;
+  const dispatch = useDispatch();
 
   const lineinfoData = useSelector((state: RootState) => state.lineiteminfo);
-  const vendorPKIDData = useSelector((state: RootState) => state.vendorandshipping.PKID);
+  const vendorPKIDData = useSelector(
+    (state: RootState) => state.vendorandshipping.PKID
+  );
   const [selectedItems, setSelectedItems] = React.useState<{
     [key: string]: IDropdownOption;
   }>({
     // GlAccount: { key: "", text: "" },
     UOM: { key: "", text: "" },
-    prCurrency:{key: "", text: ""}
+    prCurrency: { key: "", text: "" },
   });
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
@@ -344,11 +346,17 @@ const dispatch = useDispatch();
     // console.log("LineItem selectedItems::",selectedItems);
   };
 
-  useEffect(()=>{
-    console.log("GlobalStore.getTitledata().currencyKey:: ",GlobalStore.getTitledata().currencyKey) ;
-    console.log("selectedItems--",selectedItems.prCurrency.key,selectedItems["prCurrency"]?.key);
-    
-  },[])
+  useEffect(() => {
+    console.log(
+      "GlobalStore.getTitledata().currencyKey:: ",
+      GlobalStore.getTitledata().currencyKey
+    );
+    console.log(
+      "selectedItems--",
+      selectedItems.prCurrency.key,
+      selectedItems["prCurrency"]?.key
+    );
+  }, []);
 
   const PrCurrency: IDropdownOption[] = [
     { key: "AED", text: "AED" },
@@ -360,7 +368,7 @@ const dispatch = useDispatch();
     { key: "HKD", text: "HKD" },
     { key: "INR", text: "INR" },
     { key: "SGD", text: "SGD" },
-    { key: "USD",text: "USD" },
+    { key: "USD", text: "USD" },
   ];
 
   // const dropdownStyles: Partial<IDropdownStyles> = {
@@ -373,7 +381,7 @@ const dispatch = useDispatch();
   const [totalAmount, settotalAmount] = React.useState<number>(0);
 
   const addTotalAmount = (total: IAmountProps) => {
-       // console.log(total);
+    // console.log(total);
     const index = findIndex(listOftotalAmount, (item) => item.id === total.id);
     if (!total.completedelete) {
       if (index !== -1) {
@@ -391,22 +399,28 @@ const dispatch = useDispatch();
     // let totalValue: number = 0;
 
     let totalnumber: number = map(listOftotalAmount, "amount").reduce(
-      (acc, curr) => acc + curr,0);
-      settotalAmount(totalnumber);
+      (acc, curr) => acc + curr,
+      0
+    );
+    settotalAmount(totalnumber);
   };
- 
- const saveIntoTable = () => {
+
+  const saveIntoTable = () => {
     // lineinfoData.saveTable =1
     // saveButtonClick()
     dispatch(saveButtonClick());
-    let saveList=[];
+    let saveList = [];
     for (
       let i: number = 0;
       i < lineinfoData.TypeofPurchaseDetailList.length;
       i++
     ) {
-      console.log(lineinfoData.TypeofPurchaseDetailList[i].demotypeOfPurchaseInfoList);
-      lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList=[...lineinfoData.TypeofPurchaseDetailList[i].demotypeOfPurchaseInfoList];
+      console.log(
+        lineinfoData.TypeofPurchaseDetailList[i].demotypeOfPurchaseInfoList
+      );
+      lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList = [
+        ...lineinfoData.TypeofPurchaseDetailList[i].demotypeOfPurchaseInfoList,
+      ];
       // lineinfoData.TypeofPurchaseDetailList[i].projectCodeList = [
       //   ...lineinfoData.TypeofPurchaseDetailList[i].demoprojectCodeList,
       // ];
@@ -429,41 +443,58 @@ const dispatch = useDispatch();
       //   ...lineinfoData.TypeofPurchaseDetailList[i].demounitPricePerList,
       // ];
 
-      for(let j:number=0;j<lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList.length;j++){
-        let bodyItem={
-           "PKID":vendorPKIDData ,
-           "ConnectPRID": vendorPKIDData,
-           "DateRequired": lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].date,
-           "Qty": lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].qty,
-           "UOM": null,
-           "Plant": null,
-           "Amount": null,
-           "Cost_Center":lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].costCenter,
-           "GL_Account": null,
-           "Unit_Price": lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].unitPrice,
-           "Requester_Name": null,
-           "Requester_LoginName": null,
-           "TypeOfOrder": null,
-           "ItemDescription": null,
-           "Manager1": null,
-           "Manager2": null,
-           "Manager3": null,
-           "Manager4": null,
-           "PrepaidFromDate": null,
-           "PrepaidToDate": null,
-           "OverallLimit": null,
-           "AssetNbr": null,
-           "UnitPricePer": lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].unitPricePer,
-           "OtherTypeOfOrder": null,
-           "ExpenseGL": null,
-           "IsDeleted": null,
-           "ProjCode": lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].projectCode,
-           "Created": null,
-           "CreatedBy": null,
-           "Modified": null,
-           "ModifiedBy": null
+      for (
+        let j: number = 0;
+        j <
+        lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList.length;
+        j++
+      ) {
+        let bodyItem = {
+          PKID: vendorPKIDData,
+          ConnectPRID: vendorPKIDData,
+          DateRequired:
+            lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
+              .date,
+          Qty: lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[
+            j
+          ].qty,
+          UOM: null,
+          Plant: null,
+          Amount: null,
+          Cost_Center:
+            lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
+              .costCenter,
+          GL_Account: null,
+          Unit_Price:
+            lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
+              .unitPrice,
+          Requester_Name: null,
+          Requester_LoginName: null,
+          TypeOfOrder: null,
+          ItemDescription: null,
+          Manager1: null,
+          Manager2: null,
+          Manager3: null,
+          Manager4: null,
+          PrepaidFromDate: null,
+          PrepaidToDate: null,
+          OverallLimit: null,
+          AssetNbr: null,
+          UnitPricePer:
+            lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
+              .unitPricePer,
+          OtherTypeOfOrder: null,
+          ExpenseGL: null,
+          IsDeleted: null,
+          ProjCode:
+            lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
+              .projectCode,
+          Created: null,
+          CreatedBy: null,
+          Modified: null,
+          ModifiedBy: null,
         };
-          saveList.push(bodyItem);
+        saveList.push(bodyItem);
       }
     }
     // restApiCall.insertLineItem(saveList);
@@ -527,16 +558,18 @@ const dispatch = useDispatch();
                 // defaultSelectedKey={GlobalStore.getTitledata().currencyKey}
                 styles={dropdownStyles1}
               />
-             </Stack.Item>
+            </Stack.Item>
 
-            {(selectedItems.prCurrency.key!==GlobalStore.getTitledata().currencyKey)?
+            {selectedItems.prCurrency.key !==
+            GlobalStore.getTitledata().currencyKey ? (
               <Stack.Item align="end" style={{ display: "flex" }}>
                 <span style={{ marginRight: "10px" }}>
-                  Total Order Amount in ({GlobalStore.getTitledata().currencyKey}):{" "}
+                  Total Order Amount in (
+                  {GlobalStore.getTitledata().currencyKey}):{" "}
                 </span>
                 <span> ($){totalAmount}</span>
               </Stack.Item>
-            :null}
+            ) : null}
 
             <Stack.Item align="end" style={{ display: "flex" }}>
               <span style={{ marginRight: "10px" }}>
@@ -556,6 +589,7 @@ const dispatch = useDispatch();
                         tableviewItem={tableValueItem}
                         id={index}
                         addTotalAmount={addTotalAmount}
+                        isViewMode={isViewMode}
                       />
                     </>
                   )
@@ -572,4 +606,3 @@ const dispatch = useDispatch();
 };
 
 export default LineItemComponent;
-

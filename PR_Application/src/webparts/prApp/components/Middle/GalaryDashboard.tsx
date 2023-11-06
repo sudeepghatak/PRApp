@@ -12,8 +12,9 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 import { fetchSearchContent } from "../../../../features/reducers/searchSlice";
 import { RootState } from "../../../../app/store";
 import { Spinner } from "office-ui-fabric-react/lib/Spinner";
+import { IIconProps, IconButton } from "@fluentui/react";
 const dropdownStyles: Partial<IDropdownStyles> = {
-  dropdown: { width: 300 },
+  dropdown: { width: 100 },
 };
 
 const options: IDropdownOption[] = [
@@ -32,6 +33,7 @@ const GalaryDashboard = () => {
     key: "MyOrder",
     text: "My Orders",
   };
+  const syncIcon: IIconProps = { iconName: "Sync" };
   const [searchOption, setsearchOption] = useState(initialDropOption);
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
@@ -51,20 +53,36 @@ const GalaryDashboard = () => {
   useEffect(() => {
     dispatch(fetchSearchContent(searchOption.key as string));
   }, [searchOption]);
+  const syncOrderDetails = () => {
+    dispatch(fetchSearchContent("MyOrder"));
+  };
   return (
     <>
-      <div style={{ paddingBottom: 5 }}>
+      <div
+        style={{ paddingBottom: 5 }}
+        // className="childshadow"
+      >
         <ComponentHeader title="Dashboard" color="green" />
       </div>
       {/* first */}
-      <div>
+      <div
+      // className="childshadow"
+      >
         <div id="order-details">
           <span>Order Details</span>
-          <span>h</span>
+          <div>
+            <IconButton
+              iconProps={syncIcon}
+              onClick={() => syncOrderDetails()}
+            />
+          </div>
         </div>
         {/* middle */}
 
-        <div id="search-by">
+        <div
+          id="search-by"
+          // className="childshadow"
+        >
           <span>Search By:</span>
 
           <Dropdown
@@ -75,18 +93,14 @@ const GalaryDashboard = () => {
             selectedKey={searchOption?.key}
             styles={dropdownStyles}
           />
+
           <span></span>
         </div>
         {/* last */}
 
         <div
-        // className={classNames.wrapper}
+        // className="childshadow"
         >
-          {/* <ScrollablePane
-            scrollContainerFocus={true}
-            scrollContainerAriaLabel="Sticky component example"
-            styles={scrollablePaneStyles}
-          > */}
           {!searchResultInfo.isLoading ? (
             searchResultInfo.listSearchResult.map((searchItem) => {
               return <GalaryBoxCard cardItem={searchItem} />;

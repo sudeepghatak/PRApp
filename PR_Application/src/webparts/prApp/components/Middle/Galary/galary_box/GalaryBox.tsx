@@ -13,6 +13,7 @@ const GalaryBox: React.FunctionComponent<IGalaryProps> = (props) => {
   const { title } = props;
   const dispatch = useDispatch();
   const setUpApiFun = () => {
+    GlobalStore.changeEnterMainpage(true);
     GlobalStore.changeviewmodeOn(false);
     dispatch(updateFinalPage("prsubmit"));
   };

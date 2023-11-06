@@ -112,7 +112,7 @@ const initialState: PrimaryPageinformation = {
     costCenter: ""
   }
   };
-
+let storeData:PrimaryPageinformation;
   export const insertContent = createAsyncThunk(
 
     'insertContent',
@@ -160,6 +160,17 @@ const initialState: PrimaryPageinformation = {
         }
 
       },
+      refreshStore(state: PrimaryPageinformation){
+          // state.radioGroup.prRadio={ key: "yes", text: "Yes" };
+          // state.requestfor={
+          //   EmployeeId: "",
+          //   email: "",
+          //   text: "",
+          //   companyCode: "",
+          //   costCenter: ""
+          // };
+
+      },
       ChangeDisableToEdit(state: PrimaryPageinformation, 
         action: PayloadAction<boolean>){
         for(let i:number=0;i<state.rightCheckbox.length;i++){
@@ -174,6 +185,8 @@ const initialState: PrimaryPageinformation = {
         state: PrimaryPageinformation, 
         action: PayloadAction<any>
       ) {
+        storeData=initialState;
+        console.log("This is The Fresh Data Here --- 182",storeData)
         for(let i=0;i<action.payload.optionGroup.length;i++){
           
           state.optionGroup[Object.keys(action.payload.optionGroup[i])[0]]=action.payload.optionGroup[i][Object.keys(action.payload.optionGroup[i])[0]]
@@ -238,10 +251,28 @@ const initialState: PrimaryPageinformation = {
         // }
 
       },
+      clearFileDoc(state: PrimaryPageinformation){
+        state.fileData.splice(0,state.fileData.length)
 
+      },
       saveFileDoc(state: PrimaryPageinformation, 
         action: PayloadAction<fileInformation>){
-          state.fileData.push(action.payload);
+          if(state.fileData.length ==0){
+            state.fileData.push(action.payload);
+          }else{
+            for(let i=0;i<state.fileData.length;i++){
+         
+              if(state.fileData[i].key!==action.payload.key){
+                state.fileData.push(action.payload);
+              }
+            }
+           
+          }
+
+     
+         
+
+          
         },
         deleteFileDoc(state: PrimaryPageinformation, 
           action: PayloadAction<string>){
@@ -292,7 +323,7 @@ console.log("iiiiiiiiiiiiiXXXXXXXXXXXXXXXXXXiiiiiiiiiiiiiiiiiiiiiii")
     }
   });
 
-  export const { setValue,changeCheckbox,rightchangeCheckbox ,saveFileDoc,deleteFileDoc,ChangeDisable,ChangeDisableToEdit,toolTipUpdate,modifyFileData,refreshCheckBox} = primaryinfoSlice.actions;
+  export const { setValue,changeCheckbox,rightchangeCheckbox ,saveFileDoc,deleteFileDoc,ChangeDisable,ChangeDisableToEdit,toolTipUpdate,modifyFileData,refreshCheckBox,clearFileDoc,refreshStore} = primaryinfoSlice.actions;
 
   // It is a convention to export reducer as a default export:
   export default primaryinfoSlice.reducer;

@@ -44,7 +44,7 @@ export const GeneralInformationModel: React.FunctionComponent<IModalProps> = (
             />
           </span>
         </Stack>
-        <div style={{ paddingLeft: 15, paddingRight: 15, color: "red" }}>
+        <div style={{ paddingLeft: 15, paddingRight: 15 }}>
           <ul>
             <li>
               Before you start the PR process. Be sure to have documents to

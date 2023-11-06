@@ -90,10 +90,12 @@ export class TypeLineItem{
     unitPrice:string;
     unitPricePer:string;
     totalamount:number;
-    glaccount:IDropdownOption[]
+    prepaid_to_date:string;
+    prepaid_from_date:string;
+    // glaccount:IDropdownOption[]
 
     constructor(CFID:string,projectCode:string,des:string,CostCenter:string,date:string,
-        glAccount:string,qty:string,uOM:string,unitPrice:string,unitPricePer:string,totalamount:number){
+        glAccount:string,qty:string,uOM:string,unitPrice:string,unitPricePer:string,totalamount:number,prepaid_to_date:string,prepaid_from_date:string){
           this.CFID=CFID,
           this.projectCode=projectCode,
           this.des=des,
@@ -105,28 +107,12 @@ export class TypeLineItem{
           this.unitPrice=unitPrice,
           this.unitPricePer=unitPricePer,
           this.totalamount=totalamount,
-          this.glaccount=new OptionList().getglAccountOption()
-          console.log("this.glaccount--",this.glaccount);
+          this.prepaid_to_date=prepaid_to_date,
+          this.prepaid_from_date=prepaid_from_date
+          // this.glaccount=new OptionList().getglAccountOption()
+          // console.log("this.glaccount--",this.glaccount);
           
     }
 }
 
-class OptionList{
-   getglAccountOption=()=>{
-        const options: IDropdownOption[] = [
-  { key: 'fruitsHeader', text: 'Fruits', itemType: DropdownMenuItemType.Header },
-  { key: 'apple', text: 'Apple' },
-  { key: 'banana', text: 'Banana' },
-  { key: 'orange', text: 'Orange', disabled: true },
-  { key: 'grape', text: 'Grape' },
-  { key: 'divider_1', text: '-', itemType: DropdownMenuItemType.Divider },
-  { key: 'vegetablesHeader', text: 'Vegetables', itemType: DropdownMenuItemType.Header },
-  { key: 'broccoli', text: 'Broccoli' },
-  { key: 'carrot', text: 'Carrot' },
-  { key: 'lettuce', text: 'Lettuce' },
-];
-    return options;
 
-  }
-
-}

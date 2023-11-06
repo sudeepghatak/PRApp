@@ -13,6 +13,7 @@ export class GlobalStore{
     private static uishowmode:string;
     private static connectPRID:string;
     private static viewmodeOn=false;
+    private static enterMainpage=false;
     private static titledata:IPRTitleData={
         name: "",
         countryKey: "",
@@ -22,19 +23,28 @@ export class GlobalStore{
         IsPrepaidCapital: ""
     };
     
+
+    static changeEnterMainpage(changeMainpage:boolean){
+        this.enterMainpage=changeMainpage
+
+    }
+    static getEnterMainpage(){
+        return this.enterMainpage
+    }
     static changeviewmodeOn(modeValue:boolean){
         this.viewmodeOn=modeValue
     }
     static getviewmodeOn(){
         return this.viewmodeOn
     }
-    static storeconnectPRID(cId:string){
-        this.connectPRID=cId;
-    }
-    static getconnectPRID(){
-        return this.connectPRID;
 
-    }
+    // static storeconnectPRID(cId:string){
+    //     this.connectPRID=cId;
+    // }
+    // static getconnectPRID(){
+    //     return this.connectPRID;
+
+    // }
 
     static storeUishowMode(uimode:string){
         localStorage.setItem("uimode",uimode);

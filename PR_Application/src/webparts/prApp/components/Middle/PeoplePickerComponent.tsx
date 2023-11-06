@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState, memo } from "react";
-import { IPersonaProps } from "@fluentui/react/lib/Persona";
+import { IPersonaProps, Persona } from "@fluentui/react/lib/Persona";
 import {
   IPeoplePickerItemSelectedProps,
   NormalPeoplePicker,
@@ -10,6 +10,7 @@ import { EmployeeData } from "../../Api/employee_api";
 import { EmployeeDetails } from "../../Model/employee_details";
 import { restApiCall } from "../../Api/ApiCall";
 import { GlobalStore } from "../../../../app/globalStore";
+import { DefaultButton } from "@fluentui/react";
 
 interface IPeoplPickerProps {
   companyCodeOptionSet: (item) => void;
@@ -25,11 +26,17 @@ const PeoplePickerComponent: React.FunctionComponent<IPeoplPickerProps> = (
 
   const { companyCodeOptionSet, defaultValue, isViewMode } = props;
   const [delayResults, setDelayResults] = useState(false);
+
+  const [currentSelectedItems, setCurrentSelectedItems] = React.useState<
+    IPersonaProps[]
+  >([]);
+
   const [employeeList, setemployeeList] = useState<EmployeeDetails[]>([]);
   console.log(
     "kSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSXXXXXXXXXXXXXx ------- ",
     employeeList,
-    defaultValue
+    defaultValue,
+    defaultValue == undefined
   );
   const picker = React.useRef(null);
 
@@ -68,8 +75,10 @@ const PeoplePickerComponent: React.FunctionComponent<IPeoplPickerProps> = (
     currentPersonas: IPersonaProps[],
     limitResults?: number
   ): IPersonaProps[] | Promise<IPersonaProps[]> => {
-    console.log("filterText", filterText);
+    console.log("filterText", filterText, currentPersonas);
     setdata(filterText);
+    // setCurrentSelectedItems(currentPersonas);
+    console.log("filterText", currentPersonas);
     if (picker.current.items.length !== 0) {
       GlobalStore.storeName(picker.current.items[0]["text"], false);
       GlobalStore.storeEmail(picker.current.items[0]["email"], false);
@@ -106,12 +115,41 @@ const PeoplePickerComponent: React.FunctionComponent<IPeoplPickerProps> = (
     }
   };
 
+  let defaultValueData: EmployeeDetails;
+  const onItemsChange = (items: any[]): void => {
+    setCurrentSelectedItems(items);
+  };
+  useEffect(() => {
+    if (defaultValue !== undefined) {
+      if (defaultValue.email !== "") {
+        console.log("kSSSSSS ", defaultValue, defaultValueData);
+        defaultValueData = defaultValue;
+        onItemsChange([defaultValue]);
+      }
+    }
+  }, [defaultValue]);
+  // if (defaultValue !== undefined) {
+  //   if (defaultValue.email !== "") {
+  //     console.log("kSSSSSS ", defaultValue, defaultValueData);
+  //     defaultValueData = defaultValue;
+  //     onItemsChange([defaultValue]);
+  //   }
+  // }
+
   return (
     <div>
       <NormalPeoplePicker
         onResolveSuggestions={onFilterChanged}
         disabled={isViewMode == undefined ? false : isViewMode}
-        defaultSelectedItems={defaultValue == undefined ? [] : [defaultValue]}
+        selectedItems={currentSelectedItems}
+        onChange={onItemsChange}
+        // defaultSelectedItems={
+        //   defaultValue === undefined
+        //     ? []
+        //     : defaultValueData === undefined
+        //     ? []
+        //     : [defaultValueData]
+        // }
         inputProps={{
           onBlur: (ev: React.FocusEvent<HTMLInputElement>) =>
             console.log("onBlur called"),
@@ -121,9 +159,19 @@ const PeoplePickerComponent: React.FunctionComponent<IPeoplPickerProps> = (
         }}
         componentRef={picker}
         itemLimit={1}
-        // onInputChange={onInputChange}
         resolveDelay={300}
       />
+      {/* {controlledItems.map((item, index) => (
+        <div key={index}>
+          <DefaultButton
+            // styles={defaultButtonStyles}
+            // eslint-disable-next-line react/jsx-no-bind
+            onClick={() => setCurrentSelectedItems([item])}
+          >
+            <Persona {...item} />
+          </DefaultButton>
+        </div>
+      ))} */}
     </div>
   );
 };

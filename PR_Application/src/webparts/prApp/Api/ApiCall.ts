@@ -210,6 +210,13 @@ export class restApiCall {
         return res.data;
     }
 
+    static async deleteSelectedOrder(pid:string){
+        
+        let res=await this.rest_apiCall(`${postPRAllRequestUrl}?pID=${pid}`,{});
+       console.log("Delete -- ",res)
+        return res.data;
+    }
+
     
 
 

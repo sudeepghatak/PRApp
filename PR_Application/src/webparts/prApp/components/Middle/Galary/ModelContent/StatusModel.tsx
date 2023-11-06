@@ -13,6 +13,10 @@ import { GlobalStore } from "../../../../../../app/globalStore";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { updateFinalPage } from "../../../../../../features/reducers/lineitemSlice";
 import AttatchmentContent from "../galary_box/got_answer_content/AttatchmentContent";
+import { useState } from "react";
+import CopyComponentModel from "./CopyComponentModel";
+import DeleteComponentModel from "./DeleteComponentModel";
+import CallRecallComponent from "./CallRecallComponent";
 
 interface IModalProps {
   isModalOpen: boolean;
@@ -32,12 +36,44 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
   };
 
   const viewContent = () => {
-    GlobalStore.storeconnectPRID(connectprID);
+    GlobalStore.storePrId(connectprID);
     GlobalStore.changeviewmodeOn(true);
     //
     dispatch(updateFinalPage(`view${connectprID}`));
     showAlertDialogView();
   };
+  const [isModalOpencopy, setisModalOpencopy] = useState(false);
+  const hideModal = () => {
+    setisModalOpencopy(!isModalOpencopy);
+  };
+  const copyConnectprId = () => {
+    setisModalOpencopy(true);
+  };
+
+  const [isModalOpendelete, setisModalOpendelete] = useState(false);
+  const deletehideModal = () => {
+    setisModalOpendelete(!isModalOpendelete);
+  };
+  console.log(
+    "Delete --Status Copy----------------",
+    isModalOpendelete,
+    isModalOpencopy
+  );
+  const deleteConnectprId = () => {
+    setisModalOpendelete(true);
+  };
+  const galaryEdit = (pId: string) => {
+    GlobalStore.storePrId(pId);
+    GlobalStore.changeEnterMainpage(true);
+    GlobalStore.changeviewmodeOn(false); //
+    dispatch(updateFinalPage(`edit${pId}`));
+    showModal();
+  };
+  const [callRecall, setcallRecall] = useState(false);
+  const recallConnectprId = () => {
+    setcallRecall(!callRecall);
+  };
+
   console.log("-------------------");
   console.log(statusInfo.isLoading);
   console.log(statusInfo.statusTitle);
@@ -110,24 +146,69 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
                           iconProps={{ iconName: "Edit" }}
                           title="Edit"
                           ariaLabel="Edit"
-                          // onClick={() => copyRow(rowIndex)}
+                          onClick={() => galaryEdit(connectprID)}
                         />
                       </span>
                       <span>
-                        <IconButton
-                          iconProps={{ iconName: "Delete" }}
-                          title="Delete"
-                          ariaLabel="Delete"
-                          // onClick={() => copyRow(rowIndex)}
-                        />
+                        {statusInfo.basicInfo.Status !== "Approval Routing" ? (
+                          <IconButton
+                            iconProps={{ iconName: "RevToggleKey" }}
+                            title="Recall"
+                            ariaLabel="Recall"
+                            onClick={() => recallConnectprId()}
+                          />
+                        ) : (
+                          <IconButton
+                            iconProps={{ iconName: "Delete" }}
+                            title="Delete"
+                            ariaLabel="Delete"
+                            onClick={() => deleteConnectprId()}
+                          />
+                        )}
+
+                        {callRecall ? (
+                          <CallRecallComponent
+                            isModalOpen={callRecall}
+                            hideModal={recallConnectprId}
+                            ConnectprId={""}
+                          />
+                        ) : null}
+
+                        {isModalOpendelete ? (
+                          <>
+                            <DeleteComponentModel
+                              isModalOpen={isModalOpendelete}
+                              hideModal={deletehideModal}
+                              ConnectprId={connectprID}
+                            />
+                          </>
+                        ) : null}
                       </span>
+
                       <span>
                         <IconButton
                           iconProps={{ iconName: "Copy" }}
                           title="Copy"
                           ariaLabel="Copy"
-                          // onClick={() => copyRow(rowIndex)}
+                          onClick={() => copyConnectprId()}
                         />
+                        {/* {isModalOpencopy ? (
+                          <ViewContentModel
+                            isModalOpen={isModalOpencopy}
+                            showModal={hideModal}
+                            backgroundcolor="#DEDBDE"
+                            title={`[${connectprID}] Request Details (Read Only)`}
+                          />
+                        ) : null} */}
+                        {isModalOpencopy ? (
+                          <>
+                            <CopyComponentModel
+                              isModalOpen={isModalOpencopy}
+                              hideModal={hideModal}
+                              ConnectprId={connectprID}
+                            />
+                          </>
+                        ) : null}
                       </span>
                     </div>
                   </div>

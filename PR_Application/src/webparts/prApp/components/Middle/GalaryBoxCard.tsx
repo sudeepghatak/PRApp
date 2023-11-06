@@ -7,10 +7,29 @@ import { ISearchResult } from "../../../../features/reducers/searchSlice";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { GlobalStore } from "../../../../app/globalStore";
 import { updateFinalPage } from "../../../../features/reducers/lineitemSlice";
-
+import CopyComponentModel from "./Galary/ModelContent/CopyComponentModel";
+import { useState } from "react";
+import DeleteComponentModel from "./Galary/ModelContent/DeleteComponentModel";
 interface IGBoxCard {
   cardItem: ISearchResult;
 }
+const statusDoc = {
+  Draft: {
+    backgroundColor: "#E46a53",
+    color: "#fff",
+    isShow: true,
+  },
+  "In SAP": {
+    backgroundColor: "#F9cd31",
+    color: "#000",
+    isShow: false,
+  },
+  "Approval Routing": {
+    backgroundColor: "#3080e3",
+    color: "#fff",
+    isShow: false,
+  },
+};
 const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
   const { cardItem } = props;
   // console.log(
@@ -31,11 +50,29 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
     dispatch(fetchStatusContent(pId));
   };
   const galaryEdit = (pId: string) => {
-    GlobalStore.storeconnectPRID(pId);
-    GlobalStore.changeviewmodeOn(false)
+    GlobalStore.storePrId(pId);
+    GlobalStore.changeEnterMainpage(true);
+    GlobalStore.changeviewmodeOn(false);
     //
     dispatch(updateFinalPage(`edit${pId}`));
   };
+  const [isModalOpencopy, setisModalOpencopy] = useState(false);
+  const hideModal = () => {
+    setisModalOpencopy(!isModalOpencopy);
+  };
+  const copyConnectprId = () => {
+    GlobalStore.changeEnterMainpage(true);
+    setisModalOpencopy(true);
+  };
+  const [isModalOpendelete, setisModalOpendelete] = useState(false);
+  const deletehideModal = () => {
+    setisModalOpendelete(!isModalOpendelete);
+  };
+
+  const deleteConnectprId = () => {
+    setisModalOpendelete(true);
+  };
+
   return (
     <>
       <div id="main-galary-box">
@@ -52,31 +89,58 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
                 title={`[${cardItem.ConnectPRID}] Request Details (Status - ${cardItem.Status})`}
                 connectprID={`${cardItem.ConnectPRID}`}
               />
-            ) : null} 
-            <span>
-              <IconButton
-                iconProps={{ iconName: "Edit" }}
-                title="Edit"
-                ariaLabel="Edit"
-                onClick={() => galaryEdit(cardItem.ConnectPRID)}
-              />
-            </span>
-            <span>
-              <IconButton
-                iconProps={{ iconName: "Delete" }}
-                title="Delete"
-                ariaLabel="Delete"
-                // onClick={() => copyRow(rowIndex)}
-              />
-            </span>
+            ) : null}
+            {statusDoc[cardItem.Status] !== undefined &&
+            statusDoc[cardItem.Status].isShow ? (
+              <span>
+                <IconButton
+                  iconProps={{ iconName: "Edit" }}
+                  title="Edit"
+                  ariaLabel="Edit"
+                  onClick={() => galaryEdit(cardItem.ConnectPRID)}
+                />
+              </span>
+            ) : null}
+            {statusDoc[cardItem.Status] !== undefined &&
+            statusDoc[cardItem.Status].isShow ? (
+              <span>
+                <IconButton
+                  iconProps={{ iconName: "Delete" }}
+                  title="Delete"
+                  ariaLabel="Delete"
+                  onClick={() => deleteConnectprId()}
+                />
+                {isModalOpendelete ? (
+                  <>
+                    <DeleteComponentModel
+                      isModalOpen={isModalOpendelete}
+                      hideModal={deletehideModal}
+                      ConnectprId={cardItem.ConnectPRID}
+                    />
+                  </>
+                ) : null}
+              </span>
+            ) : null}
+            {/* {statusDoc[cardItem.Status] !== undefined &&
+            statusDoc[cardItem.Status].isShow ? ( */}
             <span>
               <IconButton
                 iconProps={{ iconName: "Copy" }}
                 title="Copy"
                 ariaLabel="Copy"
-                // onClick={() => copyRow(rowIndex)}
+                onClick={() => copyConnectprId()}
               />
+              {isModalOpencopy ? (
+                <>
+                  <CopyComponentModel
+                    isModalOpen={isModalOpencopy}
+                    hideModal={hideModal}
+                    ConnectprId={cardItem.ConnectPRID}
+                  />
+                </>
+              ) : null}
             </span>
+            {/* ) : null} */}
           </div>
           <span>Date: {cardItem.date}</span>
         </div>
@@ -91,10 +155,24 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
               <span>${cardItem.ammount}</span>
             </span>
           </div>
-
-          <a href="#" className="galary-button">
-            {cardItem.Status}
-          </a>
+          <div>
+            <a
+              href="#"
+              className="galary-button"
+              style={{
+                backgroundColor:
+                  statusDoc[cardItem.Status] !== undefined
+                    ? statusDoc[cardItem.Status].backgroundColor
+                    : "",
+                color:
+                  statusDoc[cardItem.Status] !== undefined
+                    ? statusDoc[cardItem.Status].color
+                    : "",
+              }}
+            >
+              {cardItem.Status}
+            </a>
+          </div>
         </div>
       </div>
     </>

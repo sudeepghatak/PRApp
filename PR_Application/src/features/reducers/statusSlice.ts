@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { restApiCall } from "../../webparts/prApp/Api/ApiCall";
 import { fileInformation } from "./primaryinfoSlice";
+import { BasicInfoObj, basicInfoitem } from "../../webparts/prApp/Model/BasicInfoline";
 
 
 interface ISupplier{
@@ -51,7 +52,7 @@ interface IBasicInfo{
     "EHS_Relevant":string;
     "Is_this_Project_Related":string;
     "Project_Code":string;
-    "lineInfoList":ILineItemInfo[]
+    "lineInfoList":BasicInfoObj[]
 }
 
 interface IStatus{
@@ -109,7 +110,7 @@ export const fetchStatusContent = createAsyncThunk(
 
     async (pID:string) => {
             let res=await restApiCall.getPrbasicInfoContent(pID);
-            console.log("Data Here ",res);
+            console.log("Data Here StatusSlice File 113",res);
             let lineinfo= await restApiCall.getPrlineItemContent(pID)
            let attatchmentData=await restApiCall.getDocTypeurl(
             pID
@@ -176,6 +177,7 @@ export const statusSlice=createSlice({
             // state.isLoading = fal
             console.log("Response TOP-----------action.payload173s ::",action.payload);
             state.statusTitle=(action.payload.Title==null)?" ":action.payload.Title;
+            state.basicInfo.PR_Type=(action.payload.AesyntPRType===null)?"":action.payload.AesyntPRType;
             state.basicInfo.UFID=(action.payload.UFID==null)?" ":action.payload.UFID;
             state.basicInfo.Cost_Center=(action.payload.Cost_Center==null)?" ":action.payload.Cost_Center.toString();
             state.basicInfo.Status=(action.payload.Status==null)?" ":action.payload.Status;
@@ -186,21 +188,48 @@ export const statusSlice=createSlice({
             state.basicInfo.Prepaid_or_Capital_buy=(action.payload.PrepaidOrCapitalEquipment==null)?" ":action.payload.PrepaidOrCapitalEquipment;
             state.basicInfo.Type_Of_Buy=(action.payload.Type_Of_Buy==null)?" ":action.payload.Type_Of_Buy;
             state.basicInfo.Connect_PR_Request_ID=(action.payload.ConnectPRID==null)?" ":action.payload.ConnectPRID;
+            state.basicInfo.Is_this_Project_Related=(action.payload.IsProjectPR==null)?"":(action.payload.IsProjectPR==false)?"No":"Yes";
+
             state.basicInfo.lineInfoList=[]
             if(action.payload.lineinfo.length!==0){
             for(let i=0;i<action.payload.lineinfo.length;i++){
-                let lineinfoData:ILineItemInfo={
+                console.log("I DO THIS HERE ------------->>> ",action.payload.lineinfo[i].TypeOfOrder)
+               
+                let lineinfoData:basicInfoitem={
                     description:action.payload.lineinfo[i].ItemDescription,
-                    cost_center: action.payload.lineinfo[i].Cost_Center,
-                    date_required:action.payload.lineinfo[i].DateRequired,
-                    gl_account: action.payload.lineinfo[i].GL_Account,
+                    costCenter: action.payload.lineinfo[i].Cost_Center,
+                    date:action.payload.lineinfo[i].DateRequired,
+                    glAccount: action.payload.lineinfo[i].GL_Account,
                     qty:action.payload.lineinfo[i].Qty,
-                    uom:action.payload.lineinfo[i].UOM,
-                    unit_price:action.payload.lineinfo[i].Unit_Price,
-                    unit_price_per:action.payload.lineinfo[i].UnitPricePer,
-                    total_amount:action.payload.lineinfo[i].Amount
+                    UOM:action.payload.lineinfo[i].UOM,
+                    uintprice:action.payload.lineinfo[i].Unit_Price,
+                    unitpriceper:action.payload.lineinfo[i].UnitPricePer,
+                    totalAmount:action.payload.lineinfo[i].Amount
                 }
-                state.basicInfo.lineInfoList.push(lineinfoData)
+                let baiscItem:BasicInfoObj;
+                if(state.basicInfo.lineInfoList.length ===0){
+                    baiscItem=new BasicInfoObj(action.payload.lineinfo[i].TypeOfOrder)
+                    ;
+                   
+                    baiscItem.basicInfoObjList.push(lineinfoData)
+                }else{
+
+                    let onebasicinfoitem=state.basicInfo.lineInfoList.filter((newbasicItem:BasicInfoObj)=>newbasicItem.lineObjname ===action.payload.lineinfo[i].TypeOfOrder)
+                    if(onebasicinfoitem.length ===0){
+                        baiscItem=new BasicInfoObj(action.payload.lineinfo[i].TypeOfOrder)
+                        ;
+                    
+                        baiscItem.basicInfoObjList.push(lineinfoData)
+
+                    }else{
+                        onebasicinfoitem[0].basicInfoObjList.push(lineinfoData)
+                    }
+
+
+                }
+               if(baiscItem !==undefined){
+                state.basicInfo.lineInfoList.push(baiscItem)
+               }
 
 
             }

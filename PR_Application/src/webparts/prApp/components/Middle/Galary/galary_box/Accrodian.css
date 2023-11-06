@@ -130,9 +130,39 @@
 
   .delegate-date-id{
     width:100%;
-display:flex;
+  display:flex;
+  justify-content: flex-end;
+  }
+  .delegate-date-id div {
+    margin-left: 10px; 
+  }
+  
+  .delegate-btn{
+    background-color: #4CAF50;
+    border-radius: 25px;
+    color: white;
+    padding:5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    width:8rem;
   }
   .delegate-model{
 width: 800px !important;
 height: 500px !important;
+  }
+
+  .copy-head{
+    width: 100%;
+    height:25px !important;
+    display: flex;
+    font-size: 10px;
+    justify-content: space-between;
+  }
+  .copy-btn{
+    display: flex;
+    justify-content: right;
+    width: 100%;
   }

@@ -1,6 +1,7 @@
 import * as React from "react";
 import ComponentHeader from "./ComponentHeader";
 import { DelegateModel } from "../ModelContent/DelegateModel";
+import { Icon } from "@fluentui/react/lib/Icon";
 
 const DelegatePrBox = () => {
   const [showDialogdelegate, setshowDialogdelegate] =
@@ -13,14 +14,30 @@ const DelegatePrBox = () => {
     <>
       <div id="delegate-box">
         <ComponentHeader title="Delegate PR Approval Tasks" />
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              fontSize: "40px",
+              color: "blue",
+              paddingTop: "5px",
+              paddingBottom: "3px",
+            }}
+          >
+            <Icon iconName="Switch" />
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <a
+              href="#"
+              className="getStartanchor"
+              onClick={() => showAlertDialogDelegate()}
+            >
+              Delegate My Task
+            </a>
+          </div>
+        </div>
 
-        <a
-          href="#"
-          className="getStartanchor"
-          onClick={() => showAlertDialogDelegate()}
-        >
-          Delegate My Task
-        </a>
         {showDialogdelegate ? (
           <DelegateModel
             isModalOpen={showDialogdelegate}

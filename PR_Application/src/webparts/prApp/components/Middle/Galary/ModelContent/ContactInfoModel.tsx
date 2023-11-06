@@ -1,6 +1,6 @@
 import * as React from "react";
 // import { useState } from "react";
-import { Modal, IIconProps, Stack } from "@fluentui/react";
+import { Modal, IIconProps, Stack, mergeStyleSets } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
 
 interface IModalProps {
@@ -17,7 +17,12 @@ export const ContactInfoModel: React.FunctionComponent<IModalProps> = (
   const modal_title = title as string;
   return (
     <div style={{ maxWidth: 500 }}>
-      <Modal isOpen={isModalOpen} onDismiss={showModal} isBlocking={false}>
+      <Modal
+        isOpen={isModalOpen}
+        onDismiss={showModal}
+        isBlocking={false}
+        containerClassName={contentStyles.container}
+      >
         <Stack
           horizontal
           horizontalAlign="space-between"
@@ -44,7 +49,7 @@ export const ContactInfoModel: React.FunctionComponent<IModalProps> = (
             />
           </span>
         </Stack>
-        <div style={{ paddingLeft: 15, paddingRight: 15, color: "red" }}>
+        <div style={{ paddingLeft: 15, paddingRight: 15 }}>
           <h3>Omnicell Contact for Expense</h3>
           <p>For assistance Contact Site Helpdesk</p>
           <ul>
@@ -123,5 +128,16 @@ export const ContactInfoModel: React.FunctionComponent<IModalProps> = (
     </div>
   );
 };
-
+const contentStyles = mergeStyleSets({
+  container: {
+    display: "flex",
+    minWidth: 600,
+    width: 600,
+    minHeight: 500,
+    height: 500,
+    textAlign: "center",
+    flexFlow: "column nowrap",
+    alignItems: "stretch",
+  },
+});
 const cancelIcon: IIconProps = { iconName: "Cancel" };

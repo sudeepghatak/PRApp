@@ -53,7 +53,8 @@
 }
 
 #main-galary-box{
-  border: 1px solid rgb(233, 208, 208);
+  border-top: 1px solid rgb(233, 208, 208);
+  border-bottom: 1px solid rgb(233, 208, 208);
   margin: 1px;
 
 }
@@ -102,4 +103,9 @@ display: block;
 text-align: left;
 }
 
+.childshadow{
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  /* border: 2px solid black; */
+  /* margin-bottom: 15px; */
 
+}

@@ -25,6 +25,8 @@ import { restApiCall } from "../../Api/ApiCall";
 import TooltipShow from "./TooltipShow";
 import { insertOtherVendor } from "../../Model/InsertotherVendor";
 import { GlobalStore } from "../../../../app/globalStore";
+import { fetchSearchContent } from "../../../../features/reducers/searchSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
 // import SupplierModal from "./SupplierModal";
 interface ISecondprops {
@@ -36,10 +38,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   props
 ) => {
   const { buttonContxtSave, buttonContxtBack, isViewMode } = props;
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const vendorandshippingData = useSelector(
     (state: RootState) => state.vendorandshipping
   );
+  const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
   //primary Info companycode
   const optionGroupData = useSelector(
     (state: RootState) => state.primaryinfo.optionGroup
@@ -128,7 +131,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     option?: IDropdownOption | undefined,
     index?: number | undefined
   ) => {
-    console.log("This is Shipping To Addres ----", option);
+    console.log("----", option);
     setnewshipAddress(option as IDropdownOption);
   };
 
@@ -262,8 +265,8 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     );
     let saveDetails = [
       {
-        PKID: vendorandshippingData.PKID,
-        ConnectPRID: vendorandshippingData.PKID,
+        PKID: GlobalStore.getPrId(),
+        ConnectPRID: GlobalStore.getPrId(),
         Type_Of_Buy: null,
         PrepaidOrCapitalEquipment: null,
         EHS: null,
@@ -290,7 +293,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
         ApprovalInstance: null,
         Comments: textvalue.justificatiOnOrder,
         Cost_Center: null,
-        Location: textvalue.ShippingAdrress,
+        Location: newshipAddress.text,
         IsDeleted: null,
         Special_Instructions: textvalue.downPaymentDetails,
         Shipping_Name: textvalue.Name,
@@ -357,7 +360,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
       },
     ];
     console.log("This is The Second Page Save And Continue ", saveDetails);
-    restApiCall.insertVendorDetails(saveDetails);
+
     // buttonContxtSave();
 
     let otherShippingAdd = [
@@ -384,9 +387,23 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
       },
     ];
     console.log("otherShippingAdd__otherShippingAdd--", otherShippingAdd);
+    if (
+      lineintemData.Finalpage === "prsubmit" ||
+      lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`
+    ) {
+      restApiCall.insertPlantLoc(otherShippingAdd).then((insPlat) => {
+        console.log("insertPlantLoc--------------------", insPlat);
+        restApiCall.insertVendorDetails(saveDetails).then((insVen) => {
+          console.log("insertPlantLoc--------------------", insVen);
 
-    restApiCall.insertPlantLoc(otherShippingAdd);
-    buttonContxtSave();
+          dispatch(fetchSearchContent("MyOrder"));
+          buttonContxtSave();
+        });
+      });
+    } else if (lineintemData.Finalpage === `view${GlobalStore.getPrId()}`) {
+      buttonContxtSave();
+    }
+    // buttonContxtSave();
   };
 
   useEffect(() => {

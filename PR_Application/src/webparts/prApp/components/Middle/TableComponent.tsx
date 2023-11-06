@@ -7,33 +7,48 @@ import {
 import { Icon } from "@fluentui/react/lib/Icon";
 import { RootState } from "../../../../app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { Dropdown, IDropdownOption, IDropdownStyles, IconButton, Link } from "@fluentui/react";
-import { deleteFileDoc, fileInformation, modifyFileData, saveFileDoc } from "../../../../features/reducers/primaryinfoSlice";
+import {
+  Dropdown,
+  IDropdownOption,
+  IDropdownStyles,
+  IconButton,
+  Link,
+} from "@fluentui/react";
+import {
+  deleteFileDoc,
+  fileInformation,
+  modifyFileData,
+  saveFileDoc,
+} from "../../../../features/reducers/primaryinfoSlice";
 import { log } from "sp-pnp-js";
+interface ITableComponent {
+  isViewMode: boolean;
+}
 
-const TableComponent = () => {
+const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
+  const { isViewMode } = props;
   const dispatch = useDispatch();
   const fileData = useSelector(
     (state: RootState) => state.primaryinfo.fileData
   );
 
-const changeDropdownOption = (
+  const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
     item: IDropdownOption | undefined,
     index: number,
-    fileContent:fileInformation
+    fileContent: fileInformation
   ): void => {
-    console.log("item++:",item);
-    console.log("item++....:",item.text);
+    console.log("item++:", item);
+    console.log("item++....:", item.text);
     console.log(fileContent);
-    let sowDoc={
-      "docType":item.text
-    }
-    let fileProperty={...fileContent,...sowDoc};
+    let sowDoc = {
+      docType: item.text,
+    };
+    let fileProperty = { ...fileContent, ...sowDoc };
     console.log(fileProperty);
-    console.log("KKKKKKKKKKKKKKKK")
-        dispatch(modifyFileData(fileProperty));
-// 
+    console.log("KKKKKKKKKKKKKKKK");
+    dispatch(modifyFileData(fileProperty));
+    //
     const { id } = event.target as HTMLDivElement;
     let newSelectedItem: IDropdownOption = { key: "", text: "" };
     newSelectedItem = { key: item?.key as string, text: item?.text as string };
@@ -48,11 +63,10 @@ const changeDropdownOption = (
     //   content:thisbase64String
     // };
     // console.log("Data ---------------------- >> ",fileData)
-    
+
     // dispatch(saveFileDoc(fileData));
   };
   //------------------------------------------
-
 
   const dropdownStyles: Partial<IDropdownStyles> = {
     dropdown: { width: 300 },
@@ -68,15 +82,13 @@ const changeDropdownOption = (
   ];
 
   console.log();
-  
-  function openBase64ContentInNewTab(
 
+  function openBase64ContentInNewTab(
     base64String: string,
 
     contentType: string
-
   ) {
-    console.log("Here Content Type is ",contentType,base64String)
+    console.log("Here Content Type is ", contentType, base64String);
 
     // Create a new window or tab
 
@@ -88,25 +100,17 @@ const changeDropdownOption = (
 
     const binaryData = atob(base64String);
 
- 
-
     // Create a Uint8Array from the binary data
 
     const uint8Array = new Uint8Array(binaryData.length);
 
     for (let i = 0; i < binaryData.length; i++) {
-
       uint8Array[i] = binaryData.charCodeAt(i);
-
     }
-
- 
 
     // Create a Blob from the binary data
 
     const blob = new Blob([uint8Array], { type: contentType });
-
- 
 
     // Create a URL for the Blob
 
@@ -125,15 +129,17 @@ const changeDropdownOption = (
       <body>
 
           <div>
-            ${contentType.match("image/")? (`<img src="${blobURL}" alt="Base64 Content" />`) : ""}
+            ${
+              contentType.match("image/")
+                ? `<img src="${blobURL}" alt="Base64 Content" />`
+                : ""
+            }
             <pre>${binaryData}</pre>
           </div>
       </body>
       </html>
 
     `;
-
- 
 
     // Write the HTML template to the new tab
 
@@ -142,7 +148,6 @@ const changeDropdownOption = (
     newTab.document.write(htmlTemplate);
 
     newTab.document.close();
-
   }
 
   const columns: IColumn[] = [
@@ -150,8 +155,8 @@ const changeDropdownOption = (
       key: "column1",
       name: "File Name",
       fieldName: "column1",
-      minWidth: 200,
-      maxWidth: 300,
+      minWidth: 100,
+      maxWidth: 200,
       styles: {
         root: {
           backgroundColor: "green", // Replace with your desired color
@@ -166,8 +171,8 @@ const changeDropdownOption = (
       key: "column2",
       name: "Document Type",
       fieldName: "column2",
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 100,
+      maxWidth: 150,
       styles: {
         root: {
           backgroundColor: "green", // Replace with your desired color
@@ -243,30 +248,41 @@ const changeDropdownOption = (
   for (let i = 0; i < fileData.length; i++) {
     let newItem = {
       key: fileData[i].key,
-      column1: <Link
-       onClick={()=>openBase64ContentInNewTab(fileData[i].content,fileData[i].fileType)}
-      ><b>
-       
-        {fileData[i].fileName}</b></Link>,
+      column1: (
+        <Link
+          onClick={() =>
+            openBase64ContentInNewTab(fileData[i].content, fileData[i].fileType)
+          }
+          disabled={isViewMode}
+        >
+          <b>{fileData[i].fileName}</b>
+        </Link>
+      ),
       // column2: <span>{fileData[i].fileType}</span>,
-      column2:<div>
-        <Dropdown
-          placeholder="- Select Doc Type -"
-          id="prOption"                  
-          onChange={(  event: React.FormEvent<HTMLDivElement>,
-                      item: IDropdownOption | undefined,
-                       index: number)=>changeDropdownOption(event,item,index,fileData[i])}
-          options={DocTypeOption}
-          style={{ width: "150px" }}
-          selectedKey={fileData[i].docType}
-          styles={dropdownStyles}
-                />
-      </div>,
+      column2: (
+        <div>
+          <Dropdown
+            placeholder="- Select Doc Type -"
+            disabled={isViewMode}
+            id="prOption"
+            onChange={(
+              event: React.FormEvent<HTMLDivElement>,
+              item: IDropdownOption | undefined,
+              index: number
+            ) => changeDropdownOption(event, item, index, fileData[i])}
+            options={DocTypeOption}
+            style={{ width: "150px" }}
+            selectedKey={fileData[i].docType}
+            styles={dropdownStyles}
+          />
+        </div>
+      ),
       column3: <span>{fileData[i].modifiedBy}</span>,
       column4: <span>{fileData[i].fileModifiedTime}</span>,
       column5: (
         <IconButton
           iconProps={{ iconName: "Delete" }}
+          disabled={isViewMode}
           title="Delete"
           ariaLabel="Delete"
           onClick={() => dispatch(deleteFileDoc(fileData[i].key))}

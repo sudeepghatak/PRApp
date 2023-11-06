@@ -39,6 +39,7 @@ import {
   ChangeDisableToEdit,
   CheckboxItem,
   changeCheckbox,
+  clearFileDoc,
   fileInformation,
   insertContent,
   refreshCheckBox,
@@ -48,7 +49,10 @@ import {
   toolTipUpdate,
 } from "../../../../features/reducers/primaryinfoSlice";
 import { setlineitemValue } from "../../../../features/reducers/lineitemSlice";
-import { TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
+import {
+  TypeLineItem,
+  TypeofPurchaseDetail,
+} from "../../Model/TypePurchases/type_purchases_detail";
 import { restApiCall } from "../../Api/ApiCall";
 import {
   savePkid,
@@ -135,7 +139,11 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     CIPNum: "",
     UFID: "",
   });
-
+  console.log(
+    "Line Item OF data Here 138 ----------------",
+    lineintemData.Finalpage,
+    isViewMode
+  );
   const newhandleInputChange = (
     e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue: string
@@ -150,7 +158,33 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     console.log("Textvalue ........", newtextBox);
   };
   console.log("Call Here For Update ----- 137 -- PrimaryinfoComponent");
+  useEffect(() => {
+    (async () => {
+      let value = await restApiCall.getCompanycode();
+      console.log("Company Code value164", value);
+      let companyCodeList = [];
+      for (let i: number = 0; i < value.data.length; i++) {
+        let newcompany = {
+          Key: value.data[i].MappedCompanyCode,
+          text: value.data[i].MappedCompanyCode,
+        };
+        companyCodeList.push(newcompany);
+      }
+      setCompanyCodeOption(companyCodeList);
+    })();
 
+    // let value = await restApiCall.getCompanycode();
+    // console.log("Company Code value", value);
+    // let companyCodeList = [];
+    // for (let i: number = 0; i < value.data.length; i++) {
+    //   let newcompany = {
+    //     Key: value.data[i].MappedCompanyCode,
+    //     text: value.data[i].MappedCompanyCode,
+    //   };
+    //   companyCodeList.push(newcompany);
+    // }
+    // setCompanyCodeOption(companyCodeList);
+  }, []);
   // useEffect(() => {
   //   (
   //     async()=>{
@@ -203,17 +237,33 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
   // });
   // }, [lineintemData.Finalpage]);
-  console.log("--------------PrimaryInfoComponent ---");
+  console.log(
+    "--------------PrimaryInfoComponent ---210",
+    lineintemData.Finalpage
+  );
   const [isLoadingComp, setisLoadingComp] = useState(false);
   useEffect(() => {
     (async () => {
       if (
-        lineintemData.Finalpage === `edit${GlobalStore.getconnectPRID()}` ||
-        lineintemData.Finalpage === `view${GlobalStore.getconnectPRID()}`
+        lineintemData.Finalpage === `edit${GlobalStore.getPrId()}` ||
+        lineintemData.Finalpage === `view${GlobalStore.getPrId()}`
       ) {
+        setpeople({
+          EmployeeId: "",
+          email: "",
+          text: "",
+          companyCode: "",
+          costCenter: "",
+        });
+        console.log(
+          "Enter For Loading ------------------ ",
+          lineintemData.Finalpage,
+          isViewMode
+        );
+        // dispatch(clearFileDoc());
         setisLoadingComp(true);
         let prInfo = await restApiCall.getPrbasicInfoContent(
-          GlobalStore.getconnectPRID()
+          GlobalStore.getPrId()
         );
 
         console.log("------------------------ 207 ", prInfo);
@@ -263,9 +313,19 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
           {
             prProjectRadio: {
-              key: selectRadioItems.prProjectRadio.key,
+              key:
+                prInfo.IsProjectPR === null
+                  ? ""
+                  : prInfo.IsProjectPR === true
+                  ? "yes"
+                  : "no",
 
-              text: selectRadioItems.prProjectRadio.text,
+              text:
+                prInfo.IsProjectPR === null
+                  ? ""
+                  : prInfo.IsProjectPR === true
+                  ? "Yes"
+                  : "No",
             },
           },
         ];
@@ -330,20 +390,21 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           saveData
         );
 
-        let fileValue = await restApiCall.getDocTypeurl(
-          GlobalStore.getconnectPRID()
-        );
+        let fileValue = await restApiCall.getDocTypeurl(GlobalStore.getPrId());
 
         let getfileData;
         if (fileValue.length !== 0) {
           for (let i: number = 0; i < fileValue.length; i++) {
             console.log(
               "Data Data ----------------------------",
-              primaryinfoData
+              primaryinfoData,
+              i,
+              fileValue[i],
+              primaryinfoData.fileData[i]
             );
             if (primaryinfoData.fileData.length === 0) {
               getfileData = {
-                key: fileValue[i].ConnectPRID,
+                key: fileValue[i].PKID,
                 fileName: fileValue[i].Filename,
                 fileType: "file",
                 modifiedBy: fileValue[i].Modified_By,
@@ -353,6 +414,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               };
               dispatch(saveFileDoc(getfileData));
             } else if (
+              primaryinfoData.fileData[i] !== undefined &&
               !(
                 fileValue[i].Content === primaryinfoData.fileData[i].content &&
                 fileValue[i].Modified_Date ===
@@ -361,7 +423,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               primaryinfoData.fileData.length !== 0
             ) {
               getfileData = {
-                key: fileValue[i].ConnectPRID,
+                key: fileValue[i].PKID,
                 fileName: fileValue[i].Filename,
                 fileType: "file",
                 modifiedBy: fileValue[i].Modified_By,
@@ -382,8 +444,9 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           saveVendorandShippingData({
             vendorDetails: new VendorDetails(
               0,
-              prInfo.Supplier_Name,
+
               prInfo.Supplier_Account_Number,
+              prInfo.Supplier_Name,
               prInfo.Supplier_Address,
               prInfo.Supplier_City,
               prInfo.Supplier_State,
@@ -400,13 +463,14 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
         dispatch(setValue(saveData));
         dispatch(refreshCheckBox());
-        dispatch(changeCheckbox(prInfo.Type_Of_Order));
-        dispatch(rightchangeCheckbox(prInfo.Type_Of_Order));
+        let type_of_order_list = prInfo.Type_Of_Order.split(",");
+        for (let i = 0; i < type_of_order_list.length; i++) {
+          dispatch(changeCheckbox(type_of_order_list[i]));
+          dispatch(rightchangeCheckbox(type_of_order_list[i]));
+        }
+
         setisLoadingComp(false);
         console.log("----------------Insert Data ", getfileData);
-        // if (getfileData !== undefined) {
-
-        // }
       }
     })();
   }, [lineintemData.Finalpage]);
@@ -423,6 +487,14 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     buyRadio: { key: "", text: "" },
     prepaidcapitalRadio: { key: "", text: "" },
     ehsRadio: { key: "", text: "" },
+  });
+
+  const [people, setpeople] = useState({
+    EmployeeId: "",
+    email: "",
+    text: "",
+    companyCode: "",
+    costCenter: "",
   });
 
   const [isPrepaidCapitalbuy, setisPrepaidCapitalbuy] =
@@ -572,8 +644,8 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     { key: "alternatecostcenter", text: "Alternate Cost Center" },
   ];
   const selectDepartmentOption: IDropdownOption[] = [
-    { key: "engineering", text: "Engineering" },
-    { key: "marketing", text: "Marketing" },
+    { key: "Engineering", text: "Engineering" },
+    { key: "Marketing", text: "Marketing" },
   ];
 
   const [projectCodeOption, setprojectCodeOption] = useState([]);
@@ -589,23 +661,32 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   const dropdownStyles: Partial<IDropdownStyles> = {
     dropdown: { width: 300 },
   };
+  console.log(
+    "This is Company Code Option Here ---- XXXX ",
 
+    selectedItems
+  );
   //peoplepicker
   const companyCodeOptionSet = useCallback((newItem) => {
-    console.log("This is Company Code Option Here ---- ", newItem);
     if (newItem.length !== 0) {
       // console.log(newItem[0].companyCode);
 
       let itemTest = {
-        key: newItem[0].EmployeeId,
+        key: newItem[0].companyCode,
 
         text: newItem[0].companyCode,
       };
 
       costCenter = newItem[0].costCenter;
+      setpeople(newItem[0]);
       setCompanyCodeOption([itemTest]);
+      // setSelectedItems((prevSelectedItems) => ({
+      //   ...prevSelectedItems,
+      //   ...itemTest,
+      // }));
     }
   }, []);
+  console.log("option data ", selectedItems, companyCodeOption);
 
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
@@ -818,9 +899,138 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     }
     return false;
   };
+  console.log(
+    "This is All Data For Api Call -------------- 1144",
+    lineintemData.Finalpage
+  );
 
-  const SaveandContinue = () => {
+  const lineintemInfoContent = async (checkboxList, ConnectPrId) => {
+    let lineinfo = await restApiCall.getPrlineItemContent(ConnectPrId);
+    let ListofTypePurchases: TypeofPurchaseDetail[] = [];
+    if (lineinfo.length === 0) {
+      checkboxList.map((item: CheckboxItem, index: number) => {
+        let newpurchaseItem: TypeofPurchaseDetail;
+        newpurchaseItem = new TypeofPurchaseDetail(
+          item.label,
+          selectedItems["prOption"]?.key as string,
+          selectRadioItems["prepaidcapitalRadio"]?.key,
+          textbox.CIPNum
+        );
+        newpurchaseItem.costCenter = costCenter;
+        newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
+        ListofTypePurchases.push(newpurchaseItem);
+      });
+    } else {
+      checkboxList.map((item: CheckboxItem, index: number) => {
+        let onelineinfoList = lineinfo.filter(
+          (newlineItem) => newlineItem.TypeOfOrder === item.label
+        );
+        let newpurchaseItem: TypeofPurchaseDetail;
+        if (onelineinfoList.length === 0) {
+          newpurchaseItem = new TypeofPurchaseDetail(
+            item.label,
+            selectedItems["prOption"]?.key as string,
+            selectRadioItems["prepaidcapitalRadio"]?.key,
+            textbox.CIPNum
+          );
+          newpurchaseItem.costCenter = costCenter;
+          newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
+        } else {
+          newpurchaseItem = new TypeofPurchaseDetail(
+            item.label,
+            selectedItems["prOption"]?.key as string,
+            selectRadioItems["prepaidcapitalRadio"]?.key,
+            textbox.CIPNum
+          );
+          console.log(
+            "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU XXXXXXXXXXXXXXXXXXXXXX",
+            newpurchaseItem
+          );
+          // newpurchaseItem.typeofPurchaseName = item.label;
+          // newpurchaseItem.typeOfPurchaseInfoList.clear();
+          for (let kl = 0; kl < onelineinfoList.length; kl++) {
+            let onepuchase: TypeLineItem = {
+              CFID:
+                onelineinfoList[kl].Plant === null
+                  ? ""
+                  : onelineinfoList[kl].Plant,
+              projectCode:
+                onelineinfoList[kl].ProjCode === null
+                  ? ""
+                  : onelineinfoList[kl].ProjCode,
+              des:
+                onelineinfoList[kl].ItemDescription === null
+                  ? ""
+                  : onelineinfoList[kl].ItemDescription,
+              CostCenter:
+                onelineinfoList[kl].Cost_Center === null
+                  ? ""
+                  : onelineinfoList[kl].Cost_Center,
+              date:
+                onelineinfoList[kl].DateRequired === null
+                  ? ""
+                  : onelineinfoList[kl].DateRequired,
+              glAccount:
+                onelineinfoList[kl].GL_Account === null
+                  ? ""
+                  : onelineinfoList[kl].GL_Account,
+              qty:
+                onelineinfoList[kl].Qty === null ? "" : onelineinfoList[kl].Qty,
+              uOM:
+                onelineinfoList[kl].UOM === null ? "" : onelineinfoList[kl].UOM,
+              unitPrice:
+                onelineinfoList[kl].Unit_Price === null
+                  ? ""
+                  : onelineinfoList[kl].Unit_Price,
+              unitPricePer:
+                onelineinfoList[kl].UnitPricePer === null
+                  ? ""
+                  : onelineinfoList[kl].UnitPricePer,
+              totalamount:
+                onelineinfoList[kl].Amount === null
+                  ? 0
+                  : onelineinfoList[kl].Amount,
+              prepaid_to_date:
+                onelineinfoList[kl].PrepaidFromDate === null
+                  ? ""
+                  : onelineinfoList[kl].PrepaidFromDate,
+              prepaid_from_date:
+                onelineinfoList[kl].PrepaidToDate === null
+                  ? ""
+                  : onelineinfoList[kl].PrepaidToDate,
+            };
+            newpurchaseItem.typeOfPurchaseInfoList.push(onepuchase);
+          }
+          newpurchaseItem.costCenter = costCenter;
+          newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
+        }
+        if (newpurchaseItem !== undefined) {
+          ListofTypePurchases.push(newpurchaseItem);
+        }
+      });
+    }
+
+    let setlineItemData = {
+      // projectCode:selectedItems["projectCode"]?.text,
+      saveTable: lineintemData.saveTable === 0 ? 0 : 1,
+      selectDepartment: selectedItems["selectDepartment"]?.text,
+      prProjectRadio: selectRadioItems["prProjectRadio"]?.text,
+      TypeofPurchaseDetailList: ListofTypePurchases,
+      Finalpage: lineintemData.Finalpage,
+    };
+    console.log("setlineItemData");
+    console.log(setlineItemData);
+    console.log(
+      ",setlineItemData.prProjectRadio--,setlineItemData.prProjectRadio",
+      setlineItemData.prProjectRadio
+    );
+
+    dispatch(setlineitemValue(setlineItemData));
+    // return ListofTypePurchases;
+  };
+  const SaveandContinue = async () => {
     //------------- start storing- ---------------
+
     let saveRadioGroupData: IradioSave[] = [
       {
         ehsRadio: {
@@ -924,52 +1134,62 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         (checkItem: CheckboxItem) => checkItem.isChecked
       ),
     ];
-    let ListofTypePurchases: TypeofPurchaseDetail[] = [];
 
-    checkboxList.map((item: CheckboxItem, index: number) => {
-      let newpurchaseItem: TypeofPurchaseDetail;
+    // checkboxList.map((item:CheckboxItem,index:number)=>{
+    //   if(lineintemData.TypeofPurchaseDetailList.length !== 0){
 
-      if (lineintemData.TypeofPurchaseDetailList.length !== 0) {
-        if (
-          lineintemData.TypeofPurchaseDetailList[index].typeofPurchaseName ===
-          item.label
-        ) {
-          newpurchaseItem = lineintemData.TypeofPurchaseDetailList[index];
-          newpurchaseItem.typeofPurchaseOption=selectRadioItems["prepaidcapitalRadio"]?.key
-          newpurchaseItem.typeofPurchaseName=item.label;
-          newpurchaseItem.prType=selectedItems["prOption"]?.key as string;
-          newpurchaseItem.CFID=textbox.CIPNum;
-        } else {
-          newpurchaseItem=new TypeofPurchaseDetail(item.label,selectedItems["prOption"]?.key as string,selectRadioItems["prepaidcapitalRadio"]?.key,textbox.CIPNum);
-        }
-      } else {
-        newpurchaseItem=new TypeofPurchaseDetail(item.label,selectedItems["prOption"]?.key as string,selectRadioItems["prepaidcapitalRadio"]?.key,textbox.CIPNum);
-      }
-      newpurchaseItem.costCenter = costCenter;
-      newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
-      ListofTypePurchases.push(newpurchaseItem);
-    });
+    //     for(let k=0;k<lineintemData.TypeofPurchaseDetailList.length;k++){
+
+    //       if(lineintemData.TypeofPurchaseDetailList[k].typeofPurchaseName===item.label){
+    //               lineintemData.TypeofPurchaseDetailList[k]
+
+    //       }
+
+    //     }
+
+    //   }
+
+    // })
+
+    // checkboxList.map((item: CheckboxItem, index: number) => {
+    //   let newpurchaseItem: TypeofPurchaseDetail;
+
+    //   if (lineintemData.TypeofPurchaseDetailList.length !== 0) {
+    //     if (
+    //       lineintemData.TypeofPurchaseDetailList[index].typeofPurchaseName ===
+    //       item.label
+    //     ) {
+    //       newpurchaseItem = lineintemData.TypeofPurchaseDetailList[index];
+    //       newpurchaseItem.typeofPurchaseOption =
+    //         selectRadioItems["prepaidcapitalRadio"]?.key;
+    //       newpurchaseItem.typeofPurchaseName = item.label;
+    //       newpurchaseItem.prType = selectedItems["prOption"]?.key as string;
+    //       newpurchaseItem.CFID = textbox.CIPNum;
+    //     } else {
+    //       newpurchaseItem = new TypeofPurchaseDetail(
+    //         item.label,
+    //         selectedItems["prOption"]?.key as string,
+    //         selectRadioItems["prepaidcapitalRadio"]?.key,
+    //         textbox.CIPNum
+    //       );
+    //     }
+    //   } else {
+    //     newpurchaseItem = new TypeofPurchaseDetail(
+    //       item.label,
+    //       selectedItems["prOption"]?.key as string,
+    //       selectRadioItems["prepaidcapitalRadio"]?.key,
+    //       textbox.CIPNum
+    //     );
+    //   }
+    //   newpurchaseItem.costCenter = costCenter;
+    //   newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
+    //   ListofTypePurchases.push(newpurchaseItem);
+    // });
 
     console.log("lineItemsaveTable");
     console.log(lineintemData);
-    let setlineItemData = {
-      // projectCode:selectedItems["projectCode"]?.text,
-      saveTable: lineintemData.saveTable === 0 ? 0 : 1,
-      selectDepartment: selectedItems["selectDepartment"]?.text,
-      prProjectRadio: selectRadioItems["prProjectRadio"]?.text,
-      TypeofPurchaseDetailList: ListofTypePurchases,
-      Finalpage: lineintemData.Finalpage,
-    };
-    console.log("setlineItemData");
-    console.log(setlineItemData);
-    console.log(
-      ",setlineItemData.prProjectRadio--,setlineItemData.prProjectRadio",
-      setlineItemData.prProjectRadio
-    );
 
-    dispatch(setlineitemValue(setlineItemData));
-
-    dispatch(setValue(saveData));
+    // dispatch(setValue(saveData));
 
     console.log("1.SAVE PR ALL Values...........");
     // ---------end storing ---------------------
@@ -1016,7 +1236,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     conecctPkid = "00" + conecctPkid;
     let fileInfo = [];
 
-    WarningMessage.accept(warningCheckData).then((warningRes) => {
+    WarningMessage.accept(warningCheckData).then(async (warningRes) => {
       if (warningRes != "") {
         setwarningContent(warningRes);
         setshowDialog(true);
@@ -1100,7 +1320,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             IsProjectPR: changeStrToBool(selectRadioItems.prProjectRadio.text),
             ProjectDepartment: selectedItems.selectDepartment.text,
             ProjectCode: selectedItems.projectCode.text,
-            Created: null,
+            Created: new Date(),
             CreatedBy: GlobalStore.getmainEmail(),
             Modified: null,
             ModifiedBy: null,
@@ -1121,47 +1341,77 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           },
         ];
 
-        if (lineintemData.Finalpage === `edit${GlobalStore.getconnectPRID()}`) {
+        if (lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`) {
           console.log(
             "This is PrimaryInfoComponent tsx file ---------",
-            GlobalStore.getconnectPRID()
+            GlobalStore.getPrId()
           );
-          saveprimayData[0].PKID = GlobalStore.getconnectPRID();
-          saveprimayData[0].ConnectPRID = GlobalStore.getconnectPRID();
-          restApiCall.insertVendorDetails(saveprimayData).then((_) => {
-            if (primaryinfoData.fileData.length !== 0) {
-              for (
-                let i: number = 0;
-                i < primaryinfoData.fileData.length;
-                i++
-              ) {
-                let fileDatainfo = {
-                  PKID: GlobalStore.getconnectPRID(),
-                  ConnectPRID: GlobalStore.getconnectPRID(),
-                  Doc_Type: primaryinfoData.fileData[i].docType,
-                  Filename: primaryinfoData.fileData[i].fileName,
-                  Content: primaryinfoData.fileData[i].content,
-                  Modified_By: GlobalStore.getmainName(),
-                  Modified_Date: primaryinfoData.fileData[i].fileModifiedTime,
-                };
+          saveprimayData[0].PKID = GlobalStore.getPrId();
+          saveprimayData[0].ConnectPRID = GlobalStore.getPrId();
 
-                fileInfo.push(fileDatainfo);
+          // let fileValue = await restApiCall.getDocTypeurl(
+          //   GlobalStore.getconnectPRID()
+          // );
+
+          restApiCall.getDocTypeurl(GlobalStore.getPrId()).then((fileValue) => {
+            console.log(
+              "This is The File Value DocType here ",
+              fileValue,
+              primaryinfoData.fileData
+            );
+            restApiCall.insertVendorDetails(saveprimayData).then(async (_) => {
+              let extraFileData = [];
+              if (
+                primaryinfoData.fileData.length !== 0 &&
+                fileValue.length !== 0
+              ) {
+                if (primaryinfoData.fileData.length > fileValue.length) {
+                  extraFileData = primaryinfoData.fileData.filter(
+                    (itemData) =>
+                      !fileValue.some((obj) => obj.PKID === itemData.key)
+                  );
+                }
+              }
+              console.log(
+                "Extra Data ------------ CCCCCCCCCCCCCCCc ",
+                extraFileData,
+                extraFileData[0]
+              );
+              await lineintemInfoContent(checkboxList, GlobalStore.getPrId());
+              if (extraFileData.length !== 0) {
+                for (let l = 0; l < extraFileData.length; l++) {
+                  let fileDatainfo = {
+                    PKID: GlobalStore.getPrId(),
+                    ConnectPRID: GlobalStore.getPrId(),
+                    Doc_Type: extraFileData[l].docType,
+                    Filename: extraFileData[l].fileName,
+                    Content: extraFileData[l].content,
+                    Modified_By: GlobalStore.getmainName(),
+                    Modified_Date: extraFileData[l].fileModifiedTime,
+                  };
+                  fileInfo.push(fileDatainfo);
+                }
               }
 
-              restApiCall
-                .insertPrimaryInfoData(fileInfo, false)
-                .then((value) => {
-                  console.log(value);
-                  dispatch(fetchSearchContent("MyOrder"));
-                  console.log("Data Save Here ------------");
-                  buttonContxtSave();
-                });
-            }
+              if (fileInfo.length !== 0) {
+                restApiCall
+                  .insertPrimaryInfoData(fileInfo, false)
+                  .then((value) => {
+                    console.log(value);
+                    dispatch(fetchSearchContent("MyOrder"));
+                    console.log("Data Save Here ------------");
+                    buttonContxtSave();
+                  });
+              } else {
+                buttonContxtSave();
+              }
+              // }
+            });
           });
-        } else {
+        } else if (lineintemData.Finalpage === "prsubmit") {
           restApiCall
             .insertPrimaryInfoData(saveprimayData, true)
-            .then((ConnectPRIDvalue) => {
+            .then(async (ConnectPRIDvalue) => {
               let ConnectPRIDvaluestr: String = ConnectPRIDvalue.toString();
               let totalLoop = 10 - ConnectPRIDvaluestr.length;
 
@@ -1174,7 +1424,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
               // let ConnectPRID: string =value;
               GlobalStore.storePrId(ConnectPRIDvaluestr);
-
+              await lineintemInfoContent(checkboxList, ConnectPRIDvaluestr);
               if (primaryinfoData.fileData.length !== 0) {
                 for (
                   let i: number = 0;
@@ -1193,9 +1443,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
                   fileInfo.push(fileDatainfo);
                 }
-                // let fileDatapayload = {
-                //   Attachment: fileInfo,
-                // };
 
                 restApiCall
                   .insertPrimaryInfoData(fileInfo, false)
@@ -1207,6 +1454,10 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                   });
               }
             });
+        } else if (lineintemData.Finalpage === `view${GlobalStore.getPrId()}`) {
+          await lineintemInfoContent(checkboxList, GlobalStore.getPrId());
+          console.log("12511251125112511251");
+          buttonContxtSave();
         }
         // buttonContxtSave();
       }
@@ -1298,11 +1549,20 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   const linkCostCenterClickEvent = () => {
     showopenCostCenter();
   };
-
+  console.log(
+    "Here This is The Data Here ---- 1514",
+    lineintemData.Finalpage,
+    showDialog,
+    isViewMode,
+    !(lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`)
+  );
   return (
     <>
       {isLoadingComp ? <LoadingBox /> : null}
-      {showDialog && !isViewMode ? (
+      {showDialog && lineintemData.Finalpage === "prsubmit" ? (
+        // !isViewMode &&
+        // !(lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`
+        // )
         <ModalComponent
           isModalOpen={showDialog}
           showModal={showAlertDialog}
@@ -1323,7 +1583,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 borderRadius: 5,
                 height: "40px",
               }}
-              onClick={SaveandContinue}
+              onClick={() => SaveandContinue()}
             >
               <Stack horizontal>
                 <span style={{ marginRight: 10, marginTop: 2 }}>
@@ -1406,7 +1666,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                     <div style={{ width: 250 }}>
                       <PeoplePickerComponent
                         companyCodeOptionSet={companyCodeOptionSet}
-                        defaultValue={primaryinfoData.requestfor}
+                        defaultValue={people}
                         isViewMode={isViewMode}
                       />
                       {/* <PeopleComponent context={context} /> */}
@@ -1431,6 +1691,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                     disabled={isViewMode}
                     onChange={changeDropdownOption}
                     selectedKey={selectedItems["companyCode"]?.key}
+                    defaultSelectedKey={selectedItems["companyCode"]?.key}
                     style={{ width: "200px" }}
                     options={companyCodeOption}
                     styles={dropdownStyles}
@@ -1925,7 +2186,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           {/* lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll */}
         </Stack>
 
-        <TableComponent />
+        <TableComponent isViewMode={isViewMode} />
       </Stack>
       {isModalOpen ? (
         <ModalComponent isModalOpen={isModalOpen} showModal={showModal} />

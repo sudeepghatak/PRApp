@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import { Stack, IStackTokens } from "@fluentui/react/lib/Stack";
 import { DefaultButton } from "@fluentui/react/lib/Button";
 import { Spinner, mergeStyles } from "@fluentui/react";
@@ -11,6 +11,11 @@ import VendorandShippingComponent from "./VendorandShippingComponent";
 import LineItemComponent from "./LineItemComponent";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { lazy, Suspense } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../app/store";
+import { GlobalStore } from "../../../../app/globalStore";
+import { refreshStore } from "../../../../features/reducers/primaryinfoSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
 const LazyFourth = lazy(() => import("./FourthComponent"));
 
@@ -47,15 +52,26 @@ export const MainPage: React.FunctionComponent<IMainPage> = (props) => {
     TypeofbuyOption: "",
     IsPrepaidCapital: "",
   });
-
+  const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const [tableCreate, settableCreate] = useState<ITableBuildProps[]>([]);
   const setTableCreate = (newtableName: ITableBuildProps) => {
     let copytableCreate = [...tableCreate];
     copytableCreate.push(newtableName);
     settableCreate(copytableCreate);
   };
+  useEffect(() => {
+    if (lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`) {
+      setPageNumber(1);
+    }
+  }, [lineintemData.Finalpage]);
+  // const useEffectny(()=>{
+  //   if(lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`){
 
+  //   }
+
+  // },[lineintemData.Finalpage])
   const deleteTableContent = (index: number) => {
     console.log(index);
 
@@ -220,6 +236,7 @@ export const MainPage: React.FunctionComponent<IMainPage> = (props) => {
               <LineItemComponent
                 buttonContxtSave={buttonContxtSave}
                 buttonContxtBack={buttonContxtBack}
+                isViewMode={isViewMode}
               />
             ) : null}
             {pageNumber === 4 ? (

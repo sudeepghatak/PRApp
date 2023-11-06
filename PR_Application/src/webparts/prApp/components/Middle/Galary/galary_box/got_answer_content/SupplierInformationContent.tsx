@@ -6,6 +6,8 @@ const SupplierInformationContent = () => {
   const supplierInfo = useSelector(
     (state: RootState) => state.statusreducer.supplier
   );
+
+  console.log("-------- XXXXXXXXXXXXXXXXXXXXXXXXXXXX  -------- ", supplierInfo);
   return (
     <>
       <div>
@@ -33,12 +35,12 @@ const SupplierInformationContent = () => {
         </div>
         <div className="basic-status">
           <span>Special Instructions:</span>
-          <span>{supplierInfo.Comments}</span>
+          <span>{supplierInfo.Special_Instructions}</span>
           {/* <span> Omnicell</span> */}
         </div>
         <div className="basic-status back-hover">
           <span>Justification/Reason for Order:</span>
-          <span>{supplierInfo.Special_Instructions}</span>
+          <span>{supplierInfo.Justification_Reason_for_Order}</span>
         </div>
         <div className="basic-status">
           <span>Shipping Location:</span>
