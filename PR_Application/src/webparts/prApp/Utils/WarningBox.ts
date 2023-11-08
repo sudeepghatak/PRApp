@@ -27,6 +27,7 @@ export class WarningMessage{
                     CountryKey:nameRes[i].CountryKey,
                     CurrencyKey:nameRes[i].CurrencyKey,
                     CostCenter:nameRes[i].CostCenter,
+                    LegacyCompany:nameRes[i].LegacyCompany,
                     // warningMsg:`${GlobalStore.getName()} has no company code `
                     warningMsg:"Temporary Employees and Contractors are not allowed to submit Purchase Requests!"
 
@@ -43,6 +44,7 @@ export class WarningMessage{
                     CountryKey:nameRes[i].CountryKey,
                     CurrencyKey:nameRes[i].CurrencyKey,
                     CostCenter:nameRes[i].CostCenter,
+                    LegacyCompany:nameRes[i].LegacyCompany,
                     warningMsg:" "
 
                 };

@@ -29,6 +29,11 @@ const statusDoc = {
     color: "#fff",
     isShow: false,
   },
+  Recalled: {
+    backgroundColor: "#f2dab5",
+    color: "red",
+    isShow: true,
+  },
 };
 const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
   const { cardItem } = props;
@@ -102,7 +107,8 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
               </span>
             ) : null}
             {statusDoc[cardItem.Status] !== undefined &&
-            statusDoc[cardItem.Status].isShow ? (
+            statusDoc[cardItem.Status].isShow &&
+            cardItem.Status !== "Recalled" ? (
               <span>
                 <IconButton
                   iconProps={{ iconName: "Delete" }}
@@ -155,7 +161,7 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
               <span>${cardItem.ammount}</span>
             </span>
           </div>
-          <div>
+          <div style={{ width: "50%" }}>
             <a
               href="#"
               className="galary-button"

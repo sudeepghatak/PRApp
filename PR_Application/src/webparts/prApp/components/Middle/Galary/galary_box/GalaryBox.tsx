@@ -23,7 +23,7 @@ const GalaryBox: React.FunctionComponent<IGalaryProps> = (props) => {
         <ComponentHeader title={title} />
 
         <div>
-          <p>
+          <p style={{ textAlign: "start", paddingLeft: "3px" }}>
             Create a new purchase<br></br> requisition in just a few steps
           </p>
         </div>

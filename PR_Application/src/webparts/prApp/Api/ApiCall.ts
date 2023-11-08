@@ -136,7 +136,7 @@ export class restApiCall {
         let employeList=await this.getRequestFor(empname);
         for(let i=0;i<employeList.length;i++){
             let fullName: string = employeList[i].FirstName + " " + employeList[i].LastName;
-        let employeeDetail=new EmployeeDetails(employeList[i].EmployeeID,employeList[i].Email,fullName,employeList[i].CompanyCode,employeList[i].CostCenter)
+        let employeeDetail=new EmployeeDetails(employeList[i].EmployeeID,employeList[i].Email,fullName,employeList[i].CompanyCode,employeList[i].CostCenter,employeList[i].LegacyCompany)
          employeeDetailsList.push(employeeDetail)
         }
     }
@@ -217,7 +217,7 @@ export class restApiCall {
         return res.data;
     }
 
-    
+
 
 
 }

@@ -60,10 +60,75 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   const showOtherShipping = () => {
     setopenOtherShipping(!openOtherShipping);
   };
-  //Redux save
   useEffect(() => {
-    setvendorItem(vendorandshippingData.vendorDetails);
+    (async () => {
+      let listDataSupplierAdd = [];
+
+      let shipAddressValue = await restApiCall.getShippingAddress(
+        optionGroupData.companyCode.text
+      );
+
+      for (let i: number = 0; i < shipAddressValue.length; i++) {
+        let newObjSupplierAdd = {
+          key: shipAddressValue[i],
+          text: shipAddressValue[i],
+        };
+        listDataSupplierAdd.push(newObjSupplierAdd);
+      }
+      setshipAddress([...listDataSupplierAdd]);
+
+      //Shipping country ----------------------------------------------
+
+      //Shipping Region ----------------------------------------------
+      console.log(
+        "This Currency Key ---- ",
+        GlobalStore.getTitledata().currencyKey
+      );
+      //  ConnectPr.getInstance().GetPRCountry().then((PrCountry)=>{
+      let PrCountry = await restApiCall.GetCountryUrl();
+      let listDataCountry = [];
+      for (let i = 0; i < PrCountry.length; i++) {
+        let newObjCountry = {
+          key: PrCountry[i].CountryKey,
+          text: PrCountry[i].Title,
+        };
+        if (GlobalStore.getTitledata().countryKey === newObjCountry.key) {
+          setdefaultCountry(newObjCountry.text);
+        }
+        listDataCountry.push(newObjCountry);
+      }
+
+      setCountryOptions([...listDataCountry]);
+
+      //Shipping Region ----------------------------------------------
+      console.log(
+        "This Currency Key ---- ",
+        GlobalStore.getTitledata().currencyKey
+      );
+
+      let PrRegion = await restApiCall.GetRegionUrl(
+        GlobalStore.getTitledata().countryKey
+      );
+
+      console.log("REGIONNNNNNNNNNNNNNNNNNNNNNNN ---", PrRegion);
+      let listDataRegion = [];
+      for (let i = 0; i < PrRegion.length; i++) {
+        let newObjRegion = {
+          key: PrRegion[i].Title + "(" + PrRegion[i].StateKey + ")",
+          text: PrRegion[i].Title + "(" + PrRegion[i].StateKey + ")",
+        };
+        listDataRegion.push(newObjRegion);
+      }
+      setRegionOptions([...listDataRegion]);
+    })();
+    //Ship Address to Company Code Compare------------------------------------------------------
+
+    // console.log("optionGroupData.companyCode.text---optionGroupData.companyCode.text",optionGroupData.companyCode.text);
   }, []);
+  //Redux save
+  // useEffect(() => {
+  //   setvendorItem(vendorandshippingData.vendorDetails);
+  // }, []);
 
   const [vendorItem, setvendorItem] = useState<VendorDetails>(
     new VendorDetails(0, " ", " ", " ", " ", " ", " ", " ", " ")
@@ -105,7 +170,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     [key: string]: IDropdownOption;
   }>({
     regionoption: { key: "", text: "" },
-    countryoption: { key: "", text: "" },
+    countryoption: { key: GlobalStore.getTitledata().countryKey, text: "" },
     basedOn: { key: "", text: "" },
   });
 
@@ -134,71 +199,10 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     console.log("----", option);
     setnewshipAddress(option as IDropdownOption);
   };
-
+  const [defaultCountry, setdefaultCountry] = useState("");
   const [shipAddress, setshipAddress] = useState([]);
   const [countryOptions, setCountryOptions] = useState([]);
   const [regionOptions, setRegionOptions] = useState([]);
-
-  useEffect(() => {
-    //Ship Address to Company Code Compare------------------------------------------------------
-
-    // console.log("optionGroupData.companyCode.text---optionGroupData.companyCode.text",optionGroupData.companyCode.text);
-
-    let listDataSupplierAdd = [];
-
-    restApiCall
-      .getShippingAddress(optionGroupData.companyCode.text)
-      .then((shipAddressValue) => {
-        for (let i: number = 0; i < shipAddressValue.length; i++) {
-          let newObjSupplierAdd = {
-            key: shipAddressValue[i].toLowerCase(),
-            text: shipAddressValue[i],
-          };
-          listDataSupplierAdd.push(newObjSupplierAdd);
-        }
-        setshipAddress([...listDataSupplierAdd]);
-      });
-
-    //Shipping country ----------------------------------------------
-
-    //Shipping Region ----------------------------------------------
-    console.log(
-      "This Currency Key ---- ",
-      GlobalStore.getTitledata().currencyKey
-    );
-    //  ConnectPr.getInstance().GetPRCountry().then((PrCountry)=>{
-    restApiCall.GetCountryUrl().then((PrCountry) => {
-      let listDataCountry = [];
-      for (let i = 0; i < PrCountry.length; i++) {
-        let newObjCountry = {
-          key: PrCountry[i],
-          text: PrCountry[i].Title,
-        };
-        listDataCountry.push(newObjCountry);
-      }
-      setCountryOptions([...listDataCountry]);
-    });
-
-    //Shipping Region ----------------------------------------------
-    console.log(
-      "This Currency Key ---- ",
-      GlobalStore.getTitledata().currencyKey
-    );
-    restApiCall
-      .GetRegionUrl(GlobalStore.getTitledata().currencyKey)
-      .then((PrRegion) => {
-        console.log("REGIONNNNNNNNNNNNNNNNNNNNNNNN ---", PrRegion);
-        let listDataRegion = [];
-        for (let i = 0; i < PrRegion.length; i++) {
-          let newObjRegion = {
-            key: PrRegion[i],
-            text: PrRegion[i].Title + "(" + PrRegion[i].StateKey + ")",
-          };
-          listDataRegion.push(newObjRegion);
-        }
-        setRegionOptions([...listDataRegion]);
-      });
-  }, []);
 
   useEffect(() => {
     if (newshipAddress.text === "Other Shipping Location") {
@@ -240,18 +244,18 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     console.log(id);
   };
 
-  const saveVendorandSupplierDetails = () => {
-    dispatch(
-      saveVendorandShippingData({
-        vendorDetails: vendorItem,
-        vendorOtherDetails: {
-          justificatiOnOrder: "",
-          downPaymentDetails: "",
-        },
-      })
-    );
-    buttonContxtSave();
-  };
+  // const saveVendorandSupplierDetails = () => {
+  //   dispatch(
+  //     saveVendorandShippingData({
+  //       vendorDetails: vendorItem,
+  //       vendorOtherDetails: {
+  //         justificatiOnOrder: "",
+  //         downPaymentDetails: "",
+  //       },
+  //     })
+  //   );
+  //   buttonContxtSave();
+  // };
 
   const saveVendorDetails = () => {
     dispatch(
@@ -260,6 +264,19 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
         vendorOtherDetails: {
           justificatiOnOrder: textvalue.justificatiOnOrder,
           downPaymentDetails: textvalue.downPaymentDetails,
+        },
+
+        ship_to_address: {
+          key: newshipAddress.text,
+          text: newshipAddress.text,
+        },
+        Shipping_Location: {
+          key: selectedItems.basedOn.text,
+          text: selectedItems["basedOn"].text,
+        },
+        shipping_region: {
+          key: selectedItems.regionoption.text,
+          text: selectedItems["regionoption"].text,
         },
       })
     );
@@ -345,7 +362,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
         ModifiedBy: null,
         PRNumber: null,
         DWCreateDate: null,
-        PRId: null,
+        PRId: GlobalStore.getPrId(),
         OldAllApprovers: null,
         OldAllManagers: null,
         OldCFO: null,
@@ -408,6 +425,14 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
 
   useEffect(() => {
     setvendorItem(vendorandshippingData.vendorDetails);
+    setnewshipAddress(vendorandshippingData.ship_to_address);
+
+    setselectedItems((prevItems) => ({
+      ...prevItems,
+      basedOn:vendorandshippingData.Shipping_Location,
+      regionoption: vendorandshippingData.shipping_region,
+    }));
+
     for (
       let i = 0;
       i < Object.keys(vendorandshippingData.vendorOtherDetails).length;
@@ -430,16 +455,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     }
   }, []);
 
-  // where are you based....
-
-  // const basedOptions: IDropdownOption[] = [
-  //   { key: "1", text: "US,- Strongsville, OH (STV) plant" },
-  //   { key: "2", text: "US, Cranberry" },
-  //   { key: "3", text: "US, Field Persons" },
-  //   { key: "4", text: "US, HQ-Mountain View, CA (MTV)" },
-  //   { key: "5", text: "US, Milpitas, (MIL) Plant" },
-  // ];
-
+  console.log("This is The Main Content Here ------458", selectedItems);
   const dropdownStyles: Partial<IDropdownStyles> = {
     dropdown: { width: 150 },
   };
@@ -772,6 +788,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                       placeholder="Select an option"
                       disabled={isViewMode ? true : false}
                       onChange={changeshipDropdownOption}
+                      selectedKey={newshipAddress.key}
                       options={shipAddress}
                       styles={dropdownStyles}
                     />
@@ -873,6 +890,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                     </Stack.Item>
                   </Stack>
                 </Stack.Item>
+
                 <Stack.Item grow={12}>
                   <Stack horizontal horizontalAlign="baseline">
                     <Stack.Item styles={col1Style}>
@@ -906,9 +924,8 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                           disabled={isViewMode ? true : false}
                           onChange={changeDropdownOption}
                           selectedKey={selectedItems["countryoption"]?.key}
-                          defaultSelectedKey={
-                            GlobalStore.getTitledata().countryKey
-                          }
+                          // defaultSelectedKey={defaultCountry}
+                          // defaultSelectedKey="US"
                           options={countryOptions}
                           styles={dropdownStyles}
                         />
@@ -916,6 +933,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                     </Stack.Item>
                   </Stack>
                 </Stack.Item>
+
                 <Stack.Item grow={12}>
                   <Stack horizontal horizontalAlign="baseline">
                     <Stack.Item styles={col1Style}>

@@ -20,19 +20,20 @@ interface IModalProps {
   showModal: () => void;
   backgroundcolor?: string;
   title?: string;
+  ConnectprId: string;
 }
 export const RecallComponentModel: React.FunctionComponent<IModalProps> = (
   props
 ) => {
-  const { isModalOpen, showModal, backgroundcolor, title } = props;
+  const { isModalOpen, showModal, backgroundcolor, title, ConnectprId } = props;
   const background_color = backgroundcolor as string;
   const modal_title = title as string;
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const RecallSubmit = () => {
     let saveprimayData = [
       {
-        PKID: GlobalStore.getPrId(),
-        ConnectPRID: GlobalStore.getPrId(),
+        PKID: ConnectprId,
+        ConnectPRID: ConnectprId,
         Type_Of_Buy: null,
         PrepaidOrCapitalEquipment: null,
         EHS: null,

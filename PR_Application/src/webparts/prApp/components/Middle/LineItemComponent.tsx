@@ -278,7 +278,7 @@
 
 // export default LineItemComponent;
 import * as React from "react";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Dropdown,
   IDropdownOption,
@@ -329,7 +329,7 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
   }>({
     // GlAccount: { key: "", text: "" },
     UOM: { key: "", text: "" },
-    prCurrency: { key: "", text: "" },
+    prCurrency: { key: GlobalStore.getTitledata().currencyKey, text: "" },
   });
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
@@ -405,7 +405,45 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
     settotalAmount(totalnumber);
   };
 
-  const saveIntoTable = () => {
+  const [CurrChange, setCurrChange] = useState<string>("");
+  console.log("CurrChange::", CurrChange);
+
+  let changenum: number = +CurrChange;
+  if (changenum < 0) {
+    changenum = -(totalAmount / changenum);
+  } else if (changenum > 0) {
+    changenum = totalAmount * changenum;
+  }
+
+  // console.log("selectedItems--",selectedItems.prCurrency.key,GlobalStore.getTitledata().currencyKey);
+
+  useEffect(() => {
+    let changeCurrVal = [];
+    restApiCall
+      .GetCurrencyChangeUrl(
+        selectedItems.prCurrency.key,
+        GlobalStore.getTitledata().currencyKey
+      )
+      .then((value) => {
+        // console.log("tableviewItem.typeofPurchaseOption---tableviewItem.typeofPurchaseOption",tableviewItem.typeofPurchaseOption,tableviewItem.typeofPurchaseName);
+        for (let i: number = 0; i < value.length; i++) {
+          let newOption = {
+            key: value[i],
+            text: value[i].ExchangeRate,
+          };
+          changeCurrVal.push(newOption);
+          setCurrChange(newOption.text);
+        }
+      });
+  }, [selectedItems.prCurrency.key]);
+  const date = new Date();
+
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  let currentDate = `${day}-${month}-${year}`;
+
+  const saveIntoTable = async () => {
     // lineinfoData.saveTable =1
     // saveButtonClick()
     dispatch(saveButtonClick());
@@ -421,27 +459,6 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
       lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList = [
         ...lineinfoData.TypeofPurchaseDetailList[i].demotypeOfPurchaseInfoList,
       ];
-      // lineinfoData.TypeofPurchaseDetailList[i].projectCodeList = [
-      //   ...lineinfoData.TypeofPurchaseDetailList[i].demoprojectCodeList,
-      // ];
-
-      // lineinfoData.TypeofPurchaseDetailList[i].costCenterList = [
-      //   ...lineinfoData.TypeofPurchaseDetailList[i].democostCenterList,
-      // ];
-      //       lineinfoData.TypeofPurchaseDetailList[i].description = [
-      //   ...lineinfoData.TypeofPurchaseDetailList[i].demodescription,
-      // ];
-
-      // lineinfoData.TypeofPurchaseDetailList[i].QtyList = [
-      //   ...lineinfoData.TypeofPurchaseDetailList[i].demoQtyList,
-      // ];
-      //       lineinfoData.TypeofPurchaseDetailList[i].unitPriceList = [
-      //   ...lineinfoData.TypeofPurchaseDetailList[i].demounitPriceList,
-      // ];
-
-      // lineinfoData.TypeofPurchaseDetailList[i].unitPricePerList = [
-      //   ...lineinfoData.TypeofPurchaseDetailList[i].demounitPricePerList,
-      // ];
 
       for (
         let j: number = 0;
@@ -450,54 +467,64 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
         j++
       ) {
         let bodyItem = {
-          PKID: vendorPKIDData,
-          ConnectPRID: vendorPKIDData,
+          PKID: GlobalStore.getPrId(),
+          ConnectPRID: GlobalStore.getPrId(),
           DateRequired:
             lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
               .date,
           Qty: lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[
             j
           ].qty,
-          UOM: null,
+          UOM: lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[
+            j
+          ].uOM,
           Plant: null,
-          Amount: null,
+          Amount:
+            lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
+              .totalamount,
           Cost_Center:
             lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
               .costCenter,
-          GL_Account: null,
+          GL_Account:
+            lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
+              .glAccount,
           Unit_Price:
             lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
               .unitPrice,
-          Requester_Name: null,
-          Requester_LoginName: null,
-          TypeOfOrder: null,
-          ItemDescription: null,
+          Requester_Name: GlobalStore.getName(),
+          Requester_LoginName: GlobalStore.getEmail(),
+          TypeOfOrder:
+            lineinfoData.TypeofPurchaseDetailList[i].typeofPurchaseName,
+          ItemDescription:
+            lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
+              .des,
           Manager1: null,
           Manager2: null,
           Manager3: null,
           Manager4: null,
-          PrepaidFromDate: null,
-          PrepaidToDate: null,
-          OverallLimit: null,
-          AssetNbr: null,
+          PrepaidFromDate: lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].prepaid_from_date,
+          PrepaidToDate: lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].prepaid_to_date,
+          OverallLimit: lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].prepaid_,
+          AssetNbr: lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].CFID,
           UnitPricePer:
             lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
               .unitPricePer,
           OtherTypeOfOrder: null,
-          ExpenseGL: null,
+          ExpenseGL: lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j].expensegl,
           IsDeleted: null,
           ProjCode:
             lineinfoData.TypeofPurchaseDetailList[i].typeOfPurchaseInfoList[j]
               .projectCode,
-          Created: null,
-          CreatedBy: null,
+          Created: currentDate,
+          CreatedBy:GlobalStore.getmainEmail(),
           Modified: null,
           ModifiedBy: null,
         };
         saveList.push(bodyItem);
       }
     }
-    // restApiCall.insertLineItem(saveList);
+    console.log("Line item data Here 481", GlobalStore.getPrId(), saveList);
+    await restApiCall.insertLineItem(saveList);
     buttonContxtSave();
   };
   return (

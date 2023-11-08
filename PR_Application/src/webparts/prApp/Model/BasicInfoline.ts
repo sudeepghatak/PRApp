@@ -1,9 +1,11 @@
 export class BasicInfoObj{
     lineObjname:string;
-    basicInfoObjList:basicInfoitem[]
+    basicInfoObjList:basicInfoitem[];
+    totalAmount:number;
     constructor(lineObjname:string){
         this.lineObjname=lineObjname;
         this.basicInfoObjList=[];
+        this.totalAmount=0;
     }
 }
 

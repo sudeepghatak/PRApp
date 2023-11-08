@@ -54,7 +54,7 @@ interface radioGroup{
 interface optionGroup{
   prOption:dropdownOption;
   companyCode:dropdownOption;
-
+  SelectAltCostCenter:dropdownOption;
   selectDepartment:dropdownOption;
 
   projectCode:dropdownOption;
@@ -86,6 +86,7 @@ const initialState: PrimaryPageinformation = {
   optionGroup:{
     prOption:  { key: "SAP", text: "SAP(Omnicell)" },
     companyCode: { key: "", text: "" },
+    SelectAltCostCenter:{key:"",text:""},
     selectDepartment: { key: "engineering", text: "Engineering" },
     projectCode: { key: "", text: "" },
   },
@@ -109,7 +110,8 @@ const initialState: PrimaryPageinformation = {
     email: "",
     text: "",
     companyCode: "",
-    costCenter: ""
+    costCenter: "",
+    LegacyCompany:"",
   }
   };
 let storeData:PrimaryPageinformation;

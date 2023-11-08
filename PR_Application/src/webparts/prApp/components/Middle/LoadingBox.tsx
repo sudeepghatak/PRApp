@@ -14,6 +14,7 @@ const LoadingBox = () => {
         <Modal
           isOpen={isModalOpen}
           onDismiss={hideModal}
+          // isBlocking={false}
           isModeless={true}
           containerClassName={contentStyles.container}
         >

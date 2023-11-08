@@ -150,7 +150,7 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
                         />
                       </span>
                       <span>
-                        {statusInfo.basicInfo.Status !== "Approval Routing" ? (
+                        {statusInfo.basicInfo.Status === "Approval Routing" ? (
                           <IconButton
                             iconProps={{ iconName: "RevToggleKey" }}
                             title="Recall"
@@ -170,7 +170,7 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
                           <CallRecallComponent
                             isModalOpen={callRecall}
                             hideModal={recallConnectprId}
-                            ConnectprId={""}
+                            ConnectprId={connectprID}
                           />
                         ) : null}
 

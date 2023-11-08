@@ -92,6 +92,7 @@ export class TypeLineItem{
     totalamount:number;
     prepaid_to_date:string;
     prepaid_from_date:string;
+    // expensegl:string;
     // glaccount:IDropdownOption[]
 
     constructor(CFID:string,projectCode:string,des:string,CostCenter:string,date:string,
@@ -109,6 +110,7 @@ export class TypeLineItem{
           this.totalamount=totalamount,
           this.prepaid_to_date=prepaid_to_date,
           this.prepaid_from_date=prepaid_from_date
+        //   this.expensegl=expensegl
           // this.glaccount=new OptionList().getglAccountOption()
           // console.log("this.glaccount--",this.glaccount);
           

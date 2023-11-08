@@ -20,7 +20,8 @@ export class GlobalStore{
         currencyKey: "",
         costCenter: "",
         TypeofbuyOption: "",
-        IsPrepaidCapital: ""
+        IsPrepaidCapital: "",
+        LegacyCompany:"",
     };
     
 
@@ -151,7 +152,7 @@ export class GlobalStore{
         console.log(prType,ebuy,toolName)
         console.log(this.Tooldata[prType])
         console.log(this.Tooldata[prType][ebuy])
-        console.log(this.Tooldata[prType][ebuy][toolName])
+        // console.log(this.Tooldata[prType][ebuy][toolName])
 
         return this.Tooldata[prType][ebuy][toolName];
     }

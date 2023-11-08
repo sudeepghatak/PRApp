@@ -14,7 +14,7 @@ import { RootState } from "../../../../app/store";
 import { Spinner } from "office-ui-fabric-react/lib/Spinner";
 import { IIconProps, IconButton } from "@fluentui/react";
 const dropdownStyles: Partial<IDropdownStyles> = {
-  dropdown: { width: 100 },
+  dropdown: { width: 200, maxWidth: 200 },
 };
 
 const options: IDropdownOption[] = [
@@ -34,6 +34,7 @@ const GalaryDashboard = () => {
     text: "My Orders",
   };
   const syncIcon: IIconProps = { iconName: "Sync" };
+  const BulletedListIcon: IIconProps = { iconName: "BulletedList" };
   const [searchOption, setsearchOption] = useState(initialDropOption);
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
@@ -58,20 +59,16 @@ const GalaryDashboard = () => {
   };
   return (
     <>
-      <div
-        style={{ paddingBottom: 5 }}
-        // className="childshadow"
-      >
+      <div style={{ paddingBottom: 5 }} className="childshadow">
         <ComponentHeader title="Dashboard" color="green" />
       </div>
       {/* first */}
-      <div
-      // className="childshadow"
-      >
+      <div className="childshadow">
         <div id="order-details">
           <span>Order Details</span>
           <div>
             <IconButton
+              id="sync-btn-orderdetails"
               iconProps={syncIcon}
               onClick={() => syncOrderDetails()}
             />
@@ -84,23 +81,26 @@ const GalaryDashboard = () => {
           // className="childshadow"
         >
           <span>Search By:</span>
-
-          <Dropdown
-            id="search-drop"
-            placeholder="Select options"
-            onChange={changeDropdownOption}
-            options={options}
-            selectedKey={searchOption?.key}
-            styles={dropdownStyles}
-          />
-
-          <span></span>
+          <div style={{ paddingTop: "2px" }}>
+            <Dropdown
+              id="search-drop"
+              placeholder="Select options"
+              onChange={changeDropdownOption}
+              options={options}
+              selectedKey={searchOption?.key}
+              styles={dropdownStyles}
+            />
+          </div>
+          <div style={{ color: "blue", float: "right" }}>
+            <IconButton
+              iconProps={BulletedListIcon}
+              onClick={() => console.log("")}
+            />
+          </div>
         </div>
         {/* last */}
 
-        <div
-        // className="childshadow"
-        >
+        <div className="childshadow" style={{ minHeight: "50rem" }}>
           {!searchResultInfo.isLoading ? (
             searchResultInfo.listSearchResult.map((searchItem) => {
               return <GalaryBoxCard cardItem={searchItem} />;

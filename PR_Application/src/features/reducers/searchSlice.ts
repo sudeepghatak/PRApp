@@ -63,9 +63,10 @@ export const searchSlice=createSlice({
             state.listSearchResult=[];
             if(action.payload.length !==0){
                 for(let i=0;i<action.payload.length;i++){
-                    var dateString = action.payload[i].CreateDate!==null?action.payload[i].CreateDate :"2017-02-09T18:06:55";
-                    var correctedDateString = dateString.replace(/(\d{1,2}:\d{2})([APM]+)$/, "$1 $2");
-                    var date = new Date(correctedDateString);
+                    var dateString = action.payload[i].Created!==null?action.payload[i].Created :new Date();
+                    // var correctedDateString = dateString.replace(/(\d{1,2}:\d{2})([APM]+)$/, "$1 $2");
+                    console.log("Data --- ",dateString)
+                    var date = new Date(dateString);
 
                    
 

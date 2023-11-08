@@ -106,6 +106,7 @@ const CallRecallComponent: React.FunctionComponent<ICallRecallComponent> = (
                   showModal={ConfirmRecall}
                   backgroundcolor="black"
                   title={"Reason for Recall"}
+                  ConnectprId={ConnectprId}
                 />
               </>
             ) : null}

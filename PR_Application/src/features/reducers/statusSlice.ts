@@ -177,7 +177,7 @@ export const statusSlice=createSlice({
             // state.isLoading = fal
             console.log("Response TOP-----------action.payload173s ::",action.payload);
             state.statusTitle=(action.payload.Title==null)?" ":action.payload.Title;
-            state.basicInfo.PR_Type=(action.payload.AesyntPRType===null)?"":action.payload.AesyntPRType;
+            state.basicInfo.PR_Type=(action.payload.Company===null)?"":action.payload.Company;
             state.basicInfo.UFID=(action.payload.UFID==null)?" ":action.payload.UFID;
             state.basicInfo.Cost_Center=(action.payload.Cost_Center==null)?" ":action.payload.Cost_Center.toString();
             state.basicInfo.Status=(action.payload.Status==null)?" ":action.payload.Status;
@@ -210,7 +210,7 @@ export const statusSlice=createSlice({
                 if(state.basicInfo.lineInfoList.length ===0){
                     baiscItem=new BasicInfoObj(action.payload.lineinfo[i].TypeOfOrder)
                     ;
-                   
+                    baiscItem.totalAmount=baiscItem.totalAmount+lineinfoData.totalAmount;
                     baiscItem.basicInfoObjList.push(lineinfoData)
                 }else{
 
@@ -218,10 +218,11 @@ export const statusSlice=createSlice({
                     if(onebasicinfoitem.length ===0){
                         baiscItem=new BasicInfoObj(action.payload.lineinfo[i].TypeOfOrder)
                         ;
-                    
+                        baiscItem.totalAmount=baiscItem.totalAmount+lineinfoData.totalAmount;
                         baiscItem.basicInfoObjList.push(lineinfoData)
 
                     }else{
+                        onebasicinfoitem[0].totalAmount=onebasicinfoitem[0].totalAmount+lineinfoData.totalAmount;
                         onebasicinfoitem[0].basicInfoObjList.push(lineinfoData)
                     }
 

@@ -721,14 +721,17 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
     dispatch(deletetypePurchases(id));
     addTotalAmount(totalNumber);
   };
-  //Link for Project Code-------------------------------------
+  //Link for Project Code Pick particular value-------------------------------------
 
   const [ProCodeItem, setProCodeItem] = useState<IPrProjectCode>(
     new IPrProjectCode(" ", " ")
   );
   const ProCodeItemDatapick = (ProCode: IPrProjectCode) => {
+    console.log("ProCode:::", ProCode.project_code);
     setProCodeItem(ProCode);
   };
+  console.log("ProCodeItem::", ProCodeItem.project_code);
+
   // ................................................................
 
   //Project Code Modal Design Here ...........................
@@ -1003,37 +1006,40 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   const [glaccountOption, setglaccountOption] = useState([]);
   const [UOMOption, setUOMOption] = useState([]);
   useEffect(() => {
-    let listglacc = [];
-    restApiCall
-      .GetTypeOfPurGLCodeOdrType(
-        tableviewItem.prType,
-        tableviewItem.typeofPurchaseOption,
-        tableviewItem.typeofPurchaseName
-      )
-      .then((GLList) => {
-        // console.log("tableviewItem.typeofPurchaseOption---tableviewItem.typeofPurchaseOption",tableviewItem.typeofPurchaseOption,tableviewItem.typeofPurchaseName);
-        for (let i = 0; i < GLList.length; i++) {
-          let newOption = {
-            key: GLList[i].GL_Code,
-            text: GLList[i].GL_Code + " (" + GLList[i].Dscription + ") ",
-          };
-          listglacc.push(newOption);
-        }
-        setglaccountOption(listglacc);
-      });
+    (async () => {
+      let listglacc = [];
+      restApiCall
+        .GetTypeOfPurGLCodeOdrType(
+          tableviewItem.prType,
+          tableviewItem.typeofPurchaseOption,
+          tableviewItem.typeofPurchaseName
+        )
+        .then((GLList) => {
+          // console.log("tableviewItem.typeofPurchaseOption---tableviewItem.typeofPurchaseOption",tableviewItem.typeofPurchaseOption,tableviewItem.typeofPurchaseName);
+          for (let i = 0; i < GLList.length; i++) {
+            let newOption = {
+              key: GLList[i].GL_Code,
+              text: GLList[i].GL_Code + " (" + GLList[i].Dscription + ") ",
+            };
+            listglacc.push(newOption);
+          }
+          setglaccountOption(listglacc);
+        });
 
-    let listUOM = [];
-    restApiCall.GetUOMUrl().then((Value) => {
+      let listUOM = [];
+      let uomValue = await restApiCall.GetUOMUrl();
+      // .then((Value) => {
       // console.log("tableviewItem.typeofPurchaseOption---tableviewItem.typeofPurchaseOption",tableviewItem.typeofPurchaseOption,tableviewItem.typeofPurchaseName);
-      for (let i = 0; i < Value.length; i++) {
+      for (let i = 0; i < uomValue.length; i++) {
         let newUOMOption = {
-          key: Value[i],
-          text: Value[i].UnitText + " ( " + Value[i].Title + " ) ",
+          key: uomValue[i].Title,
+          text: uomValue[i].UnitText + " ( " + uomValue[i].Title + " ) ",
         };
         listUOM.push(newUOMOption);
       }
       setUOMOption(listUOM);
-    });
+      // });
+    })();
   }, []);
 
   useEffect(() => {
@@ -1225,12 +1231,12 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
             />
             {isPickerRemove === true ? (
               <TextField
-              disabled={isViewMode}
+                disabled={isViewMode}
                 name="CIPNumber"
                 value={tableItem[rowIndex].CIPNumber}
               />
             ) : (
-              <TextField  disabled={isViewMode} name="CIPNumber" value="" />
+              <TextField disabled={isViewMode} name="CIPNumber" value="" />
             )}
           </Stack>
         );
@@ -1267,7 +1273,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         return (
           <div className={rootClass}>
             <DatePicker
-            disabled={isViewMode}
+              disabled={isViewMode}
               firstDayOfWeek={firstDayOfWeek}
               firstWeekOfYear={1}
               placeholder="MM/DD/YY"
@@ -1428,7 +1434,12 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         },
       },
       onRender: (item: TableRow, rowIndex: number) => {
-        return <TextField disabled={isViewMode} value={tableItem[rowIndex].description} />;
+        return (
+          <TextField
+            disabled={isViewMode}
+            value={tableItem[rowIndex].description}
+          />
+        );
       },
     },
     {
@@ -1495,7 +1506,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         return (
           <div className={rootClass}>
             <DatePicker
-            disabled={isViewMode}
+              disabled={isViewMode}
               firstDayOfWeek={firstDayOfWeek}
               firstWeekOfYear={1}
               placeholder="MM/DD/YY"
@@ -1677,6 +1688,12 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
       },
 
       onRender: (item: TableRow, rowIndex: number) => {
+        console.log(
+          "UOM UOM UOM 1688",
+          UOMOption,
+          tableItem[rowIndex].uOM,
+          rowIndex
+        );
         return (
           <>
             <Dropdown

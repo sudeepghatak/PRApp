@@ -167,6 +167,12 @@ const Basicinfolineitem: React.FunctionComponent<IBasicinfolineitem> = (
             checkboxVisibility={CheckboxVisibility.hidden}
           />
         </div>
+        <div style={{ float: "right" }}>
+          <h3 style={{ float: "left", margin: 0 }}>Total Amount:</h3>
+          <span style={{ float: "left", paddingTop: "3px" }}>
+            {newlineinfoItem.totalAmount}
+          </span>
+        </div>
       </div>
     </>
   );

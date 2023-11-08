@@ -254,13 +254,14 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           text: "",
           companyCode: "",
           costCenter: "",
+          LegacyCompany: "",
         });
         console.log(
           "Enter For Loading ------------------ ",
           lineintemData.Finalpage,
           isViewMode
         );
-        // dispatch(clearFileDoc());
+        dispatch(clearFileDoc());
         setisLoadingComp(true);
         let prInfo = await restApiCall.getPrbasicInfoContent(
           GlobalStore.getPrId()
@@ -289,9 +290,15 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
           {
             constCenterRadio: {
-              key: selectRadioItems.constCenterRadio.key,
+              key:
+                prInfo.ActCostCenter === prInfo.Cost_Center
+                  ? "department"
+                  : "alternatecostcenter",
 
-              text: selectRadioItems.constCenterRadio.text,
+              text:
+                prInfo.ActCostCenter === prInfo.Cost_Center
+                  ? "Department"
+                  : "Alternate Cost Center",
             },
           },
 
@@ -347,6 +354,13 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               text: prInfo.CompanyCode,
             },
           },
+          {
+            SelectAltCostCenter: {
+              key: prInfo.ActCostCenter.toString(),
+
+              text: "",
+            },
+          },
 
           {
             selectDepartment: {
@@ -358,7 +372,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
           {
             projectCode: {
-              key: prInfo.ProjectCode,
+              key: prInfo.ProjectCode.toLowerCase(),
 
               text: prInfo.ProjectCode,
             },
@@ -458,6 +472,18 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               justificatiOnOrder: prInfo.Comments,
               downPaymentDetails: prInfo.Special_Instructions,
             },
+            ship_to_address: {
+              key: prInfo.Location == null ? "" : prInfo.Location,
+              text: prInfo.Location == null ? "" : prInfo.Location,
+            },
+            shipping_region:{
+              key:prInfo.Shipping_Region==null?"":prInfo.Shipping_Region,
+              text:prInfo.Shipping_Region==null?"":prInfo.Shipping_Region
+            },
+            Shipping_Location:{
+              key:prInfo.Shipping_Location==null?"":prInfo.Shipping_Location,
+              text:prInfo.Shipping_Location==null?"":prInfo.Shipping_Location
+            }
           })
         );
 
@@ -495,6 +521,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     text: "",
     companyCode: "",
     costCenter: "",
+    LegacyCompany: "",
   });
 
   const [isPrepaidCapitalbuy, setisPrepaidCapitalbuy] =
@@ -803,6 +830,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         costCenter: value.CostCenter,
         TypeofbuyOption: selectRadioItems.buyRadio.text,
         IsPrepaidCapital: selectRadioItems.prepaidcapitalRadio.text,
+        LegacyCompany: value.LegacyCompany,
       };
       GlobalStore.storeTitledata(titledata);
       setTile(titledata);
@@ -819,26 +847,52 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   ]);
 
   useMemo(
-    () => {
+    async () => {
       // Select Other Cost Center Options ----------------------------------
       // if(selectedItems.prOption.key==="SAP"){
 
-      restApiCall
-        .getCostCenterList(selectedItems.companyCode.text)
-        .then((Prcostcenter) => {
-          let listDataCostCenterSap = [];
-          for (let i = 0; i < Prcostcenter.length; i++) {
-            let newObjCostCenter = {
-              key: Prcostcenter[i],
-              text: Prcostcenter[i].Title + "(" + Prcostcenter[i].Details + ")",
-            };
-            listDataCostCenterSap.push(newObjCostCenter);
-          }
-          setCostCenterOption([...listDataCostCenterSap]);
-        });
+      let Prcostcenter = await restApiCall.getCostCenterList(
+        selectedItems.companyCode.text
+      );
+
+      let listDataCostCenterSap = [];
+      for (let i = 0; i < Prcostcenter.length; i++) {
+        let newObjCostCenter = {
+          key: Prcostcenter[i].Title,
+          text: Prcostcenter[i].Title + "(" + Prcostcenter[i].Details + ")",
+        };
+        listDataCostCenterSap.push(newObjCostCenter);
+      }
+      setCostCenterOption([...listDataCostCenterSap]);
+
+      console.log("856 856 856 ---", selectedItems, costCenterOption);
     },
+
     //  }
     [selectedItems.companyCode]
+  );
+
+  useEffect(() => {
+    let costCentervalue = primaryinfoData.optionGroup.SelectAltCostCenter;
+    console.log(
+      "------newcostCenter Value ",
+      costCentervalue,
+      costCenterOption
+    );
+    let newcostCenterValue = costCenterOption.filter(
+      (costItem) => costItem.key == costCentervalue.key
+    );
+
+    console.log("------newcostCenter Value ", newcostCenterValue);
+    setSelectedItems((prevSelectedItems) => ({
+      ...prevSelectedItems,
+      ...newcostCenterValue[0],
+    }));
+  }, [costCenterOption]);
+  console.log(
+    "This is The Main Cost Center Here 866",
+    selectedItems,
+    costCenterOption
   );
 
   useMemo(() => {
@@ -858,7 +912,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         setprojectCodeOption([...listProjectCode]);
       });
   }, [selectedItems.selectDepartment]);
-
+  console.log("This is The Department Option Find Now--- ", projectCodeOption);
   // useEffect(()=>{
 
   // },[]);
@@ -1027,6 +1081,13 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
     dispatch(setlineitemValue(setlineItemData));
     // return ListofTypePurchases;
+  };
+  const changeCompanyName = (companyName: string) => {
+    if (companyName.trim() === "OMNI") {
+      return "Omnicell";
+    } else {
+      return companyName.trim();
+    }
   };
   const SaveandContinue = async () => {
     //------------- start storing- ---------------
@@ -1251,7 +1312,13 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             PrepaidOrCapitalEquipment:
               selectRadioItems.prepaidcapitalRadio.text,
             EHS: changeStrToBool(selectRadioItems.ehsRadio.text),
-            Title: null,
+            Title:
+              "Requested By " +
+              GlobalStore.getmainName() +
+              " On " +
+              new Date() +
+              " on behalf of " +
+              GlobalStore.getName(),
             RequestFor: GlobalStore.getEmail(),
             Type_Of_Order: Type_Of_Order,
             Order_Amount: null,
@@ -1302,19 +1369,22 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             AesyntPRType: selectedItems.prOption.key,
             PONumber: null,
             IsCompleted: null,
-            Company: "omnicell",
+            Company: changeCompanyName(
+              GlobalStore.getTitledata().LegacyCompany
+            ),
+
             ProjectNumber: null,
-            ActCostCenter: +costCenter,
+            ActCostCenter: +selectedItems.SelectAltCostCenter.key,
             CompanyCode: selectedItems.companyCode.text,
-            FromCurrency: null,
-            ToCurrency: null,
-            RequesterCurrency: null,
-            ExchangeRate: null,
+            FromCurrency: GlobalStore.getTitledata().currencyKey,
+            ToCurrency: GlobalStore.getTitledata().currencyKey,
+            RequesterCurrency: GlobalStore.getTitledata().currencyKey,
+            ExchangeRate: 0.0,
             ExchangeRateV: null,
             ExchangeRateDate: null,
             ConvertedDollerAmount: null,
-            CountryKey: null,
-            HRADCompanyCode: null,
+            CountryKey: GlobalStore.getTitledata().countryKey,
+            HRADCompanyCode: selectedItems.companyCode.text,
             QuickbookPO: null,
             CCDescription: null,
             IsProjectPR: changeStrToBool(selectRadioItems.prProjectRadio.text),
@@ -1330,16 +1400,24 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             OldAllApprovers: null,
             OldAllManagers: null,
             OldCFO: null,
-            OldCreatedBy: null,
+            OldCreatedBy: GlobalStore.getmainEmail(),
             OldManager: null,
             OldManager1: null,
             OldManager2: null,
             OldManager3: null,
             OldModifiedBy: null,
-            OldRequestFor: null,
+            OldRequestFor: GlobalStore.getEmail(),
             OldTaskCreatedFor: null,
           },
         ];
+
+        console.log(
+          "1344 1344 1344 ",
+          saveprimayData,
+          lineintemData.Finalpage,
+          GlobalStore.getPrId(),
+          lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`
+        );
 
         if (lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`) {
           console.log(
@@ -1348,7 +1426,10 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           );
           saveprimayData[0].PKID = GlobalStore.getPrId();
           saveprimayData[0].ConnectPRID = GlobalStore.getPrId();
-
+          saveprimayData[0].Created = null;
+          saveprimayData[0].Modified = new Date();
+          saveprimayData[0].ModifiedBy = GlobalStore.getmainEmail();
+          saveprimayData[0].PRId = GlobalStore.getPrId();
           // let fileValue = await restApiCall.getDocTypeurl(
           //   GlobalStore.getconnectPRID()
           // );
@@ -1403,6 +1484,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                     buttonContxtSave();
                   });
               } else {
+                dispatch(fetchSearchContent("MyOrder"));
                 buttonContxtSave();
               }
               // }
@@ -1456,7 +1538,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             });
         } else if (lineintemData.Finalpage === `view${GlobalStore.getPrId()}`) {
           await lineintemInfoContent(checkboxList, GlobalStore.getPrId());
-          console.log("12511251125112511251");
+
           buttonContxtSave();
         }
         // buttonContxtSave();
@@ -1756,7 +1838,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                       disabled={isViewMode}
                       onChange={changeDropdownOption}
                       style={{ width: "200px" }}
-                      selectedKey={selectedItems["SelectAltCostCenter"]?.key}
+                      selectedKey={selectedItems.SelectAltCostCenter.key}
                       options={costCenterOption}
                       styles={dropdownStyles}
                     />
