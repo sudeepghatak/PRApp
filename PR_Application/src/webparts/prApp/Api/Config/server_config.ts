@@ -38,3 +38,24 @@ export const getCountryUrl="getCountry_Result"
 export const getUOMUrl="getUOM_Result";
 export const getCurrencyChangeUrl="usp_pr_currency_exchange_Result?from=";
 export const getExpenseGLUrl="getPrepaidExpenseGL_Result?pPGL=";
+
+
+export const getManagerDetails="getManagers_Result?emp=";
+export const getJobLevel="getApprovalLimit_Result";
+export const getVacationLeave="getPRVacation_Result";
+export const getempEmail="getEmployees_Result?ename="
+//vendor Details
+export const getpaginationURL="getVendorName_Result?compCode="
+// LineItem Approval
+export const InsertApprovalLog="getPR_Approval_Log_Result?cT=i"
+// Finance Approval
+export const FinanceApprovallog="getOtherCCApprovalMapping_Result?cType=Finance Approval"
+//Delete Line Item
+export const DelLineItem="delPR_RequestItemsinfo";
+//Delete DocItem :
+export const delDocItem="postPRRequest_Values?pID=";
+//Approval log Delete
+export const prApprovaldelete="getPR_Approval_Log_Result?pID=";
+//Approval Limit List
+export const getApprovalLimit="getApprovalLimit_Result";
+

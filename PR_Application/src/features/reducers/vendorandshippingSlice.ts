@@ -6,6 +6,12 @@ import { AnyAsyncThunk } from "@reduxjs/toolkit/dist/matchers";
 interface otherDetails{
     justificatiOnOrder:string,
     downPaymentDetails:string,
+    Name:string,
+    HouseNumber:string,
+    StreetName:string,
+    PostalCode:string,
+    City:string,
+    ContactName:string,
 }
 interface IdropdownOption{
     key:string,
@@ -35,6 +41,12 @@ const initialState:IvendorDetails={
     vendorOtherDetails:{
         justificatiOnOrder: "",
         downPaymentDetails: "",
+        Name:"",
+        HouseNumber:"",
+        StreetName:"",
+        PostalCode:"",
+        City:"",
+        ContactName:"",
     },
     ship_to_address:{key:"",text:""},
     Shipping_Location:{key:"",text:""},

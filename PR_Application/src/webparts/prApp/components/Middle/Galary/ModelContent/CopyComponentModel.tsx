@@ -62,7 +62,7 @@ const CopyComponentModel: React.FunctionComponent<ICopyComponentModel> = (
               <div style={{ paddingLeft: 5 }}>
                 <div className="copy-head">
                   <div style={{ paddingTop: 10 }}>
-                    <span>
+                    <span style={{ fontSize: "x-large" }}>
                       <b>Confirm!</b>
                     </span>
                   </div>
@@ -86,7 +86,8 @@ const CopyComponentModel: React.FunctionComponent<ICopyComponentModel> = (
                       style={{
                         background: "#C0293B",
                         color: DefaultPalette.white,
-                        height: "20px",
+                        height: "35px",
+                        borderRadius: "5px",
                       }}
                       onClick={() => ConfirmCopy()}
                     >
@@ -96,7 +97,8 @@ const CopyComponentModel: React.FunctionComponent<ICopyComponentModel> = (
                   <div style={{ padding: "2px" }}>
                     <DefaultButton
                       style={{
-                        height: "20px",
+                        height: "35px",
+                        borderRadius: "5px",
                         background: "#DDDDDD",
                         color: DefaultPalette.black,
                       }}
@@ -110,7 +112,9 @@ const CopyComponentModel: React.FunctionComponent<ICopyComponentModel> = (
             </>
           ) : (
             <Spinner
-              style={{ paddingTop: 10 }}
+              style={{
+                paddingTop: "50px",
+              }}
               size={SpinnerSize.large}
               label="please wait..."
             />
@@ -123,8 +127,8 @@ const CopyComponentModel: React.FunctionComponent<ICopyComponentModel> = (
 const theme = getTheme();
 const contentStyles = mergeStyleSets({
   container: {
-    minWidth: 300,
-    width: 300,
+    minWidth: 400,
+    width: 400,
     minHeight: 150,
     height: 150,
     // textAlign: "center",

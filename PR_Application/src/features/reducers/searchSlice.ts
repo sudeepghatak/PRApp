@@ -8,7 +8,10 @@ export interface ISearchResult{
     "Status":string,
     "date":string,
     "supplierName":string,
-    "ammount":string
+    "ammount":string,
+    "ToAmount":string,
+    "FromCurrency":string,
+    "ToCurrency":string
 }
 
 const initialState={
@@ -83,7 +86,11 @@ export const searchSlice=createSlice({
                         Status: action.payload[i].Status ,
                         date: formattedDate,
                         supplierName:action.payload[i].Supplier_Name,
-                        ammount: action.payload[i].ConvertedDollerAmount===null?0.00:action.payload[i].ConvertedDollerAmount
+                        ammount: 
+                        action.payload[i].Order_Amount===null?0.00:action.payload[i].Order_Amount,
+                        ToAmount:action.payload[i].ConvertedDollerAmount,
+                        FromCurrency:action.payload[i].FromCurrency,
+                        ToCurrency:action.payload[i].ToCurrency
                     }
                 state.listSearchResult.splice(0,0,searchResultItem)
                 }

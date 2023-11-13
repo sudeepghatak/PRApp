@@ -21,6 +21,8 @@ import {
   saveFileDoc,
 } from "../../../../features/reducers/primaryinfoSlice";
 import { log } from "sp-pnp-js";
+import { GlobalStore } from "../../../../app/globalStore";
+import { restApiCall } from "../../Api/ApiCall";
 interface ITableComponent {
   isViewMode: boolean;
 }
@@ -31,6 +33,12 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
   const fileData = useSelector(
     (state: RootState) => state.primaryinfo.fileData
   );
+
+  const DeleteDoc = () =>
+  {
+      
+
+  }
 
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
@@ -111,7 +119,6 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
     // Create a Blob from the binary data
 
     const blob = new Blob([uint8Array], { type: contentType });
-
     // Create a URL for the Blob
 
     const blobURL = URL.createObjectURL(blob);
@@ -246,6 +253,17 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
   ];
   // const items=
   for (let i = 0; i < fileData.length; i++) {
+    let DelDoc=()=>{
+      console.log("GlobalStore.getPrId()!==null::",GlobalStore.getPrId()!==null);
+     if (GlobalStore.getPrId()!==null) 
+      {
+         console.log("GlobalStore.getPrId()!==null::",GlobalStore.getPrId()!==null,fileData[i].fileName,GlobalStore.getPrId());
+        restApiCall.deleleDocItem(GlobalStore.getPrId(),fileData[i].fileName);
+      }
+      dispatch(deleteFileDoc(fileData[i].key))
+    };
+
+
     let newItem = {
       key: fileData[i].key,
       column1: (
@@ -285,7 +303,10 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
           disabled={isViewMode}
           title="Delete"
           ariaLabel="Delete"
-          onClick={() => dispatch(deleteFileDoc(fileData[i].key))}
+          onClick={() =>
+            DelDoc()
+            // dispatch(deleteFileDoc(fileData[i].key))
+          }
         />
       ),
     };

@@ -8,10 +8,12 @@ export class BasicInfoObj{
         this.totalAmount=0;
     }
 }
-
+ 
 export class basicInfoitem{
-    
+   
         description:string;
+        prepaid_to_date:string;
+        prepaid_from_date:string;
         costCenter:string;
         date:string;
         glAccount:string;
@@ -21,6 +23,8 @@ export class basicInfoitem{
         unitpriceper:string;
         totalAmount: number;
         constructor( description:string,
+            prepaid_to_date:string,
+            prepaid_from_date:string,
             costCenter:string,
             date:string,
             glAccount:string,
@@ -30,6 +34,8 @@ export class basicInfoitem{
             unitpriceper:string,
             totalAmount: number){
             this.description=description;
+            this.prepaid_to_date=prepaid_to_date;
+            this.prepaid_from_date=prepaid_from_date;
             this.costCenter=costCenter;
             this.date=date;
             this.glAccount=glAccount;
@@ -39,5 +45,5 @@ export class basicInfoitem{
             this.unitpriceper=unitpriceper;
             this.totalAmount= totalAmount;
         }
-      
+     
 }

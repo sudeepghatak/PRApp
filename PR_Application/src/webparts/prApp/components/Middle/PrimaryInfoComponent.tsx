@@ -172,76 +172,16 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       }
       setCompanyCodeOption(companyCodeList);
     })();
-
-    // let value = await restApiCall.getCompanycode();
-    // console.log("Company Code value", value);
-    // let companyCodeList = [];
-    // for (let i: number = 0; i < value.data.length; i++) {
-    //   let newcompany = {
-    //     Key: value.data[i].MappedCompanyCode,
-    //     text: value.data[i].MappedCompanyCode,
-    //   };
-    //   companyCodeList.push(newcompany);
-    // }
-    // setCompanyCodeOption(companyCodeList);
   }, []);
-  // useEffect(() => {
-  //   (
-  //     async()=>{
-  //       console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkk144", lineintemData.Finalpage);
-  //       console.log(`edit${GlobalStore.getconnectPRID()}`);
 
-  //   restApiCall.getDocTypeurl(GlobalStore.getPrId()).then((value) => {
-  //     if (value !== 0) {
-  //       for (let i: number = 0; i < value.length; i++) {
-  //         if (
-  //           !(
-  //             value[i].Content === primaryinfoData.fileData[i].content &&
-  //             value[i].Modified_Date ===
-  //               primaryinfoData.fileData[i].fileModifiedTime
-  //           )
-  //         ) {
-  //           let getfileData: fileInformation = {
-  //             key: value[i].ConnectPRID,
-  //             fileName: value[i].Filename,
-  //             fileType: "file",
-  //             modifiedBy: value[i].Modified_By,
-  //             fileModifiedTime: value[i].Modified_Date,
-  //             docType: value[i].Doc_Type,
-  //             content: value[i].Content,
-  //           };
-  //           console.log(
-  //             " get Doc type Data ---------------------- >> ",
-  //             getfileData
-  //           );
-
-  //           dispatch(saveFileDoc(getfileData));
-  //         }
-  //       }
-  //     }
-
-  // restApiCall.getCompanycode().then((value) => {
-  //   console.log("Company Code value", value);
-  //   let companyCodeList = [];
-  //   for (let i: number = 0; i < value.data.length; i++) {
-  //     let newcompany = {
-  //       Key: value.data[i].MappedCompanyCode.toLowerCase(),
-  //       text: value.data[i].MappedCompanyCode,
-  //     };
-  //     companyCodeList.push(newcompany);
-  //   }
-  //   setCompanyCodeOption(companyCodeList);
-  // });
-  // }
-  // )();
-
-  // });
-  // }, [lineintemData.Finalpage]);
   console.log(
     "--------------PrimaryInfoComponent ---210",
     lineintemData.Finalpage
   );
   const [isLoadingComp, setisLoadingComp] = useState(false);
+  // useEffect(() => {
+  //   dispatch(clearFileDoc());
+  // }, [lineintemData.Finalpage]);
   useEffect(() => {
     (async () => {
       if (
@@ -257,11 +197,11 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           LegacyCompany: "",
         });
         console.log(
-          "Enter For Loading ------------------ ",
+          "Enter For Loading ------------------ 260 260 ",
           lineintemData.Finalpage,
           isViewMode
         );
-        dispatch(clearFileDoc());
+
         setisLoadingComp(true);
         let prInfo = await restApiCall.getPrbasicInfoContent(
           GlobalStore.getPrId()
@@ -291,12 +231,12 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           {
             constCenterRadio: {
               key:
-                prInfo.ActCostCenter === prInfo.Cost_Center
+                prInfo.ActCostCenter == 0
                   ? "department"
                   : "alternatecostcenter",
 
               text:
-                prInfo.ActCostCenter === prInfo.Cost_Center
+                prInfo.ActCostCenter == 0
                   ? "Department"
                   : "Alternate Cost Center",
             },
@@ -336,6 +276,8 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             },
           },
         ];
+
+        console.log("Radio Group Here ---340 340", saveRadioGroupData);
         let saveOptionGroupData: IoptionSave[] = [
           {
             prOption: {
@@ -356,7 +298,10 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           },
           {
             SelectAltCostCenter: {
-              key: prInfo.ActCostCenter.toString(),
+              key:
+                prInfo.ActCostCenter.toString() === undefined
+                  ? ""
+                  : prInfo.ActCostCenter.toString(),
 
               text: "",
             },
@@ -405,18 +350,10 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         );
 
         let fileValue = await restApiCall.getDocTypeurl(GlobalStore.getPrId());
-
         let getfileData;
         if (fileValue.length !== 0) {
-          for (let i: number = 0; i < fileValue.length; i++) {
-            console.log(
-              "Data Data ----------------------------",
-              primaryinfoData,
-              i,
-              fileValue[i],
-              primaryinfoData.fileData[i]
-            );
-            if (primaryinfoData.fileData.length === 0) {
+          if (primaryinfoData.fileData.length === 0) {
+            for (let i: number = 0; i < fileValue.length; i++) {
               getfileData = {
                 key: fileValue[i].PKID,
                 fileName: fileValue[i].Filename,
@@ -426,34 +363,72 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 docType: fileValue[i].Doc_Type,
                 content: fileValue[i].Content,
               };
-              dispatch(saveFileDoc(getfileData));
-            } else if (
-              primaryinfoData.fileData[i] !== undefined &&
-              !(
-                fileValue[i].Content === primaryinfoData.fileData[i].content &&
-                fileValue[i].Modified_Date ===
-                  primaryinfoData.fileData[i].fileModifiedTime
-              ) &&
-              primaryinfoData.fileData.length !== 0
-            ) {
-              getfileData = {
-                key: fileValue[i].PKID,
-                fileName: fileValue[i].Filename,
-                fileType: "file",
-                modifiedBy: fileValue[i].Modified_By,
-                fileModifiedTime: fileValue[i].Modified_Date,
-                docType: fileValue[i].Doc_Type,
-                content: fileValue[i].Content,
-              };
-              dispatch(saveFileDoc(getfileData));
-              console.log(
-                " get Doc type Data ---------------------- >> ",
-                getfileData
+              if (getfileData.content !== undefined) {
+                dispatch(saveFileDoc(getfileData));
+              }
+            }
+          } else {
+            let saveFileData = [];
+            let removeFileData = [];
+            if (primaryinfoData.fileData.length >= fileValue.length) {
+              saveFileData = primaryinfoData.fileData.filter((itemData) =>
+                fileValue.some((obj) => obj.PKID === itemData.key)
               );
+
+              removeFileData = primaryinfoData.fileData.filter(
+                (itemData) =>
+                  !fileValue.some((obj) => obj.PKID === itemData.key)
+              );
+              console.log(
+                "This is All SaveFile Doc Here 382",
+                saveFileData,
+                removeFileData
+              );
+              if (saveFileData.length !== 0) {
+                for (let k = 0; k < saveFileData.length; k++) {
+                  getfileData = {
+                    key: saveFileData[k].PKID,
+                    fileName: saveFileData[k].Filename,
+                    fileType: "file",
+                    modifiedBy: saveFileData[k].Modified_By,
+                    fileModifiedTime: saveFileData[k].Modified_Date,
+                    docType: saveFileData[k].Doc_Type,
+                    content: saveFileData[k].Content,
+                  };
+                  if (getfileData.content !== undefined) {
+                    console.log(
+                      "This is SaVE fiLE doC hERE 394 394 ",
+                      getfileData
+                    );
+                    dispatch(saveFileDoc(getfileData));
+                  }
+                }
+              }
+              if (removeFileData.length !== 0) {
+                for (let k = 0; k < removeFileData.length; k++) {
+                  getfileData = {
+                    key: removeFileData[k].PKID,
+                    fileName: removeFileData[k].Filename,
+                    fileType: "file",
+                    modifiedBy: removeFileData[k].Modified_By,
+                    fileModifiedTime: removeFileData[k].Modified_Date,
+                    docType: removeFileData[k].Doc_Type,
+                    content: removeFileData[k].Content,
+                  };
+                  dispatch(clearFileDoc(getfileData));
+                }
+              }
             }
           }
         }
-
+        let Shipping_Postal_CodeList =
+          prInfo.Shipping_Postal_Code == null
+            ? []
+            : prInfo.Shipping_Postal_Code.split("#");
+        let Shipping_StreetList =
+          prInfo.Shipping_Street == null
+            ? []
+            : prInfo.Shipping_Street.split("#");
         dispatch(
           saveVendorandShippingData({
             vendorDetails: new VendorDetails(
@@ -468,22 +443,48 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               prInfo.Supplier_Country,
               prInfo.CompanyCode
             ),
+
             vendorOtherDetails: {
               justificatiOnOrder: prInfo.Comments,
               downPaymentDetails: prInfo.Special_Instructions,
+              Name: prInfo.Shipping_Name,
+              HouseNumber:
+                Shipping_StreetList[0] == undefined
+                  ? ""
+                  : Shipping_StreetList[0],
+              StreetName:
+                Shipping_StreetList[1] == undefined
+                  ? ""
+                  : Shipping_StreetList[1],
+              PostalCode:
+                Shipping_Postal_CodeList[0] == undefined
+                  ? ""
+                  : Shipping_Postal_CodeList[0],
+              City:
+                Shipping_Postal_CodeList[1] == undefined
+                  ? ""
+                  : Shipping_Postal_CodeList[1],
+              ContactName: prInfo.Shipping_ContactPhone,
             },
             ship_to_address: {
               key: prInfo.Location == null ? "" : prInfo.Location,
               text: prInfo.Location == null ? "" : prInfo.Location,
             },
-            shipping_region:{
-              key:prInfo.Shipping_Region==null?"":prInfo.Shipping_Region,
-              text:prInfo.Shipping_Region==null?"":prInfo.Shipping_Region
+            shipping_region: {
+              key: prInfo.Shipping_Region == null ? "" : prInfo.Shipping_Region,
+              text:
+                prInfo.Shipping_Region == null ? "" : prInfo.Shipping_Region,
             },
-            Shipping_Location:{
-              key:prInfo.Shipping_Location==null?"":prInfo.Shipping_Location,
-              text:prInfo.Shipping_Location==null?"":prInfo.Shipping_Location
-            }
+            Shipping_Location: {
+              key:
+                prInfo.Shipping_Location == null
+                  ? ""
+                  : prInfo.Shipping_Location,
+              text:
+                prInfo.Shipping_Location == null
+                  ? ""
+                  : prInfo.Shipping_Location,
+            },
           })
         );
 
@@ -707,6 +708,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       costCenter = newItem[0].costCenter;
       setpeople(newItem[0]);
       setCompanyCodeOption([itemTest]);
+      console.log("----------------->>>>>>>750 750 750", newItem[0]);
       // setSelectedItems((prevSelectedItems) => ({
       //   ...prevSelectedItems,
       //   ...itemTest,
@@ -886,9 +888,13 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     console.log("------newcostCenter Value ", newcostCenterValue);
     setSelectedItems((prevSelectedItems) => ({
       ...prevSelectedItems,
-      ...newcostCenterValue[0],
+      SelectAltCostCenter:
+        newcostCenterValue[0] == undefined
+          ? { key: "", text: "" }
+          : newcostCenterValue[0],
     }));
   }, [costCenterOption]);
+
   console.log(
     "This is The Main Cost Center Here 866",
     selectedItems,
@@ -1003,7 +1009,13 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           // newpurchaseItem.typeofPurchaseName = item.label;
           // newpurchaseItem.typeOfPurchaseInfoList.clear();
           for (let kl = 0; kl < onelineinfoList.length; kl++) {
+            console.log(
+              "979 979 979 979 979 979 979 979 ",
+              onelineinfoList[kl],
+              onelineinfoList[kl].PKID
+            );
             let onepuchase: TypeLineItem = {
+              PKID: onelineinfoList[kl].PKID,
               CFID:
                 onelineinfoList[kl].Plant === null
                   ? ""
@@ -1022,12 +1034,16 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                   : onelineinfoList[kl].Cost_Center,
               date:
                 onelineinfoList[kl].DateRequired === null
-                  ? ""
+                  ? new Date().toString()
                   : onelineinfoList[kl].DateRequired,
               glAccount:
                 onelineinfoList[kl].GL_Account === null
                   ? ""
-                  : onelineinfoList[kl].GL_Account,
+                  : onelineinfoList[kl].GL_Account.toString(),
+              expensegl:
+                onelineinfoList[kl].ExpenseGL === null
+                  ? ""
+                  : onelineinfoList[kl].ExpenseGL,
               qty:
                 onelineinfoList[kl].Qty === null ? "" : onelineinfoList[kl].Qty,
               uOM:
@@ -1045,12 +1061,14 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                   ? 0
                   : onelineinfoList[kl].Amount,
               prepaid_to_date:
-                onelineinfoList[kl].PrepaidFromDate === null
-                  ? ""
+                onelineinfoList[kl].PrepaidFromDate === null ||
+                onelineinfoList[kl].PrepaidFromDate == ""
+                  ? new Date().toString()
                   : onelineinfoList[kl].PrepaidFromDate,
               prepaid_from_date:
-                onelineinfoList[kl].PrepaidToDate === null
-                  ? ""
+                onelineinfoList[kl].PrepaidToDate === null ||
+                onelineinfoList[kl].PrepaidToDate == ""
+                  ? new Date().toString()
                   : onelineinfoList[kl].PrepaidToDate,
             };
             newpurchaseItem.typeOfPurchaseInfoList.push(onepuchase);
@@ -1061,9 +1079,13 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         if (newpurchaseItem !== undefined) {
           ListofTypePurchases.push(newpurchaseItem);
         }
+        console.log(
+          "1107 this the the PrimaryInfoComponent here so ",
+          ListofTypePurchases
+        );
       });
     }
-
+ 
     let setlineItemData = {
       // projectCode:selectedItems["projectCode"]?.text,
       saveTable: lineintemData.saveTable === 0 ? 0 : 1,
@@ -1078,7 +1100,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       ",setlineItemData.prProjectRadio--,setlineItemData.prProjectRadio",
       setlineItemData.prProjectRadio
     );
-
+ 
     dispatch(setlineitemValue(setlineItemData));
     // return ListofTypePurchases;
   };
@@ -1196,61 +1218,12 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       ),
     ];
 
-    // checkboxList.map((item:CheckboxItem,index:number)=>{
-    //   if(lineintemData.TypeofPurchaseDetailList.length !== 0){
 
-    //     for(let k=0;k<lineintemData.TypeofPurchaseDetailList.length;k++){
-
-    //       if(lineintemData.TypeofPurchaseDetailList[k].typeofPurchaseName===item.label){
-    //               lineintemData.TypeofPurchaseDetailList[k]
-
-    //       }
-
-    //     }
-
-    //   }
-
-    // })
-
-    // checkboxList.map((item: CheckboxItem, index: number) => {
-    //   let newpurchaseItem: TypeofPurchaseDetail;
-
-    //   if (lineintemData.TypeofPurchaseDetailList.length !== 0) {
-    //     if (
-    //       lineintemData.TypeofPurchaseDetailList[index].typeofPurchaseName ===
-    //       item.label
-    //     ) {
-    //       newpurchaseItem = lineintemData.TypeofPurchaseDetailList[index];
-    //       newpurchaseItem.typeofPurchaseOption =
-    //         selectRadioItems["prepaidcapitalRadio"]?.key;
-    //       newpurchaseItem.typeofPurchaseName = item.label;
-    //       newpurchaseItem.prType = selectedItems["prOption"]?.key as string;
-    //       newpurchaseItem.CFID = textbox.CIPNum;
-    //     } else {
-    //       newpurchaseItem = new TypeofPurchaseDetail(
-    //         item.label,
-    //         selectedItems["prOption"]?.key as string,
-    //         selectRadioItems["prepaidcapitalRadio"]?.key,
-    //         textbox.CIPNum
-    //       );
-    //     }
-    //   } else {
-    //     newpurchaseItem = new TypeofPurchaseDetail(
-    //       item.label,
-    //       selectedItems["prOption"]?.key as string,
-    //       selectRadioItems["prepaidcapitalRadio"]?.key,
-    //       textbox.CIPNum
-    //     );
-    //   }
-    //   newpurchaseItem.costCenter = costCenter;
-    //   newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
-    //   ListofTypePurchases.push(newpurchaseItem);
-    // });
 
     console.log("lineItemsaveTable");
     console.log(lineintemData);
 
-    // dispatch(setValue(saveData));
+    dispatch(setValue(saveData));
 
     console.log("1.SAVE PR ALL Values...........");
     // ---------end storing ---------------------
@@ -1262,7 +1235,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     let warningCheckData = {};
     if (selectRadioItems["constCenterRadio"].text == "Alternate Cost Center") {
       let warningmsg = {
-        "Select Other Cost Center": selectedItems["SelectAltCostCenter"]?.text,
+        "Select Other Cost Center": selectedItems["SelectAltCostCenter"]?.key,
       };
       warningCheckData = { ...warningCheckData, ...warningmsg };
     }
@@ -1430,6 +1403,11 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           saveprimayData[0].Modified = new Date();
           saveprimayData[0].ModifiedBy = GlobalStore.getmainEmail();
           saveprimayData[0].PRId = GlobalStore.getPrId();
+          saveprimayData[0].ActCostCenter =
+            selectCostCenterOption[0].key === "department"
+              ? 0
+              : +selectedItems.SelectAltCostCenter.key;
+          // saveprimayData[0].ActCostCenter=selectCostCenterOption.key==="department"?:
           // let fileValue = await restApiCall.getDocTypeurl(
           //   GlobalStore.getconnectPRID()
           // );
@@ -1838,7 +1816,12 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                       disabled={isViewMode}
                       onChange={changeDropdownOption}
                       style={{ width: "200px" }}
-                      selectedKey={selectedItems.SelectAltCostCenter.key}
+                      selectedKey={
+                        selectedItems.SelectAltCostCenter == undefined &&
+                        selectedItems.SelectAltCostCenter.key == undefined
+                          ? ""
+                          : selectedItems.SelectAltCostCenter.key
+                      }
                       options={costCenterOption}
                       styles={dropdownStyles}
                     />

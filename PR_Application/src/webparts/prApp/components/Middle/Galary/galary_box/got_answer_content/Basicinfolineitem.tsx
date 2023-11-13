@@ -5,9 +5,12 @@ import { CheckboxVisibility, DetailsList, IColumn } from "@fluentui/react";
 
 interface IBasicinfolineitem {
   newlineinfoItem: BasicInfoObj;
+  isPrepaidorExpense: string;
 }
 interface TableRow {
   description: string;
+  prepaid_to_date: string;
+  prepaid_from_date: string;
   costCenter: string;
   date: string;
   glAccount: string;
@@ -21,11 +24,13 @@ interface TableRow {
 const Basicinfolineitem: React.FunctionComponent<IBasicinfolineitem> = (
   props
 ) => {
-  const { newlineinfoItem } = props;
+  const { newlineinfoItem, isPrepaidorExpense } = props;
   console.log("I am at Basicinfolineitem here ---", newlineinfoItem);
   const [tableItem, settableItem] = useState<TableRow[]>([
     {
       description: "",
+      prepaid_to_date: "",
+      prepaid_from_date: "",
       costCenter: "",
       date: "",
       glAccount: "",
@@ -50,6 +55,9 @@ const Basicinfolineitem: React.FunctionComponent<IBasicinfolineitem> = (
         );
         let newitemLineinfo = {
           description: newlineinfoItem.basicInfoObjList[i].description,
+          prepaid_to_date: newlineinfoItem.basicInfoObjList[i].prepaid_to_date,
+          prepaid_from_date:
+            newlineinfoItem.basicInfoObjList[i].prepaid_from_date,
           costCenter: newlineinfoItem.basicInfoObjList[i].costCenter,
           date: newlineinfoItem.basicInfoObjList[i].date,
           glAccount: newlineinfoItem.basicInfoObjList[i].glAccount,
@@ -79,6 +87,34 @@ const Basicinfolineitem: React.FunctionComponent<IBasicinfolineitem> = (
           tableItem[rowIndex]
         );
         return <span>{tableItem[rowIndex].description}</span>;
+      },
+    },
+    {
+      key: "prepaid_to_date",
+      name: "Prepaid To Date",
+      fieldName: "prepaid_to_date",
+      onRender: (item: TableRow, rowIndex: number) => {
+        return (
+          <span>
+            {tableItem[rowIndex].prepaid_to_date === null
+              ? ""
+              : tableItem[rowIndex].prepaid_to_date}
+          </span>
+        );
+      },
+    },
+    {
+      key: "prepaid_from_date",
+      name: "Prepaid From Date",
+      fieldName: "prepaid_from_date",
+      onRender: (item: TableRow, rowIndex: number) => {
+        return (
+          <span>
+            {tableItem[rowIndex].prepaid_from_date === null
+              ? ""
+              : tableItem[rowIndex].prepaid_from_date}
+          </span>
+        );
       },
     },
     {
@@ -150,6 +186,23 @@ const Basicinfolineitem: React.FunctionComponent<IBasicinfolineitem> = (
       },
     },
   ];
+  let newColumns = [];
+  console.log("isPrepaidorExpense and also 190", isPrepaidorExpense);
+  if (isPrepaidorExpense == "Expense") {
+    newColumns = columns.filter(
+      (columnItem) =>
+        columnItem.name != "Prepaid To Date" &&
+        columnItem.name != "Prepaid From Date"
+    );
+    console.log(
+      "isPrepaidorExpense and also 197",
+      isPrepaidorExpense,
+      newColumns
+    );
+  } else {
+    newColumns = columns;
+  }
+
   return (
     <>
       <div>
@@ -160,19 +213,31 @@ const Basicinfolineitem: React.FunctionComponent<IBasicinfolineitem> = (
               : newlineinfoItem.lineObjname}
           </span>
         </div>
-        <div>
+        <div style={{ width: "100%" }}>
           <DetailsList
             items={tableItem}
-            columns={columns as IColumn[]}
+            columns={newColumns as IColumn[]}
             checkboxVisibility={CheckboxVisibility.hidden}
           />
         </div>
-        <div style={{ float: "right" }}>
+        <div
+          style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}
+        >
+          <div>
+            <span>
+              <b>Total Amount: </b>
+            </span>
+          </div>
+          <div>
+            <span>{newlineinfoItem.totalAmount}</span>
+          </div>
+        </div>
+        {/* <div style={{ float: "right" }}>
           <h3 style={{ float: "left", margin: 0 }}>Total Amount:</h3>
           <span style={{ float: "left", paddingTop: "3px" }}>
             {newlineinfoItem.totalAmount}
           </span>
-        </div>
+        </div> */}
       </div>
     </>
   );

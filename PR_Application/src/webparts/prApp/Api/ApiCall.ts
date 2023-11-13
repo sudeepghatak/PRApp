@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl, getprrequestiteminforesultUrl, getUserDeptUrl, getRegionUrl, getCountryUrl, getUOMUrl, getCurrencyChangeUrl, getExpenseGLUrl } from './Config/server_config'
+import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl, getprrequestiteminforesultUrl, getUserDeptUrl, getRegionUrl, getCountryUrl, getUOMUrl, getCurrencyChangeUrl, getExpenseGLUrl, getManagerDetails, getJobLevel, getVacationLeave, InsertApprovalLog, FinanceApprovallog, DelLineItem, delDocItem, getpaginationURL, prApprovaldelete, getApprovalLimit } from './Config/server_config'
 import { EmployeeDetails } from '../Model/employee_details'
 
 export class restApiCall {
@@ -129,7 +129,7 @@ export class restApiCall {
         let res=await this.rest_apiCall(`${getExpenseGLUrl}${pPGL}`,{})
         return res.data;
     }
-
+    
     static async getallEmployeList(empname:string){
         let employeeDetailsList=[];
         if(empname!==""){
@@ -170,17 +170,21 @@ export class restApiCall {
 
     static async insertLineItem(body){
         
-        let res=await this.rest_apiCall(`${postLineItemUrl}`,body);
+        let res=await this.rest_apiCall(`${postLineItemUrl}?cT=i`,body);
         console.log("Modify Success  insertLineItem Here ...........")
         console.log(res.data)
         console.log(res)
         console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+    }
+    static async updateLineItem(body){
+        let res=await this.rest_apiCall(`${postLineItemUrl}?cT=u`,body);
     }
     static async insertPlantLoc(body){
         let res= await this.rest_apiCall(`${insertPlantLocUrl}`,body);
         console.log("PlantLoc---PlantLoc---PlantLoc :::",res,res.data);
         
     }
+
     // static async
 
     static async storeDelegateTask(body){
@@ -216,9 +220,59 @@ export class restApiCall {
        console.log("Delete -- ",res)
         return res.data;
     }
+//approval log---------------------------------------
+static async GetManagerDetails(emp:string){
+        let res=await this.rest_apiCall(`${getManagerDetails}${emp}`,{})
+        return res.data;
+    }
 
+static async GetJobLevelDetails(){
+        let res=await this.rest_apiCall(`${getJobLevel}`,{})
+        return res.data;
+    }
 
-
+static async GetVacationLeave(){
+        let res=await this.rest_apiCall(`${getVacationLeave}`,{})
+        return res.data;
+    }
+static async GetempEmail(emp:string){
+        let res=await this.rest_apiCall(`${getVacationLeave}${emp}`,{})
+        return res.data;
+    }
+static async InsertApprovalLog(body){
+        let res= await this.rest_apiCall(`${InsertApprovalLog}`,body);
+        console.log("-----",res,res.data);
+        
+    }
+    static async FinanceApprovallog(){
+        let res=await this.rest_apiCall(`${FinanceApprovallog}`,{});
+        return res.data;
+    }
+    static async DeleleLineItem(body){
+        let res = await this.rest_apiCall(`${DelLineItem}`,body)
+        return res.data;
+    }
+    static async deleleDocItem(CnnectPrid,flName){
+        let res = await this.rest_apiCall(`${delDocItem}${CnnectPrid}&flName=${flName}`,{})
+        return res.data;
+    }
+    //vendor Details
+    static async getPaginationData(companyCode:string,offset:number){
+       
+        let res=await this.rest_apiCall(`${getpaginationURL}${companyCode}&offValue=${offset}`,{});
+        return res.data;
+    }
+    //Approval log delete---
+    static async prApprovaldelete(pid:string){
+        await this.rest_apiCall(`${prApprovaldelete}${pid}&cT=d`,{})
+ 
+    }
+    //Approval Limit List-----
+    static async getApprovalLimitList(){
+         let res=await this.rest_apiCall(`${getApprovalLimit}`,{});
+         console.log("approvalLimit List  -- ",res)
+         return res.data;
+    }
 
 }
 

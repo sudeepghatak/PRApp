@@ -106,7 +106,7 @@ export const DelegateModel: React.FunctionComponent<IModalProps> = (props) => {
             />
           </span>
         </Stack>
-        <div style={{ paddingLeft: 15, paddingRight: 15, color: "red" }}>
+        <div style={{ paddingLeft: 15, paddingRight: 15, color: "black" }}>
           <div>
             <div className="delegate-date-id">
               <span>From: </span>

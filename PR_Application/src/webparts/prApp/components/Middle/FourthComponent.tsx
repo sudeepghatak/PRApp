@@ -3,6 +3,10 @@ import { IStackStyles, Stack} from '@fluentui/react/lib/Stack';
 import { DefaultButton, Icon, Link } from '@fluentui/react';
 import { mergeStyles,DefaultPalette} from '@fluentui/react/lib/Styling';
 import './StyleFourthComponent.css'
+import { FuncApprovalLog } from '../../Utils/FuncApprovalLog';
+import { GlobalStore } from '../../../../app/globalStore';
+import { RootState } from '../../../../app/store';
+import { useSelector } from 'react-redux/es/exports';
 
 
 interface IFourthprops {
@@ -11,6 +15,10 @@ interface IFourthprops {
 
 
 const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
+
+  const basicInfo = useSelector(
+    (state: RootState) => state.statusreducer.basicInfo
+  );
 
   const {buttonContxtBack} = props;
     const stackItemStyles = mergeStyles({
@@ -63,6 +71,10 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
     },
   };
 
+  const SaveandNext=async ()=>{
+FuncApprovalLog.SaveandContinue(GlobalStore.getTotal(),GlobalStore.getEmail())
+  }
+
 return (
      <div>
         <Stack>
@@ -84,6 +96,25 @@ return (
                       <Icon iconName="Back" />
                     </span>
                     <span>Back</span>
+                  </Stack>
+                </DefaultButton>
+              </span>
+              <span>
+                <DefaultButton
+                  style={{
+                    background: DefaultPalette.green,
+                    color: DefaultPalette.white,
+                    borderRadius: 5,
+                    height: "40px",
+                  }}
+                  onClick={() => SaveandNext()}
+                  // FuncApprovalLog.delegateApproval(12000,"sunandap@omnicell.com");
+                >
+                  <Stack horizontal>
+                    <span style={{ marginRight: 10, marginTop: 2 }}>
+                      <Icon iconName="Save" />
+                    </span>
+                    <span>Submit</span>
                   </Stack>
                 </DefaultButton>
               </span>
@@ -197,7 +228,7 @@ return (
                     </Stack.Item>
                     <Stack.Item >
                       <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des' >Engineering (ACP.DAP) </div>
+                        <div className='text-des' >{basicInfo.Project_Code} </div>
                       </Stack>
                     </Stack.Item>
                   </Stack>
@@ -578,3 +609,7 @@ return (
 }
 
 export default FourthComponent
+
+// function onClick(event: MouseEvent<HTMLDivElement | HTMLSpanElement | HTMLAnchorElement | HTMLButtonElement | BaseButton | Button, MouseEvent>): void {
+//   throw new Error('Function not implemented.');
+// }

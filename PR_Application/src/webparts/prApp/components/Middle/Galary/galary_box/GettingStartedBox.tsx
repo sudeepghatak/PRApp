@@ -3,6 +3,8 @@ import * as React from "react";
 import ComponentHeader from "./ComponentHeader";
 import { GeneralInformationModel } from "../ModelContent/GeneralInformationModel";
 import { ContactInfoModel } from "../ModelContent/ContactInfoModel";
+import { useState } from "react";
+import { ApprovalLimitModel } from "../ModelContent/ApprovalLimitModel";
 
 interface IGettingStartedProps {
   title: string;
@@ -23,6 +25,12 @@ const GettingStartedBox: React.FunctionComponent<IGettingStartedProps> = (
 
   const showAlertDialogCI = () => {
     setshowDialogci(!showDialogci);
+  };
+
+  const [isviewapprovalLimit, setisviewapprovalLimit] =
+    useState<boolean>(false);
+  const viewPrApproval = () => {
+    setisviewapprovalLimit(!isviewapprovalLimit);
   };
 
   return (
@@ -72,9 +80,20 @@ const GettingStartedBox: React.FunctionComponent<IGettingStartedProps> = (
               </a>
             </li>
             <li>
-              <a href="#" className="getStartanchor">
+              <a
+                href="#"
+                onClick={() => viewPrApproval()}
+                className="getStartanchor"
+              >
                 View PR Approval Levels
               </a>
+              {isviewapprovalLimit ? (
+                <ApprovalLimitModel
+                  isModalOpen={isviewapprovalLimit}
+                  showModal={viewPrApproval}
+                  backgroundcolor="black"
+                />
+              ) : null}
             </li>
             <li>
               <a

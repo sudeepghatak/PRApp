@@ -3,6 +3,9 @@ import { IPRPrepaidGLLoc } from "../webparts/prApp/Model/IPrGLAccountLoc";
 import { IPRTitleData } from "../webparts/prApp/Model/IprTitleData";
 
 export class GlobalStore{
+    static dispatch(arg0: { payload: string; type: "reducers/deleteFileDoc"; }) {
+      throw new Error("Method not implemented.");
+    }
     private static  Email:string ;
     private static Name:string;
     private static mainEmail:string;
@@ -14,6 +17,8 @@ export class GlobalStore{
     private static connectPRID:string;
     private static viewmodeOn=false;
     private static enterMainpage=false;
+    private static Totalamount:number;
+
     private static titledata:IPRTitleData={
         name: "",
         countryKey: "",
@@ -23,6 +28,14 @@ export class GlobalStore{
         IsPrepaidCapital: "",
         LegacyCompany:"",
     };
+    static setTotal(amount:number){
+        this.Totalamount=amount;
+
+    }
+
+    static getTotal(){
+        return this.Totalamount;
+    }
     
 
     static changeEnterMainpage(changeMainpage:boolean){

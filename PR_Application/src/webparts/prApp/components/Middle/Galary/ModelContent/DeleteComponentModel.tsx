@@ -67,7 +67,7 @@ const DeleteComponentModel: React.FunctionComponent<ICopyComponentModel> = (
               <div style={{ paddingLeft: 5 }}>
                 <div className="copy-head">
                   <div style={{ paddingTop: 10 }}>
-                    <span>
+                    <span style={{ fontSize: "x-large" }}>
                       <b>Confirm!</b>
                     </span>
                   </div>
@@ -91,7 +91,8 @@ const DeleteComponentModel: React.FunctionComponent<ICopyComponentModel> = (
                       style={{
                         background: "#C0293B",
                         color: DefaultPalette.white,
-                        height: "20px",
+                        height: "35px",
+                        borderRadius: "5px",
                       }}
                       onClick={() => ConfirmCopy()}
                     >
@@ -101,7 +102,8 @@ const DeleteComponentModel: React.FunctionComponent<ICopyComponentModel> = (
                   <div style={{ padding: "2px" }}>
                     <DefaultButton
                       style={{
-                        height: "20px",
+                        height: "35px",
+                        borderRadius: "5px",
                         background: "#DDDDDD",
                         color: DefaultPalette.black,
                       }}
@@ -114,11 +116,15 @@ const DeleteComponentModel: React.FunctionComponent<ICopyComponentModel> = (
               </div>
             </>
           ) : (
-            <Spinner
-              style={{ paddingTop: 10 }}
-              size={SpinnerSize.large}
-              label="please wait..."
-            />
+            <div>
+              <Spinner
+                style={{
+                  paddingTop: "50px",
+                }}
+                size={SpinnerSize.large}
+                label="please wait..."
+              />
+            </div>
           )}
         </Modal>
       </div>

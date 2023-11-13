@@ -28,6 +28,8 @@ interface ISupplier{
 
 interface ILineItemInfo{
     "description":string;
+    "prepaid_to_date":string;
+    "prepaid_from_date":string;
     "cost_center":string;
     "date_required":string;
     "gl_account":string;
@@ -178,6 +180,7 @@ export const statusSlice=createSlice({
             console.log("Response TOP-----------action.payload173s ::",action.payload);
             state.statusTitle=(action.payload.Title==null)?" ":action.payload.Title;
             state.basicInfo.PR_Type=(action.payload.Company===null)?"":action.payload.Company;
+            state.basicInfo.Total_Order_Amount=(action.payload.Order_Amount===null)?0.0:action.payload.Order_Amount;
             state.basicInfo.UFID=(action.payload.UFID==null)?" ":action.payload.UFID;
             state.basicInfo.Cost_Center=(action.payload.Cost_Center==null)?" ":action.payload.Cost_Center.toString();
             state.basicInfo.Status=(action.payload.Status==null)?" ":action.payload.Status;
@@ -193,10 +196,12 @@ export const statusSlice=createSlice({
             state.basicInfo.lineInfoList=[]
             if(action.payload.lineinfo.length!==0){
             for(let i=0;i<action.payload.lineinfo.length;i++){
-                console.log("I DO THIS HERE ------------->>> ",action.payload.lineinfo[i].TypeOfOrder)
+                console.log("I DO THIS HERE ------------->>> ",action.payload.lineinfo[i],action.payload.lineinfo[i].TypeOfOrder)
                
                 let lineinfoData:basicInfoitem={
                     description:action.payload.lineinfo[i].ItemDescription,
+                    prepaid_to_date:action.payload.lineinfo[i].PrepaidToDate,
+                    prepaid_from_date:action.payload.lineinfo[i].PrepaidFromDate,
                     costCenter: action.payload.lineinfo[i].Cost_Center,
                     date:action.payload.lineinfo[i].DateRequired,
                     glAccount: action.payload.lineinfo[i].GL_Account,

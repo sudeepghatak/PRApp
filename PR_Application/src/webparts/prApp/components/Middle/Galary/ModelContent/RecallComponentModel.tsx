@@ -29,7 +29,7 @@ export const RecallComponentModel: React.FunctionComponent<IModalProps> = (
   const background_color = backgroundcolor as string;
   const modal_title = title as string;
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const RecallSubmit = () => {
+  const RecallSubmit = async () => {
     let saveprimayData = [
       {
         PKID: ConnectprId,
@@ -126,11 +126,13 @@ export const RecallComponentModel: React.FunctionComponent<IModalProps> = (
         OldTaskCreatedFor: null,
       },
     ];
-    restApiCall.insertVendorDetails(saveprimayData).then((_) => {
-      dispatch(fetchSearchContent("MyOrder"));
-      dispatch(updateFinalPage(""));
-      showModal();
-    });
+    await restApiCall.insertVendorDetails(saveprimayData);
+    await restApiCall.prApprovaldelete(ConnectprId);
+    // .then((_) => {
+    dispatch(fetchSearchContent("MyOrder"));
+    dispatch(updateFinalPage(""));
+    showModal();
+    // });
   };
   return (
     <div style={{ maxWidth: 500 }}>

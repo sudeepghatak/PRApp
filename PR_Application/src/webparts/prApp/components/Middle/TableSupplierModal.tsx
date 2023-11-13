@@ -15,11 +15,12 @@ import { VendorDetails } from "../../Model/vendor_details";
 import { RootState } from "../../../../app/store";
 import { useSelector } from "react-redux";
 import { Spinner } from "office-ui-fabric-react";
+import { restApiCall } from "../../Api/ApiCall";
 
 interface IModalProps {
   isModalOpen: boolean;
   showModal: () => void;
-  venderItemDatapick: (vendor: VendorDetails) => void;
+  venderItemDatapick?: (vendor: VendorDetails) => void;
   // content?: string;
 }
 let Allitems: VendorDetails[] = [];
@@ -28,8 +29,7 @@ let vendorName: VendorDetails[] = [];
 let vendorNumber: VendorDetails[] = [];
 let vendorNamestring: string = "";
 let vendorNumberstring: string = "";
-let completeSupplierDatafetch:boolean=false;
-
+let completeSupplierDatafetch: boolean = false;
 
 export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
   const { isModalOpen, showModal, venderItemDatapick } = props;
@@ -48,13 +48,20 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
 
   const sendVendorDetails = (vendorDetails: VendorDetails) => {
     console.log(vendorDetails);
-    venderItemDatapick(vendorDetails);
+    if (venderItemDatapick != undefined) {
+      venderItemDatapick(vendorDetails);
+    }
+
     showModal();
   };
 
   const optionGroupData = useSelector(
     (state: RootState) => state.primaryinfo.optionGroup
   );
+
+  // const vendorNameselector = useSelector(
+  //   (state: RootState) => state.vendornamereducer
+  // );
 
   let columns = [
     {
@@ -316,6 +323,11 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
 
     setitems(result);
   };
+  //  const fetchVendorData=(vendorList)=>{
+  //     console.log("This is The Data",vendorList)
+  //     // dispatch
+
+  //   }
 
   const onFilterNumber = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -325,7 +337,6 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
     vendorNumberstring = filteredValue;
     let result = [];
     if (vendorName.length === 0) {
-
       result = Allitems.filter((item) => {
         const vendorNumber = item.vendorNumber; // Access the vendorName property
         return (
@@ -334,7 +345,6 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
         );
       });
     } else {
-
       result = vendorName.filter((item) => {
         const vendorNumber = item.vendorNumber; // Access the vendorName property
         return (
@@ -360,28 +370,44 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
   };
 
   React.useEffect(() => {
-    console.log("Length",items.length);
+    console.log("Length", items.length);
     setselectNumber(items.length);
   }, [items]);
+  // React.useEffect(() => {
+  //   Allitems = vendorNameselector.vendorNameList;
+
+  //   setitems(Allitems);
+  // }, [vendorNameselector.vendorNameList.length]);
+
+  const callVendorApi = async (companyCode: string, offset: number) => {
+    let vendorData = await restApiCall.getPaginationData(companyCode, offset);
+    if (vendorData.length === 0) {
+      return;
+    }
+    let vendorDetailsList = [];
+    for (let i: number = 0; i < vendorData.length; i++) {
+      let vendorDetails = new VendorDetails(
+        vendorData[i].VendorID,
+        vendorData[i].VdrNumber,
+        vendorData[i].VdrName,
+        vendorData[i].VdrStreet,
+        vendorData[i].VdrCity,
+        vendorData[i].VdrRegion,
+        vendorData[i].VdrPostalCode,
+        vendorData[i].VdrCountry,
+        companyCode
+      );
+      vendorDetailsList.push(vendorDetails);
+    }
+    Allitems = [...Allitems, ...vendorDetailsList];
+    console.log("This is The length Here ----");
+    setitems(Allitems);
+
+    callVendorApi(companyCode, offset + 200);
+  };
 
   React.useEffect(() => {
-
-    console.log(
-
-      "--------------------- vvvvvvvvvvvvvv ------------------------"
-
-    );
-
-    console.log(optionGroupData.companyCode.text);
-
-     VendorData.fetchVendordetails(optionGroupData.companyCode.text).then((newAllitems) => {
-
-      Allitems = newAllitems;
-
-      setitems(Allitems);
-
-    });
-
+    callVendorApi(optionGroupData.companyCode.text, 0);
   }, []);
 
   return (
@@ -471,25 +497,24 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
                 </div>
               </div>
             </div>
-         {
+            {
               // !completeDatafetch ? (
               //   <div>
               //     <Spinner label="Please wait .." />
               //   </div>
               // ) :
 
-              (items.length === 0) ?
-
-                <Spinner label="Please wait .." /> : (
-
-                  <DetailsList
-                    items={items}
-                    columns={columns}
-                    checkboxVisibility={CheckboxVisibility.hidden}
-                  />)
+              items.length === 0 ? (
+                <Spinner label="Please wait .." />
+              ) : (
+                <DetailsList
+                  items={items}
+                  columns={columns}
+                  checkboxVisibility={CheckboxVisibility.hidden}
+                />
+              )
             }
-    
-         </Stack>
+          </Stack>
         </div>
       </div>
     </Modal>

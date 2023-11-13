@@ -264,6 +264,13 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
         vendorOtherDetails: {
           justificatiOnOrder: textvalue.justificatiOnOrder,
           downPaymentDetails: textvalue.downPaymentDetails,
+          Name:textvalue.Name,
+          HouseNumber:textvalue.HouseNumber,
+          StreetName:textvalue.StreetName,
+          PostalCode:textvalue.PostalCode,
+          City:textvalue.City,
+          ContactName:textvalue.ContactName,
+
         },
 
         ship_to_address: {
@@ -429,7 +436,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
 
     setselectedItems((prevItems) => ({
       ...prevItems,
-      basedOn:vendorandshippingData.Shipping_Location,
+      basedOn: vendorandshippingData.Shipping_Location,
       regionoption: vendorandshippingData.shipping_region,
     }));
 
@@ -829,6 +836,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                         <TextField
                           id="Name"
                           disabled={isViewMode ? true : false}
+                          value={textvalue.Name}
                           placeholder="Provide Company/Recipient Name.Maximum length"
                           style={{ width: 350 }}
                           onChange={textContext}
@@ -849,6 +857,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                           disabled={isViewMode ? true : false}
                           placeholder={"House No."}
                           onChange={textContext}
+                          value={textvalue.HouseNumber}
                           // value={shippingItem.HouseNumber}
                           style={{ width: 100 }}
                         />
@@ -856,6 +865,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                         <TextField
                           id="StreetName"
                           disabled={isViewMode ? true : false}
+                          value={textvalue.StreetName}
                           placeholder="Street Name"
                           onChange={textContext}
                           style={{ width: 300 }}
@@ -875,6 +885,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                           id="PostalCode"
                           disabled={isViewMode ? true : false}
                           placeholder="Postal Code"
+                          value={textvalue.PostalCode}
                           onChange={textContext}
                           style={{ width: 100 }}
                         />
@@ -883,6 +894,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                           placeholder="City"
                           id="City"
                           disabled={isViewMode ? true : false}
+                          value={textvalue.City}
                           style={{ width: 250 }}
                           onChange={textContext}
                         />
@@ -964,6 +976,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                         <TextField
                           id="ContactName"
                           disabled={isViewMode ? true : false}
+                          value={textvalue.ContactName}
                           onChange={textContext}
                           placeholder="Maximum length is 50 characters"
                           style={{ width: 300 }}

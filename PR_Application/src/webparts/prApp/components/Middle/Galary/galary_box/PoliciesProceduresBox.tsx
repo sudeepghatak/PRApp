@@ -3,6 +3,9 @@ import * as React from "react";
 import ComponentHeader from "./ComponentHeader";
 import { CapitalExpenseModel } from "../ModelContent/CapitalExpenseModel";
 import { VendorSupplierModel } from "../ModelContent/VendorSupplierModel";
+import { useState } from "react";
+import { SupplierModal } from "../../TableSupplierModal";
+import { VendorDetails } from "../../../../Model/vendor_details";
 interface IPoliciesProceduresProps {
   title: string;
 }
@@ -21,6 +24,10 @@ const PoliciesProceduresBox: React.FunctionComponent<
 
   const showAlertDialogvendorIndirect = () => {
     setshowDialogvendorIndirect(!showDialogvendorIndirect);
+  };
+  const [showexistingVendor, setshowexistingVendor] = useState<boolean>(false);
+  const viewExistingVendor = () => {
+    setshowexistingVendor(!showexistingVendor);
   };
   return (
     <div>
@@ -64,9 +71,23 @@ const PoliciesProceduresBox: React.FunctionComponent<
               </a>
             </li>
             <li>
-              <a href="#" className="getStartanchor">
+              <a
+                href="#"
+                onClick={() => viewExistingVendor()}
+                className="getStartanchor"
+              >
                 View Existing Vendors
               </a>
+              {showexistingVendor ? (
+                <SupplierModal
+                  isModalOpen={showexistingVendor}
+                  showModal={viewExistingVendor}
+                />
+              ) : // <SupplierModal
+              //   isModalOpen={showexistingVendor}
+              //   showModal={viewExistingVendor}
+              // />
+              null}
             </li>
             <li>
               <a

@@ -156,7 +156,16 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
           <div id="sup_name_ammount">
             <div>{cardItem.supplierName}</div>
             <span>
-              <span>Amount in (USD)</span>
+              {cardItem.ToAmount !== null ? (
+                <>
+                  <span>Amount in ({cardItem.ToCurrency})</span>
+                  <span>
+                    {cardItem.ToCurrency}
+                    {cardItem.ToAmount}
+                  </span>
+                </>
+              ) : null}
+              <span>Amount in ({cardItem.FromCurrency})</span>
               <br></br>
               <span>${cardItem.ammount}</span>
             </span>

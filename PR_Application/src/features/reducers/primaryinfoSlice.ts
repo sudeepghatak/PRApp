@@ -253,12 +253,15 @@ let storeData:PrimaryPageinformation;
         // }
 
       },
-      clearFileDoc(state: PrimaryPageinformation){
-        state.fileData.splice(0,state.fileData.length)
+      clearFileDoc(state: PrimaryPageinformation,action:PayloadAction<fileInformation>){
+        state.fileData=state.fileData.filter((fileItem)=>fileItem.key !==action.payload.key)
+
 
       },
       saveFileDoc(state: PrimaryPageinformation, 
         action: PayloadAction<fileInformation>){
+
+          console.log("Here This is The Main SaveFileDoc Here ",state.fileData.length)
           if(state.fileData.length ==0){
             state.fileData.push(action.payload);
           }else{

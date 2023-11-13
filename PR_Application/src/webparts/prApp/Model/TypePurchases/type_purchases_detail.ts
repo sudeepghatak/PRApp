@@ -79,12 +79,14 @@ export class TypeofPurchaseDetail{
 
 }
 export class TypeLineItem{
+    PKID:string;
     CFID: string;
     projectCode:string;
     des:string;
     CostCenter:string;
     date:string;
     glAccount:string;
+    expensegl:string;
     qty:string;
     uOM:string;
     unitPrice:string;
@@ -96,13 +98,15 @@ export class TypeLineItem{
     // glaccount:IDropdownOption[]
 
     constructor(CFID:string,projectCode:string,des:string,CostCenter:string,date:string,
-        glAccount:string,qty:string,uOM:string,unitPrice:string,unitPricePer:string,totalamount:number,prepaid_to_date:string,prepaid_from_date:string){
+        glAccount:string,expensegl:string,qty:string,uOM:string,unitPrice:string,unitPricePer:string,totalamount:number,prepaid_to_date:string,prepaid_from_date:string){
+          this.PKID=null,
           this.CFID=CFID,
           this.projectCode=projectCode,
           this.des=des,
           this.CostCenter=CostCenter,
           this.date=date,
           this.glAccount=glAccount,
+          this.expensegl=expensegl,
           this.qty=qty,
           this.uOM=uOM,
           this.unitPrice=unitPrice,

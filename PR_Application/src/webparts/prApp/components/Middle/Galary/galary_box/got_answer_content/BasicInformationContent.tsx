@@ -57,8 +57,8 @@ const BasicInformationContent: React.FunctionComponent = () => {
           {basicInfo.lineInfoList.length !== 0 ? (
             <>
               {basicInfo.lineInfoList.map((lineinfoItem) => {
-                console.log("oooooooo  ---- ", lineinfoItem);
-                return <Basicinfolineitem newlineinfoItem={lineinfoItem} />;
+                console.log("oooooooo  ---- 60 60 60 60", lineinfoItem);
+                return <Basicinfolineitem newlineinfoItem={lineinfoItem} isPrepaidorExpense={basicInfo.Prepaid_or_Capital_buy} />;
               })}
             </>
           ) : null}

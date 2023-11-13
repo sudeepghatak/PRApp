@@ -1,5 +1,4 @@
 import * as React from "react";
-// import { useState } from "react";
 import { Modal, IIconProps, Stack, Link } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
 import Dropzone from "react-dropzone";
@@ -25,8 +24,8 @@ export const FilePickModal: React.FunctionComponent<IModalProps> = (props) => {
     let thisbase64String:string="";
     reader.onload = () => {       
       const base64String = (reader.result as string).split(',')[1]; 
-      console.log("kkkkkkkkkkkkkkkkkkkkkkkkkk")
-      console.log(base64String)
+      // console.log("kkkkkkkkkkkkkkkkkkkkkkkkkk")
+      // console.log(base64String)
       thisbase64String=base64String;
       let fileData: fileInformation = {
       key:randomKey,
