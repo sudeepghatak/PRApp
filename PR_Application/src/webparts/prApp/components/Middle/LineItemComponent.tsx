@@ -167,6 +167,7 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
 const saveIntoTable = async () => {
     // lineinfoData.saveTable =1
     // saveButtonClick()
+    GlobalStore.setTotal(totalAmount);
     console.log(
       "449 449 449 449 449 4494 4494 4494 4494 44494 ",
       lineinfoData.TypeofPurchaseDetailList
@@ -293,8 +294,7 @@ const saveIntoTable = async () => {
       );
  
       let nulltypeOfPurchaseInfoList = lineinfoData.TypeofPurchaseDetailList[
-        i
-      ].typeOfPurchaseInfoList.filter(
+        i].typeOfPurchaseInfoList.filter(
         (childtypeofPurchases) => childtypeofPurchases.PKID == null
       );
  
@@ -341,7 +341,7 @@ const saveIntoTable = async () => {
           UOM: notnulltypeOfPurchaseInfoList[k].uOM,
           Plant: null,
           Amount: notnulltypeOfPurchaseInfoList[k].totalamount,
-          Cost_Center: notnulltypeOfPurchaseInfoList[k].costCenter,
+          Cost_Center:lineinfoData.TypeofPurchaseDetailList[i].CostCenter,
           GL_Account: notnulltypeOfPurchaseInfoList[k].glAccount,
           Unit_Price: notnulltypeOfPurchaseInfoList[k].unitPrice,
           Requester_Name: GlobalStore.getName(),
@@ -413,7 +413,7 @@ const saveIntoTable = async () => {
           UOM: nulltypeOfPurchaseInfoList[j].uOM,
           Plant: null,
           Amount: nulltypeOfPurchaseInfoList[j].totalamount,
-          Cost_Center: nulltypeOfPurchaseInfoList[j].costCenter,
+          Cost_Center: lineinfoData.TypeofPurchaseDetailList[i].CostCenter,
           GL_Account: nulltypeOfPurchaseInfoList[j].glAccount,
           Unit_Price: nulltypeOfPurchaseInfoList[j].unitPrice,
           Requester_Name: GlobalStore.getName(),
@@ -451,7 +451,8 @@ const saveIntoTable = async () => {
       if (saveList.length !== 0) {
         console.log("Insert Here 668 557", saveList);
         await restApiCall.insertLineItem(saveList);
-      } else if (copySaveList.length !== 0) {
+      }
+      if (copySaveList.length !== 0) {
         console.log("Insert Here 671 557", copySaveList);
         await restApiCall.updateLineItem(copySaveList);
       }

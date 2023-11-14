@@ -576,6 +576,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
                           isModalOpen={openSupplierSearch}
                           showModal={showSupplierSearchModal}
                           venderItemDatapick={venderItemDatapick}
+                          fromLandingpage={false}
                         />
                       ) : null}
                     </DefaultButton>

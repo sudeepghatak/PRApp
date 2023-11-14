@@ -58,4 +58,6 @@ export const delDocItem="postPRRequest_Values?pID=";
 export const prApprovaldelete="getPR_Approval_Log_Result?pID=";
 //Approval Limit List
 export const getApprovalLimit="getApprovalLimit_Result";
+//Ehs Approval
+export const EHSapprovalURL="getPRApprovers_Result?aType=EHS";
 

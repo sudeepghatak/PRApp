@@ -82,6 +82,7 @@ const PoliciesProceduresBox: React.FunctionComponent<
                 <SupplierModal
                   isModalOpen={showexistingVendor}
                   showModal={viewExistingVendor}
+                  fromLandingpage={true}
                 />
               ) : // <SupplierModal
               //   isModalOpen={showexistingVendor}

@@ -21,6 +21,7 @@ interface IModalProps {
   isModalOpen: boolean;
   showModal: () => void;
   venderItemDatapick?: (vendor: VendorDetails) => void;
+  fromLandingpage: boolean;
   // content?: string;
 }
 let Allitems: VendorDetails[] = [];
@@ -32,7 +33,7 @@ let vendorNumberstring: string = "";
 let completeSupplierDatafetch: boolean = false;
 
 export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
-  const { isModalOpen, showModal, venderItemDatapick } = props;
+  const { isModalOpen, showModal, venderItemDatapick,fromLandingpage } = props;
   const [items, setitems] = useState<VendorDetails[]>([]);
   const [selectNumber, setselectNumber] = useState<number>(0);
 
@@ -407,7 +408,16 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
   };
 
   React.useEffect(() => {
-    callVendorApi(optionGroupData.companyCode.text, 0);
+    if (fromLandingpage) {
+      restApiCall.getCompanycode().then((value) => {
+        for (let i: number = 0; i < value.data.length; i++) {
+          callVendorApi(value.data[i].MappedCompanyCode, 0);
+        }
+      })}
+      else{
+        callVendorApi(optionGroupData.companyCode.text, 0);
+      }
+    
   }, []);
 
   return (

@@ -108,6 +108,10 @@ export const MainPage: React.FunctionComponent<IMainPage> = (props) => {
     width: "250px", // Adjust the width to your desired value
   });
 
+let pkid=(GlobalStore.getPrId()!==undefined)?"[PR ID -"+GlobalStore.getPrId()+"]":""
+// console.log("prid::",pkid);
+
+
   return (
     <>
       <div>
@@ -120,6 +124,7 @@ export const MainPage: React.FunctionComponent<IMainPage> = (props) => {
         <Stack tokens={sectionStackTokens}>
           <ComponentHeader
             title={
+              pkid+
               "[" +
               title.TypeofbuyOption +
               "][" +

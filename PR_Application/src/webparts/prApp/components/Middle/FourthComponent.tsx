@@ -1,12 +1,21 @@
 import * as React from 'react'
 import { IStackStyles, Stack} from '@fluentui/react/lib/Stack';
-import { DefaultButton, Icon, Link } from '@fluentui/react';
+import { DefaultButton, Icon, IconButton, Link } from '@fluentui/react';
 import { mergeStyles,DefaultPalette} from '@fluentui/react/lib/Styling';
-import './StyleFourthComponent.css'
+import './StyleFourthComponent.css';
 import { FuncApprovalLog } from '../../Utils/FuncApprovalLog';
 import { GlobalStore } from '../../../../app/globalStore';
 import { RootState } from '../../../../app/store';
-import { useSelector } from 'react-redux/es/exports';
+import { useDispatch, useSelector } from 'react-redux/es/exports';
+import { Type_of_buy } from './ReviewPage/Type_of_buy';
+import { SupplierDetails } from './ReviewPage/SupplierDetails';
+import { updateFinalPage } from "../../../../features/reducers/lineitemSlice";
+import PrimaryInfoComponent from './PrimaryInfoComponent';
+import { ITableBuildProps } from './MainPage';
+import { ISearchResult, fetchSearchContent } from '../../../../features/reducers/searchSlice';
+import { ThunkDispatch } from '@reduxjs/toolkit';
+import { restApiCall } from '../../Api/ApiCall';
+import { useState } from 'react';
 
 
 interface IFourthprops {
@@ -15,6 +24,7 @@ interface IFourthprops {
 
 
 const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
+ 
 
   const basicInfo = useSelector(
     (state: RootState) => state.statusreducer.basicInfo
@@ -70,10 +80,122 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
       width: "18%"
     },
   };
+  const[btnDisable,setbtnDisable]=useState(false)
 
-  const SaveandNext=async ()=>{
-FuncApprovalLog.SaveandContinue(GlobalStore.getTotal(),GlobalStore.getEmail())
+  const SaveandNext= async ()=>{
+    setbtnDisable(true);
+    await FuncApprovalLog.SaveandContinue(GlobalStore.getTotal(),GlobalStore.getEmail())
+   let saveLineValueDetails = [
+      {
+        PKID: GlobalStore.getPrId(),
+        ConnectPRID: GlobalStore.getPrId(),
+        Type_Of_Buy: null,
+        PrepaidOrCapitalEquipment: null,
+        EHS: null,
+        Title: null,
+        RequestFor: null,
+        Type_Of_Order: null,
+        Order_Amount: null,
+        CIP_Number: null,
+        UFID: null,
+        Supplier_Account_Number: null,
+        Supplier_Name: null,
+        Supplier_Address: null,
+        Supplier_City: null,
+        Supplier_State:null,
+        Supplier_Zip: null,
+        Supplier_Country: null,
+        Manager: null,
+        Manager1: null,
+        Manager2: null,
+        Manager3: null,
+        GL_Account: null,
+        Status: "Approval Routing",
+        TaskCreatedFor: null,
+        ApprovalInstance: null,
+        Comments: null,
+        Cost_Center: null,
+        Location: null,
+        IsDeleted: null,
+        Special_Instructions: null,
+        Shipping_Name: null ,
+        Shipping_Street: null,
+        Shipping_Postal_Code: null,
+        Shipping_Location: null,
+        Shipping_Region: null,
+        Shipping_Country: null,
+        Shipping_ContactPhone: null,
+        OldReqId: null,
+        SAPPRId: null,
+        LastWorkflowRun: null,
+        CurrentApprovalStep: null,
+        ManagerLevel: null,
+        FinalApprovalDate: null,
+        IsOtherCC: null,
+        IsCFOApproved: null,
+        CFO: null,
+        AllApprovers: null,
+        CreateDate: null,
+        LastStatus: null,
+        AllManagers: null,
+        JLReminderCount: null,
+        FIReminderCount: null,
+        AesyntPRType: null,
+        PONumber: null,
+        IsCompleted: null,
+        Company: null,
+        ProjectNumber: null,
+        ActCostCenter: null,
+        CompanyCode: null,
+        FromCurrency: null,
+        ToCurrency: null,
+        RequesterCurrency: null,
+        ExchangeRate: null,
+        ExchangeRateV: null,
+        ExchangeRateDate: null,
+        ConvertedDollerAmount: null,
+        CountryKey: null,
+        HRADCompanyCode: null,
+        QuickbookPO: null,
+        CCDescription: null,
+        IsProjectPR: null,
+        ProjectDepartment: null,
+        ProjectCode: null,
+        Created: null,
+        CreatedBy: null,
+        Modified: null,
+        ModifiedBy: null,
+        PRNumber: null,
+        DWCreateDate: null,
+        PRId: GlobalStore.getPrId(),
+        OldAllApprovers: null,
+        OldAllManagers: null,
+        OldCFO: null,
+        OldCreatedBy: null,
+        OldManager: null,
+        OldManager1: null,
+        OldManager2: null,
+        OldManager3: null,
+        OldModifiedBy: null,
+        OldRequestFor: null,
+        OldTaskCreatedFor: null,
+      },
+    ];
+    await restApiCall.insertVendorDetails(saveLineValueDetails);
+     dispatch(fetchSearchContent("MyOrder"));
+    setbtnDisable(true);
+    dispatch(updateFinalPage(""));
   }
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const PrimaryInfo= (pId: string)=>
+  {
+    // GlobalStore.storePrId(pId);
+    // GlobalStore.changeEnterMainpage(true);
+    // GlobalStore.changeviewmodeOn(false);
+    // dispatch(updateFinalPage(`edit${pId}`));
+  }
+  
+
 
 return (
      <div>
@@ -107,6 +229,7 @@ return (
                     borderRadius: 5,
                     height: "40px",
                   }}
+                  disabled={btnDisable}
                   onClick={() => SaveandNext()}
                   // FuncApprovalLog.delegateApproval(12000,"sunandap@omnicell.com");
                 >
@@ -114,7 +237,7 @@ return (
                     <span style={{ marginRight: 10, marginTop: 2 }}>
                       <Icon iconName="Save" />
                     </span>
-                    <span>Submit</span>
+                    <span>Submit for Approval</span>
                   </Stack>
                 </DefaultButton>
               </span>
@@ -139,7 +262,23 @@ return (
              <Stack.Item grow={5}>
                   <Stack horizontal horizontalAlign="baseline">
                     <Stack.Item >
-                      <div  className='heading'>Type of Buy </div>
+                      <span>
+                      <div  className='heading'>Type of Buy 
+                      <IconButton 
+                         iconProps={{ iconName: "Edit" }}
+                         title="Edit"
+                         ariaLabel="Edit"
+                         onClick={() => PrimaryInfo(GlobalStore.getPrId())}
+                         styles={{
+                            root: {
+                              borderRadius: '50%',
+                              color:"blue",
+                              // backgroundColor: "blue",
+                              // padding: '8px',
+                            },
+                      }}/>
+                      </div>
+                      </span>
                     </Stack.Item>
                   </Stack>
                 </Stack.Item>
@@ -155,143 +294,11 @@ return (
                   </Stack>
                 </Stack.Item>
           </Stack>
-          </div>
-  {/* --------------------------------------------------------------------------------- */}
-      <div className='button-border-end '>
-        <div className='borderline'>
-          <Stack horizontal horizontalAlign="space-between" >
-            <Stack.Item grow={5} >
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div className='text-heading' >Type of Buy: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 10 }}>
-                        <div className='text-des'> Expense Buy </div>
-                      </Stack>
-                    </Stack.Item>
-                   
-                  </Stack>
-                </Stack.Item>
-                <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'>Prepaid or Capital buy? </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 10 }}>
-                        <div className='text-des'>Expense </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-          </Stack>
-          </div>
         </div>
-{/* ----------------------------------------------------------------------- */}
-          <div className='single-button-border-end '>
-            <div className='singleborderline'>
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading' >Type of Purchase: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des'> Consulting; Other; </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </div>
-            </div>
-     {/* ----------------------------------------------------------------------- */}
-      <div className='button-border-end '>
-        <div className='borderline'>
-          <Stack horizontal horizontalAlign="space-between" >
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'> Is this Project Related?: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des'> Yes </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-                <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item>
-                      <div  className='text-heading'>Project Code: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des' >{basicInfo.Project_Code} </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </Stack>
-            </div>
-          </div>
-     {/* ----------------------------------------------------------------------- */}
-        <div className='single-button-border-end '>
-          <div className='singleborderline'>
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'> Is this EHS relevant?:</div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des' > No </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </div>
-            </div>
-     {/* ----------------------------------------------------------------------- */}
-    <div className='button-border-end ss-btn-border'>
-          <Stack horizontal horizontalAlign="space-between"  styles={BlockSize} >
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='heading'>Requested Items</div>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </Stack>
-          </div>
-  {/* --------------------------------------------------------------------------------- */}
-              <div className='button-border-end '>
-        <div className='borderline'>
-          <Stack horizontal horizontalAlign="space-between" >
-            <Stack.Item grow={5} >
-                  <Stack horizontal horizontalAlign="baseline">
-                     <Stack.Item >
-                     <div className='text-heading'>
-                        <Link href="" underline>
-                          Total Order Amount in (USD): ($)88.74
-                       </Link>
-                     </div>
-                    </Stack.Item>
-                    
-                  </Stack>
-                </Stack.Item>
-                <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-des'>Total Order Amount in (CHF): (CHF)80.00 </div>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-          </Stack>
-          </div>
-        </div>
-  {/* //------------------------------------------------------------------------------ */}
+     {/* ..................................................................................          */}
+    <Type_of_buy/>
+  
+  
   {/* --------------------------------------------------------------------------------- */}
       <div className='button-border-end ss-btn-border'>
           <Stack horizontal horizontalAlign="space-between"  styles={BlockSize} >
@@ -306,310 +313,19 @@ return (
           </div>
   {/* --------------------------------------------------------------------------------- */}
   
-     <div className='button-border-end '>
-        <div className='borderline'>
-          <Stack horizontal horizontalAlign="space-between" >
-            <Stack.Item grow={5} >
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div className='text-heading' >	Supplier Number: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 10 }}>
-                        <div className='text-des'> 11520 </div>
-                      </Stack>
-                    </Stack.Item>
-                   
-                  </Stack>
-                </Stack.Item>
-                <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'>	Supplier Name: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 10 }}>
-                        <div className='text-des'>University of Texas Medical Branch </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-          </Stack>
-          </div>
-        </div>
-
-     {/* ----------------------------------------------------------------------- */}
-      <div className='button-border-end '>
-        <div className='borderline'>
-          <Stack horizontal horizontalAlign="space-between" >
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'> Supplier Address: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des'> Yes </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-                <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item>
-                      <div  className='text-heading'>Supplier City:</div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des' >Galveston  </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </Stack>
-            </div>
-          </div>
-  {/* --------------------------------------------------------------------------------- */}
-  
-     <div className='button-border-end '>
-        <div className='borderline'>
-          <Stack horizontal horizontalAlign="space-between" >
-            <Stack.Item grow={5} >
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div className='text-heading' >	Supplier State: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 10 }}>
-                        <div className='text-des'> TX </div>
-                      </Stack>
-                    </Stack.Item>
-                   
-                  </Stack>
-                </Stack.Item>
-                <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'>		Supplier Zip:	</div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 10 }}>
-                        <div className='text-des'>77550 </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-          </Stack>
-          </div>
-        </div>
-     {/* ----------------------------------------------------------------------- */}
-        <div className='single-button-border-end '>
-          <div className='singleborderline'>
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'> Country:</div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des' > US </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </div>
-            </div>
-{/* ----------------------------------------------------------------------- */}
-          <div className='single-button-border-end '>
-            <div className='singleborderline'>
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading' >Justification/Reason for Order: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des'> abc </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </div>
-            </div>
-{/* ----------------------------------------------------------------------- */}
-          <div className='single-button-border-end '>
-            <div className='singleborderline'>
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading' >Special Instructions: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des'> ok </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </div>
-            </div>
-{/* ----------------------------------------------------------------------- */}
-          <div className='single-button-border-end '>
-            <div className='singleborderline'>
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading' >Ship To Address: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des'> Other Shipping Location </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </div>
-            </div>
+  <SupplierDetails/>
  {/* ----------------------------------------------------------------------- */}
- {/* --------------------------------------------------------------------------------- */}
-      <div className='button-border-end ss-btn-border'>
-          <Stack horizontal horizontalAlign="space-between"  styles={BlockSize} >
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='heading'>Shipping Details</div>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </Stack>
-          </div>
-  {/* --------------------------------------------------------------------------------- */}
-  
-     <div className='button-border-end '>
-        <div className='borderline'>
-          <Stack horizontal horizontalAlign="space-between" >
-            <Stack.Item grow={5} >
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div className='text-heading' >	Name: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 10 }}>
-                        <div className='text-des'> abc </div>
-                      </Stack>
-                    </Stack.Item>
-                   
-                  </Stack>
-                </Stack.Item>
-                <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'>House Number/Street: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 10 }}>
-                        <div className='text-des'>University of Texas Medical Branch </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-          </Stack>
-          </div>
-        </div>
-
-     {/* ----------------------------------------------------------------------- */}
-      <div className='button-border-end '>
-        <div className='borderline'>
-          <Stack horizontal horizontalAlign="space-between" >
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'> Postal Code/City: </div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des'> 37214 / Nashville </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-                <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item>
-                      <div  className='text-heading'>	Region:</div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des' >Illinois (IL)  </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </Stack>
-            </div>
-          </div>
-  {/* --------------------------------------------------------------------------------- */}
-      <div className='button-border-end '>
-        <div className='borderline'>
-          <Stack horizontal horizontalAlign="space-between" >
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'> Country:</div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des'> USA</div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-                <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item>
-                      <div  className='text-heading'>Location:</div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des' >	US, Field Persons  </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </Stack>
-            </div>
-          </div>
-  {/* --------------------------------------------------------------------------------- */}
-        <div className='single-button-border-end '>
-          <div className='singleborderline'>
-             <Stack.Item grow={5}>
-                  <Stack horizontal horizontalAlign="baseline">
-                    <Stack.Item >
-                      <div  className='text-heading'> Contact with Phone Number:</div>
-                    </Stack.Item>
-                    <Stack.Item >
-                      <Stack horizontal tokens={{ childrenGap: 15 }}>
-                        <div className='text-des' >1234 </div>
-                      </Stack>
-                    </Stack.Item>
-                  </Stack>
-                </Stack.Item>
-              </div>
-            </div>
-{/* ----------------------------------------------------------------------- */}
-    
- 
-        </Stack>
-        </Stack>
+{/* --------------------------------------------------------------------------------- */}  
       </Stack>
+    </Stack>
+  </Stack>
 {/* ................................................................................. */}
 
       </div>
   )
 }
 
-export default FourthComponent
+export default FourthComponent;
 
-// function onClick(event: MouseEvent<HTMLDivElement | HTMLSpanElement | HTMLAnchorElement | HTMLButtonElement | BaseButton | Button, MouseEvent>): void {
-//   throw new Error('Function not implemented.');
-// }
+
+

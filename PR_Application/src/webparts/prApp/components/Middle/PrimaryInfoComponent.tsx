@@ -188,6 +188,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         lineintemData.Finalpage === `edit${GlobalStore.getPrId()}` ||
         lineintemData.Finalpage === `view${GlobalStore.getPrId()}`
       ) {
+        // dispatch(refreshStore());
         setpeople({
           EmployeeId: "",
           email: "",
@@ -201,63 +202,63 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           lineintemData.Finalpage,
           isViewMode
         );
-
+ 
         setisLoadingComp(true);
         let prInfo = await restApiCall.getPrbasicInfoContent(
           GlobalStore.getPrId()
         );
-
+ 
         console.log("------------------------ 207 ", prInfo);
-
+ 
         let saveRadioGroupData: IradioSave[] = [
           {
             ehsRadio: {
               key: prInfo.EHS ? "yes" : "no",
-
+ 
               text: prInfo.EHS ? "Yes" : "No",
             },
           },
-
+ 
           {
             prepaidcapitalRadio: {
               key: prInfo.PrepaidOrCapitalEquipment.split(" ")
                 .join("")
                 .toLowerCase(),
-
+ 
               text: prInfo.PrepaidOrCapitalEquipment,
             },
           },
-
+ 
           {
             constCenterRadio: {
               key:
                 prInfo.ActCostCenter == 0
                   ? "department"
                   : "alternatecostcenter",
-
+ 
               text:
                 prInfo.ActCostCenter == 0
                   ? "Department"
                   : "Alternate Cost Center",
             },
           },
-
+ 
           {
             prRadio: {
               key: prInfo.RequestFor === null ? "yes" : "no",
-
+ 
               text: prInfo.RequestFor === null ? "Yes" : "No",
             },
           },
-
+ 
           {
             buyRadio: {
               key: prInfo.Type_Of_Buy.split(" ").join("").toLowerCase(),
-
+ 
               text: prInfo.Type_Of_Buy,
             },
           },
-
+ 
           {
             prProjectRadio: {
               key:
@@ -266,7 +267,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                   : prInfo.IsProjectPR === true
                   ? "yes"
                   : "no",
-
+ 
               text:
                 prInfo.IsProjectPR === null
                   ? ""
@@ -276,23 +277,23 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             },
           },
         ];
-
+ 
         console.log("Radio Group Here ---340 340", saveRadioGroupData);
         let saveOptionGroupData: IoptionSave[] = [
           {
             prOption: {
               key: prInfo.AesyntPRType,
-
+ 
               text: `${
                 prInfo.AesyntPRType
               }(${prInfo.Company[0].toUpperCase()}${prInfo.Company.slice(1)})`,
             },
           },
-
+ 
           {
             companyCode: {
               key: prInfo.CompanyCode,
-
+ 
               text: prInfo.CompanyCode,
             },
           },
@@ -302,28 +303,28 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 prInfo.ActCostCenter.toString() === undefined
                   ? ""
                   : prInfo.ActCostCenter.toString(),
-
+ 
               text: "",
             },
           },
-
+ 
           {
             selectDepartment: {
               key: prInfo.ProjectDepartment,
-
+ 
               text: prInfo.ProjectDepartment,
             },
           },
-
+ 
           {
             projectCode: {
               key: prInfo.ProjectCode.toLowerCase(),
-
+ 
               text: prInfo.ProjectCode,
             },
           },
         ];
-
+ 
         let emp_details =
           prInfo.RequestFor !== null
             ? await restApiCall.getallEmployeList(prInfo.RequestFor)
@@ -339,17 +340,23 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         GlobalStore.storeEmail(emp_details[0].email, false);
         let saveData: ISaveData = {
           radioGroup: saveRadioGroupData,
-
+ 
           optionGroup: saveOptionGroupData,
           requestfor: emp_details[0],
         };
-
+ 
         console.log(
           "This is The Save Data Here ---------------------",
-          saveData
+          saveData,
+          GlobalStore.getPrId()
         );
-
+ 
         let fileValue = await restApiCall.getDocTypeurl(GlobalStore.getPrId());
+        console.log(
+          "This is The FileValue Here 353 353 353 ",
+          fileValue,
+          primaryinfoData.fileData.length
+        );
         let getfileData;
         if (fileValue.length !== 0) {
           if (primaryinfoData.fileData.length === 0) {
@@ -368,59 +375,71 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               }
             }
           } else {
+            console.log(
+              "I am Here 373 373 373 373 ",
+              primaryinfoData.fileData,
+              fileValue
+            );
             let saveFileData = [];
             let removeFileData = [];
-            if (primaryinfoData.fileData.length >= fileValue.length) {
-              saveFileData = primaryinfoData.fileData.filter((itemData) =>
-                fileValue.some((obj) => obj.PKID === itemData.key)
-              );
-
-              removeFileData = primaryinfoData.fileData.filter(
-                (itemData) =>
-                  !fileValue.some((obj) => obj.PKID === itemData.key)
-              );
-              console.log(
-                "This is All SaveFile Doc Here 382",
-                saveFileData,
-                removeFileData
-              );
-              if (saveFileData.length !== 0) {
-                for (let k = 0; k < saveFileData.length; k++) {
-                  getfileData = {
-                    key: saveFileData[k].PKID,
-                    fileName: saveFileData[k].Filename,
-                    fileType: "file",
-                    modifiedBy: saveFileData[k].Modified_By,
-                    fileModifiedTime: saveFileData[k].Modified_Date,
-                    docType: saveFileData[k].Doc_Type,
-                    content: saveFileData[k].Content,
-                  };
-                  if (getfileData.content !== undefined) {
-                    console.log(
-                      "This is SaVE fiLE doC hERE 394 394 ",
-                      getfileData
-                    );
-                    dispatch(saveFileDoc(getfileData));
-                  }
+            // if (primaryinfoData.fileData.length >= fileValue.length) {
+            saveFileData = primaryinfoData.fileData.filter((itemData) =>
+              fileValue.some((obj) => obj.PKID === itemData.key)
+            );
+            saveFileData = fileValue.filter(
+              (value) => !saveFileData.some((obj) => obj.key === value.key)
+            );
+ 
+            removeFileData = primaryinfoData.fileData.filter(
+              (itemData) => !fileValue.some((obj) => obj.PKID === itemData.key)
+            );
+ 
+            console.log(
+              "This is All SaveFile Doc Here 382",
+              saveFileData,
+              removeFileData
+            );
+            if (saveFileData.length !== 0) {
+              for (let m = 0; m < saveFileData.length; m++) {
+                getfileData = {
+                  key: saveFileData[m].PKID,
+                  fileName: saveFileData[m].Filename,
+                  fileType: "file",
+                  modifiedBy: saveFileData[m].Modified_By,
+                  fileModifiedTime: saveFileData[m].Modified_Date,
+                  docType: saveFileData[m].Doc_Type,
+                  content: saveFileData[m].Content,
+                };
+                if (getfileData.content !== undefined) {
+                  console.log(
+                    "This is SaVE fiLE doC hERE 394 394 ",
+                    getfileData
+                  );
+                  dispatch(saveFileDoc(getfileData));
                 }
               }
-              if (removeFileData.length !== 0) {
-                for (let k = 0; k < removeFileData.length; k++) {
-                  getfileData = {
-                    key: removeFileData[k].PKID,
-                    fileName: removeFileData[k].Filename,
-                    fileType: "file",
-                    modifiedBy: removeFileData[k].Modified_By,
-                    fileModifiedTime: removeFileData[k].Modified_Date,
-                    docType: removeFileData[k].Doc_Type,
-                    content: removeFileData[k].Content,
-                  };
+            }
+            if (removeFileData.length !== 0) {
+              for (let n = 0; n < removeFileData.length; n++) {
+                getfileData = {
+                  key: removeFileData[n].key,
+                  fileName: removeFileData[n].fileName,
+                  fileType: "file",
+                  modifiedBy: removeFileData[n].modifiedBy,
+                  fileModifiedTime: removeFileData[n].fileModifiedTime,
+                  docType: removeFileData[n].docType,
+                  content: removeFileData[n].content,
+                };
+                console.log("434 434 434 434 434 ", getfileData);
+                if (getfileData.content !== undefined) {
                   dispatch(clearFileDoc(getfileData));
                 }
               }
             }
+            // }
           }
         }
+       
         let Shipping_Postal_CodeList =
           prInfo.Shipping_Postal_Code == null
             ? []
@@ -433,7 +452,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           saveVendorandShippingData({
             vendorDetails: new VendorDetails(
               0,
-
+ 
               prInfo.Supplier_Account_Number,
               prInfo.Supplier_Name,
               prInfo.Supplier_Address,
@@ -443,7 +462,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
               prInfo.Supplier_Country,
               prInfo.CompanyCode
             ),
-
+ 
             vendorOtherDetails: {
               justificatiOnOrder: prInfo.Comments,
               downPaymentDetails: prInfo.Special_Instructions,
@@ -487,7 +506,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             },
           })
         );
-
+ 
         dispatch(setValue(saveData));
         dispatch(refreshCheckBox());
         let type_of_order_list = prInfo.Type_Of_Order.split(",");
@@ -495,7 +514,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           dispatch(changeCheckbox(type_of_order_list[i]));
           dispatch(rightchangeCheckbox(type_of_order_list[i]));
         }
-
+ 
         setisLoadingComp(false);
         console.log("----------------Insert Data ", getfileData);
       }
@@ -1420,6 +1439,12 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             );
             restApiCall.insertVendorDetails(saveprimayData).then(async (_) => {
               let extraFileData = [];
+              if (
+                primaryinfoData.fileData.length !== 0 &&
+                fileValue.length == 0
+              ) {
+                extraFileData = [...primaryinfoData.fileData];
+              }
               if (
                 primaryinfoData.fileData.length !== 0 &&
                 fileValue.length !== 0

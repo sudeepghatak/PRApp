@@ -13,6 +13,7 @@ export class Functionality{
       let saveprimayData = [
        
       ];
+      prbasicInfo.Status="Draft";
       saveprimayData.push(prbasicInfo)
       console.log("This is The Save Data That Want to save Here ",saveprimayData)
 

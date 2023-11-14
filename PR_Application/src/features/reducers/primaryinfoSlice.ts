@@ -163,6 +163,10 @@ let storeData:PrimaryPageinformation;
 
       },
       refreshStore(state: PrimaryPageinformation){
+        console.log("166 166666666666666666666666666666666",state.fileData.length)
+        state.fileData.splice(0,state.fileData.length)
+        console.log("166 166666666666666666666666666666666",state.fileData.length)
+
           // state.radioGroup.prRadio={ key: "yes", text: "Yes" };
           // state.requestfor={
           //   EmployeeId: "",
@@ -254,21 +258,34 @@ let storeData:PrimaryPageinformation;
 
       },
       clearFileDoc(state: PrimaryPageinformation,action:PayloadAction<fileInformation>){
+        console.log("Filter The Data Here ------------------ >>>> 261 261 261 ",action.payload)
+        for(let i=0;i<state.fileData.length;i++){
+          console.log("fileData Here ..... ",state.fileData[i])
+        }
         state.fileData=state.fileData.filter((fileItem)=>fileItem.key !==action.payload.key)
-
-
       },
       saveFileDoc(state: PrimaryPageinformation, 
         action: PayloadAction<fileInformation>){
 
           console.log("Here This is The Main SaveFileDoc Here ",state.fileData.length)
           if(state.fileData.length ==0){
+            console.log("This is The PrimaryinfoSlice 277 277 277 klklk kl kl klkl",action.payload.key,state.fileData)
             state.fileData.push(action.payload);
           }else{
+
             for(let i=0;i<state.fileData.length;i++){
-         
+              console.log("277 277 277 277 2777 277 277 277 277 277 277 ",state.fileData[i],)
+            }
+
+            
+            let lengthofFileData=state.fileData.length;
+            
+            for(let i=0;i<lengthofFileData;i++){
+              console.log("Save File Content Here 275275275",action.payload.key,state.fileData[i].key)
               if(state.fileData[i].key!==action.payload.key){
+                console.log("This is The PrimaryinfoSlice 277 277 277 klklk kl kl klkl",action.payload.key,state.fileData[i].key)
                 state.fileData.push(action.payload);
+                break;
               }
             }
            

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl, getprrequestiteminforesultUrl, getUserDeptUrl, getRegionUrl, getCountryUrl, getUOMUrl, getCurrencyChangeUrl, getExpenseGLUrl, getManagerDetails, getJobLevel, getVacationLeave, InsertApprovalLog, FinanceApprovallog, DelLineItem, delDocItem, getpaginationURL, prApprovaldelete, getApprovalLimit } from './Config/server_config'
+import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl, getprrequestiteminforesultUrl, getUserDeptUrl, getRegionUrl, getCountryUrl, getUOMUrl, getCurrencyChangeUrl, getExpenseGLUrl, getManagerDetails, getJobLevel, getVacationLeave, InsertApprovalLog, FinanceApprovallog, DelLineItem, delDocItem, getpaginationURL, prApprovaldelete, getApprovalLimit, EHSapprovalURL } from './Config/server_config'
 import { EmployeeDetails } from '../Model/employee_details'
 
 export class restApiCall {
@@ -272,6 +272,12 @@ static async InsertApprovalLog(body){
          let res=await this.rest_apiCall(`${getApprovalLimit}`,{});
          console.log("approvalLimit List  -- ",res)
          return res.data;
+    }
+    //Ehs Approval------------
+    static async getEHSapproval(){
+       
+        let res=await this.rest_apiCall(`${EHSapprovalURL}`,{});
+        return res.data;
     }
 
 }
