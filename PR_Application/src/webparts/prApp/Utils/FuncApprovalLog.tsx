@@ -183,7 +183,7 @@ export class FuncApprovalLog {
       console.log("Finance Approval List 183 183 183 ", FinanApprval[i]);
       if (FinanApprval[i].FinanceDirector !== null) {
         let EmailFinanceDirectorApproval = await this.delegateCheck(
-          FinanApprval[i].Approver
+          FinanApprval[i].FinanceDirector
         );
         this.FinanceDirectorList.push(EmailFinanceDirectorApproval[0]);
 
@@ -293,14 +293,14 @@ export class FuncApprovalLog {
         console.log("Manager Name Find --- 146", delegateMang);
         if (delegateMang.length !== 0) {
           this.ManagerList.push(delegateMang[0].Delegatee);
-          this.delegateApproval(TotalAmount, upperManager[0].Email);
+          await this.delegateApproval(TotalAmount, upperManager[0].Email);
         } else {
           console.log(
             "Manager Name Find This is The Upper manager here ---- ",
             upperManager
           );
           this.ManagerList.push(upperManager[0].Email);
-          this.delegateApproval(TotalAmount, upperManager[0].Email);
+          await this.delegateApproval(TotalAmount, upperManager[0].Email);
         }
       }
       console.log("Manager Name Find --- XXXXXXXX XXXX 175", upperManager);
