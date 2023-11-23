@@ -77,7 +77,7 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
   //------------------------------------------
 
   const dropdownStyles: Partial<IDropdownStyles> = {
-    dropdown: { width: 300 },
+    dropdown: { width: 100 },
   };
 
   const DocTypeOption: IDropdownOption[] = [
@@ -289,7 +289,7 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
               index: number
             ) => changeDropdownOption(event, item, index, fileData[i])}
             options={DocTypeOption}
-            style={{ width: "150px" }}
+            style={{ width: "100px", fontSize:"12px"}}
             selectedKey={fileData[i].docType}
             styles={dropdownStyles}
           />

@@ -157,7 +157,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     setTextbox(newtextBox);
     console.log("Textvalue ........", newtextBox);
   };
-  console.log("Call Here For Update ----- 137 -- PrimaryinfoComponent");
+  console.log("Call Here For Update -- PrimaryinfoComponent");
   useEffect(() => {
     (async () => {
       let value = await restApiCall.getCompanycode();
@@ -184,8 +184,9 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   // }, [lineintemData.Finalpage]);
   useEffect(() => {
     (async () => {
-      if (
-        lineintemData.Finalpage === `edit${GlobalStore.getPrId()}` ||
+       if (
+        lineintemData.Finalpage ===
+          `edit${GlobalStore.getPrId()}${GlobalStore.getRandomNumber()}` ||
         lineintemData.Finalpage === `view${GlobalStore.getPrId()}`
       ) {
         // dispatch(refreshStore());
@@ -214,7 +215,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           {
             ehsRadio: {
               key: prInfo.EHS ? "yes" : "no",
- 
               text: prInfo.EHS ? "Yes" : "No",
             },
           },
@@ -246,15 +246,12 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           {
             prRadio: {
               key: prInfo.RequestFor === null ? "yes" : "no",
- 
               text: prInfo.RequestFor === null ? "Yes" : "No",
             },
           },
- 
           {
             buyRadio: {
               key: prInfo.Type_Of_Buy.split(" ").join("").toLowerCase(),
- 
               text: prInfo.Type_Of_Buy,
             },
           },
@@ -293,7 +290,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           {
             companyCode: {
               key: prInfo.CompanyCode,
- 
               text: prInfo.CompanyCode,
             },
           },
@@ -303,23 +299,18 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                 prInfo.ActCostCenter.toString() === undefined
                   ? ""
                   : prInfo.ActCostCenter.toString(),
- 
               text: "",
             },
           },
- 
           {
             selectDepartment: {
               key: prInfo.ProjectDepartment,
- 
               text: prInfo.ProjectDepartment,
             },
           },
- 
           {
             projectCode: {
               key: prInfo.ProjectCode.toLowerCase(),
- 
               text: prInfo.ProjectCode,
             },
           },
@@ -411,10 +402,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                   content: saveFileData[m].Content,
                 };
                 if (getfileData.content !== undefined) {
-                  console.log(
-                    "This is SaVE fiLE doC hERE 394 394 ",
-                    getfileData
-                  );
+                  console.log("This is SaVE fiLE doC::",getfileData );
                   dispatch(saveFileDoc(getfileData));
                 }
               }
@@ -543,7 +531,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     costCenter: "",
     LegacyCompany: "",
   });
-
+ 
   const [isPrepaidCapitalbuy, setisPrepaidCapitalbuy] =
     useState<boolean>(false);
 
@@ -582,8 +570,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
   const prepaidcapitalOption: IChoiceGroupOption[] = [
     { key: "expense", text: "Expense" },
     { key: "prepaid", text: "Prepaid" },
-    // { key: "capitalequipmentasset", text: "Capital Equipment / Asset" },
-    // { key: "lease", text: "Lease" },
   ];
 
   const newprepaidcapitalOption: IChoiceGroupOption[] = [
@@ -720,7 +706,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
 
       let itemTest = {
         key: newItem[0].companyCode,
-
         text: newItem[0].companyCode,
       };
 
@@ -747,10 +732,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     let newSelectedItem: IDropdownOption = { key: "", text: "" };
 
     newSelectedItem = { key: item?.key as string, text: item?.text as string };
-    console.log(
-      "------------------ newSelectedItem === newSelectedItem",
-      newSelectedItem
-    );
+    console.log(" newSelectedItem === newSelectedItem",newSelectedItem );
     setSelectedItems((prevSelectedItems) => ({
       ...prevSelectedItems,
       [id]: newSelectedItem,
@@ -919,7 +901,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     selectedItems,
     costCenterOption
   );
-
   useMemo(() => {
     let listProjectCode = [];
     restApiCall
@@ -1014,7 +995,8 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           );
           newpurchaseItem.costCenter = costCenter;
           newpurchaseItem.projectCode = selectedItems["projectCode"]?.text;
-        } else {
+        } 
+        else {
           newpurchaseItem = new TypeofPurchaseDetail(
             item.label,
             selectedItems["prOption"]?.key as string,
@@ -1113,8 +1095,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       TypeofPurchaseDetailList: ListofTypePurchases,
       Finalpage: lineintemData.Finalpage,
     };
-    console.log("setlineItemData");
-    console.log(setlineItemData);
+    console.log("setlineItemData",setlineItemData);
     console.log(
       ",setlineItemData.prProjectRadio--,setlineItemData.prProjectRadio",
       setlineItemData.prProjectRadio
@@ -1137,47 +1118,36 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       {
         ehsRadio: {
           key: selectRadioItems.ehsRadio.key,
-
           text: selectRadioItems.ehsRadio.text,
         },
       },
-
       {
         prepaidcapitalRadio: {
           key: selectRadioItems.prepaidcapitalRadio.key,
-
           text: selectRadioItems.prepaidcapitalRadio.text,
         },
       },
-
       {
         constCenterRadio: {
           key: selectRadioItems.constCenterRadio.key,
-
           text: selectRadioItems.constCenterRadio.text,
         },
       },
-
       {
         prRadio: {
           key: selectRadioItems.prRadio.key,
-
           text: selectRadioItems.prRadio.text,
         },
       },
-
       {
         buyRadio: {
           key: selectRadioItems.buyRadio.key,
-
           text: selectRadioItems.buyRadio.text,
         },
       },
-
       {
         prProjectRadio: {
           key: selectRadioItems.prProjectRadio.key,
-
           text: selectRadioItems.prProjectRadio.text,
         },
       },
@@ -1187,31 +1157,24 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
       {
         prOption: {
           key: selectedItems.prOption.key,
-
           text: selectedItems.prOption.text,
         },
       },
-
       {
         companyCode: {
           key: selectedItems.companyCode.key,
-
           text: selectedItems.companyCode.text,
         },
       },
-
       {
         selectDepartment: {
           key: selectedItems.selectDepartment.key,
-
           text: selectedItems.selectDepartment.text,
         },
       },
-
       {
         projectCode: {
           key: selectedItems.projectCode.key,
-
           text: selectedItems.projectCode.text,
         },
       },
@@ -1236,15 +1199,9 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
         (checkItem: CheckboxItem) => checkItem.isChecked
       ),
     ];
-
-
-
-    console.log("lineItemsaveTable");
-    console.log(lineintemData);
-
-    dispatch(setValue(saveData));
-
-    console.log("1.SAVE PR ALL Values...........");
+ console.log("lineItemsaveTable::",lineintemData);
+ dispatch(setValue(saveData));
+ console.log("1.SAVE PR ALL Values...........");
     // ---------end storing ---------------------
     let samplecheckbox = [];
     for (let i: number = 0; i < checkboxList.length; i++) {
@@ -1361,10 +1318,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             AesyntPRType: selectedItems.prOption.key,
             PONumber: null,
             IsCompleted: null,
-            Company: changeCompanyName(
-              GlobalStore.getTitledata().LegacyCompany
-            ),
-
+            Company: changeCompanyName(GlobalStore.getTitledata().LegacyCompany),
             ProjectNumber: null,
             ActCostCenter: +selectedItems.SelectAltCostCenter.key,
             CompanyCode: selectedItems.companyCode.text,
@@ -1408,10 +1362,10 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           saveprimayData,
           lineintemData.Finalpage,
           GlobalStore.getPrId(),
-          lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`
+          lineintemData.Finalpage === `edit${GlobalStore.getPrId()}${GlobalStore.getRandomNumber()}`
         );
 
-        if (lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`) {
+        if (lineintemData.Finalpage === `edit${GlobalStore.getPrId()}${GlobalStore.getRandomNumber()}`) {
           console.log(
             "This is PrimaryInfoComponent tsx file ---------",
             GlobalStore.getPrId()
@@ -1423,7 +1377,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
           saveprimayData[0].ModifiedBy = GlobalStore.getmainEmail();
           saveprimayData[0].PRId = GlobalStore.getPrId();
           saveprimayData[0].ActCostCenter =
-            selectCostCenterOption[0].key === "department"
+            selectRadioItems["constCenterRadio"]?.key === "department"
               ? 0
               : +selectedItems.SelectAltCostCenter.key;
           // saveprimayData[0].ActCostCenter=selectCostCenterOption.key==="department"?:
@@ -1639,7 +1593,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
     lineintemData.Finalpage,
     showDialog,
     isViewMode,
-    !(lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`)
+    !(lineintemData.Finalpage === `edit${GlobalStore.getPrId()}${GlobalStore.getRandomNumber()}`)
   );
   return (
     <>
@@ -1856,7 +1810,7 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
             </>
           ) : null}
 
-          {/* jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj */}
+          {/* ----------------------------------------------------------- */}
 
           <Stack.Item grow={12}>
             <Stack horizontal horizontalAlign="baseline">
@@ -2162,17 +2116,32 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                     {primaryinfoData.rightCheckbox.map(
                       (checkBoxItem: CheckboxItem) => {
                         return (
-                          <div className={styles.checkboxgroup}>
-                            <Checkbox
-                              label={checkBoxItem.label}
-                              id={checkBoxItem.id}
-                              checked={checkBoxItem.isChecked}
-                              disabled={
-                                isViewMode ? isViewMode : checkBoxItem.isDisable
-                              }
-                              onChange={RightchangeCheckBox}
-                            />
-                          </div>
+                          <Tippy
+                            content={
+                              <TableTooltipPurchases
+                                store={checkBoxItem.store}
+                              />
+                            }
+                            onShow={() =>
+                              hoverCallfunction(
+                                selectedItems.prOption.key as string,
+                                selectRadioItems.prepaidcapitalRadio.text,
+                                checkBoxItem.label
+                              )
+                            }
+                          >
+                            <div className={styles.checkboxgroup}>
+                              <Checkbox
+                                label={checkBoxItem.label}
+                                id={checkBoxItem.id}
+                                checked={checkBoxItem.isChecked}
+                                disabled={
+                                  isViewMode ? isViewMode : checkBoxItem.isDisable
+                                }
+                                onChange={RightchangeCheckBox}
+                              />
+                            </div>
+                          </Tippy>
                         );
                       }
                     )}
@@ -2193,7 +2162,6 @@ const PrimaryInfoComponent: React.FunctionComponent<IFirstProps> = (props) => {
                     <>
                       <GLAccountComponent
                         isGLAccountOpen={openGLAccount}
-                        // showGLAccount={setopenGLAccount}
                         showGLAccount={showopenGLAccount}
                         GlPRType={selectedItems.prOption.key}
                         GLAccountType={

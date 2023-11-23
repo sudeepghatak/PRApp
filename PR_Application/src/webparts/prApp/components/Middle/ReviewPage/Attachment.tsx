@@ -23,10 +23,7 @@ const  Attachment: React.FunctionComponent = () => {
 
 const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
-  useEffect(()=>{
-  dispatch(fetchStatusContent(GlobalStore.getPrId()));
   
-},[])
 
   const [attatchmentItem, setattatchmentItem] = useState<IAttatchment[]>([
     {
@@ -149,11 +146,35 @@ const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
       key: "fileModifiedTime",
       name: "Modified Date",
       fieldName: "fileModifiedTime",
+      styles: {
+        root: {
+          backgroundColor: "green",
+          color: "white",
+          borderRightColor: "white", // Set the right border color to white
+          borderRightWidth: "1px", // Optional: Adjust the border width if needed
+          borderRightStyle: "solid",
+        },
+      },
       
       onRender: (item: IAttatchment, rowIndex: number) => {
         return <span>{attatchmentItem[rowIndex].fileModifiedTime}</span>;
-      }, 
-      
+      },
+    },
+    {
+      key: "Delete",
+      name: "",
+      fieldName: "Delete",
+      minWidth: 10,
+      maxWidth: 20,
+       styles: {
+        root: {
+          backgroundColor: "green",
+          color: "white",
+          borderRightColor: "white", // Set the right border color to white
+          borderRightWidth: "1px", // Optional: Adjust the border width if needed
+          borderRightStyle: "solid",
+        },
+      },
     },
   ];
   return (

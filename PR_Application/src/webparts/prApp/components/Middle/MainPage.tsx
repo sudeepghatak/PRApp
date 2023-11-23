@@ -248,7 +248,9 @@ let pkid=(GlobalStore.getPrId()!==undefined)?"[PR ID -"+GlobalStore.getPrId()+"]
               <>
                 <Suspense fallback={"Loading .."}>
                   {/* <Spinner label= "Please wait .."> */}
-                  <LazyFourth buttonContxtBack={buttonContxtBack} />
+                  <LazyFourth buttonContxtBack={buttonContxtBack}  
+                  isViewMode={isViewMode}
+                  />
                   {/* </Spinner> */}
                 </Suspense>
               </>

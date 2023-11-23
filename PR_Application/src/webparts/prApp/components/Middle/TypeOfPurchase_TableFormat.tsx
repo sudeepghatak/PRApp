@@ -35,6 +35,7 @@ import { restApiCall } from "../../Api/ApiCall";
 import ProjectCodeComponent from "./TableProjectCodeComponent";
 import { IPrProjectCode } from "../../Model/IPrProjectCode";
 import TooltipShow from "./TooltipShow";
+import { GlobalStore } from "../../../../app/globalStore";
 // import { defaultprepaidFromDatePickerStrings, defaultprepaidToDatePickerStrings } from "@fluentui/react/lib/DatePicker";
 // Initialize Fluent UI icons (required)
 interface TableRow {
@@ -60,6 +61,7 @@ interface IThirdProps {
   id: number;
   addTotalAmount: (total: any) => void;
   isViewMode: boolean;
+  AmountCurr:string;
 }
 
 //date required.....
@@ -76,7 +78,7 @@ const checkboxStyles = {
 const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   // const{Title}=props;
   const dispatch = useDispatch();
-  const { tableviewItem, id, addTotalAmount, isViewMode } = props;
+  const { tableviewItem, id, addTotalAmount, isViewMode , AmountCurr } = props;
   //date Required....
   const [firstDayOfWeek, setFirstDayOfWeek] = React.useState(DayOfWeek.Sunday);
 
@@ -162,7 +164,8 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   const onCheckedButtonClick = (): void => {
     setIsPickerRemove(!isPickerRemove);
   };
-
+ console.log("tableviewItem.costCenter--",tableviewItem.costCenter,tableviewItem.projectCode);
+ 
   //create new Row in the table
   const createNewRow = () => {
     let newRow = {
@@ -1412,7 +1415,7 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
         </Stack.Item> */}
 
         <Stack.Item align="end" style={{ display: "flex" }}>
-          <span style={{ marginRight: "5px" }}>Total Amount in (USD): </span>
+          <span style={{ marginRight: "5px" }}>Total Amount in ({AmountCurr}): </span>
           {}
           <span> ($){totalAmount} </span>
         </Stack.Item>
@@ -1421,6 +1424,3 @@ const LineItemTableFormat: React.FC<IThirdProps> = (props) => {
   );
 };
 export default LineItemTableFormat;
-function setFirstDayOfWeek(arg0: number) {
-  throw new Error("Function not implemented.");
-}

@@ -15,11 +15,13 @@ import { ITableBuildProps } from './MainPage';
 import { ISearchResult, fetchSearchContent } from '../../../../features/reducers/searchSlice';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { restApiCall } from '../../Api/ApiCall';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { fetchStatusContent } from '../../../../features/reducers/statusSlice';
 
 
 interface IFourthprops {
   buttonContxtBack: () => void;
+  isViewMode:boolean;
 }
 
 
@@ -30,7 +32,7 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
     (state: RootState) => state.statusreducer.basicInfo
   );
 
-  const {buttonContxtBack} = props;
+  const {buttonContxtBack,isViewMode} = props;
     const stackItemStyles = mergeStyles({
         alignItems: 'center',
         background: DefaultPalette.black,
@@ -83,8 +85,12 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
   const[btnDisable,setbtnDisable]=useState(false)
 
   const SaveandNext= async ()=>{
+   let prEmail =
+      GlobalStore.getEmail() == undefined || GlobalStore.getEmail() == null
+        ? GlobalStore.getmainEmail()
+        : GlobalStore.getEmail();
     setbtnDisable(true);
-    await FuncApprovalLog.SaveandContinue(GlobalStore.getTotal(),GlobalStore.getEmail())
+    await FuncApprovalLog.SaveandContinue(GlobalStore.getTotal(),prEmail)
    let saveLineValueDetails = [
       {
         PKID: GlobalStore.getPrId(),
@@ -187,6 +193,12 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
     dispatch(updateFinalPage(""));
   }
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  useEffect(()=>{
+    if(!isViewMode){
+      dispatch(fetchStatusContent(GlobalStore.getPrId()));
+    }
+  
+},[])
   const PrimaryInfo= (pId: string)=>
   {
     // GlobalStore.storePrId(pId);
@@ -229,7 +241,7 @@ return (
                     borderRadius: 5,
                     height: "40px",
                   }}
-                  disabled={btnDisable}
+                  disabled={isViewMode || btnDisable}
                   onClick={() => SaveandNext()}
                   // FuncApprovalLog.delegateApproval(12000,"sunandap@omnicell.com");
                 >
@@ -265,6 +277,7 @@ return (
                       <span>
                       <div  className='heading'>Type of Buy 
                       <IconButton 
+                        disabled={isViewMode}
                          iconProps={{ iconName: "Edit" }}
                          title="Edit"
                          ariaLabel="Edit"
@@ -282,7 +295,7 @@ return (
                     </Stack.Item>
                   </Stack>
                 </Stack.Item>
-                <Stack.Item grow={5}>
+                <Stack.Item >
                   <Stack horizontal horizontalAlign="baseline">
                     <Stack.Item >
                       <div  className='heading'>

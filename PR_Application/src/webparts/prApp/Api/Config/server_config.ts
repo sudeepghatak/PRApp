@@ -60,4 +60,7 @@ export const prApprovaldelete="getPR_Approval_Log_Result?pID=";
 export const getApprovalLimit="getApprovalLimit_Result";
 //Ehs Approval
 export const EHSapprovalURL="getPRApprovers_Result?aType=EHS";
-
+//Vendor details for blank companycode
+export const getBlnkCmpVenDetails="getVendorName_Result?offValue=";
+export const getapprovallogURL="getPR_Approval_Log_Result?pID=";
+export const getauditTrailURL="PR_AuditTrail?pID=";

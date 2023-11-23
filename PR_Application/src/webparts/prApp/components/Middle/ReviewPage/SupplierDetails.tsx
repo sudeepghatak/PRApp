@@ -16,10 +16,10 @@ export const SupplierDetails: React.FunctionComponent = () => {
 
 const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
-useEffect(()=>{
-  dispatch(fetchStatusContent(GlobalStore.getPrId()));
+// useEffect(()=>{
+//   dispatch(fetchStatusContent(GlobalStore.getPrId()));
   
-},[])
+// },[])
 
   
   const BlockSize: IStackStyles = {

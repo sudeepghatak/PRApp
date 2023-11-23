@@ -8,6 +8,7 @@ import {
   Stack,
   DefaultButton,
   DefaultPalette,
+  Link,
 } from "office-ui-fabric-react";
 import { findIndex, map } from "lodash";
 import LineItemTableFormat from "./TypeOfPurchase_TableFormat";
@@ -20,6 +21,9 @@ import { restApiCall } from "../../Api/ApiCall";
 import { GlobalStore } from "../../../../app/globalStore";
 import { fetchSearchContent } from "../../../../features/reducers/searchSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
+import './StyleFourthComponent.css';
+import './File.css';
+import { TableChangeCurrencyData } from "./TableChangeCurrencyData";
 
 // interface ThirdProps {
 //   [key: string]: React.FunctionComponent[];
@@ -59,25 +63,15 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
   ): void => {
     const { id } = event.target as HTMLDivElement;
     let newSelectedItem: IDropdownOption = { key: "", text: "" };
+    
     newSelectedItem = { key: item?.key as string, text: item?.text as string };
+    console.log("Item::",newSelectedItem.text,selectedItems.prCurrency.text); 
     setSelectedItems((prevSelectedItems) => ({
       ...prevSelectedItems,
       [id]: newSelectedItem,
     }));
-    // console.log("LineItem selectedItems::",selectedItems);
   };
-
-  useEffect(() => {
-    console.log(
-      "GlobalStore.getTitledata().currencyKey:: ",
-      GlobalStore.getTitledata().currencyKey
-    );
-    console.log(
-      "selectedItems--",
-      selectedItems.prCurrency.key,
-      selectedItems["prCurrency"]?.key
-    );
-  }, []);
+  let currChng=selectedItems.prCurrency.text;
 
   const PrCurrency: IDropdownOption[] = [
     { key: "AED", text: "AED" },
@@ -98,7 +92,7 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
   const dropdownStyles1: Partial<IDropdownStyles> = {
     dropdown: { width: 150 },
   };
-
+ console.log("Change Amount::",selectedItems.prCurrency.key,GlobalStore.getTitledata().currencyKey);
   const [totalAmount, settotalAmount] = React.useState<number>(0);
 
   const addTotalAmount = (total: IAmountProps) => {
@@ -125,6 +119,14 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
     );
     settotalAmount(totalnumber);
   };
+//Change Currency Value----------------------------------
+ const[chngCurrData,setchngCurrData]  = useState<boolean>(false);
+ const PopupchngCurrData=()=>{
+  setchngCurrData(!chngCurrData);
+ }
+ const linkClickData=()=>{
+    PopupchngCurrData();
+ };
 
   const [CurrChange, setCurrChange] = useState<string>("");
   console.log("CurrChange::", CurrChange);
@@ -135,15 +137,18 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
   } else if (changenum > 0) {
     changenum = totalAmount * changenum;
   }
+  let changeCurrencyValue=(selectedItems.prCurrency.key !== GlobalStore.getDefaultCurr()) 
+                          ?changenum:0.00
 
-  // console.log("selectedItems--",selectedItems.prCurrency.key,GlobalStore.getTitledata().currencyKey);
+  console.log("changeCurrencyValue--",changeCurrencyValue);
+//------------------------------------------------------------------------  
 
   useEffect(() => {
     let changeCurrVal = [];
     restApiCall
       .GetCurrencyChangeUrl(
         selectedItems.prCurrency.key,
-        GlobalStore.getTitledata().currencyKey
+        GlobalStore.getDefaultCurr()
       )
       .then((value) => {
         // console.log("tableviewItem.typeofPurchaseOption---tableviewItem.typeofPurchaseOption",tableviewItem.typeofPurchaseOption,tableviewItem.typeofPurchaseName);
@@ -163,16 +168,17 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
   let month = date.getMonth() + 1;
   let year = date.getFullYear();
   let currentDate = `${day}-${month}-${year}`;
-
+//  console.log("GlobalStore:GlobalStore::",totalAmount,currChng,changeCurrencyValue);
+//  console.log("this DefaultCurr currency ::",GlobalStore.getDefaultCurr());
+ 
 const saveIntoTable = async () => {
     // lineinfoData.saveTable =1
     // saveButtonClick()
     GlobalStore.setTotal(totalAmount);
-    console.log(
-      "449 449 449 449 449 4494 4494 4494 4494 44494 ",
-      lineinfoData.TypeofPurchaseDetailList
-    );
- 
+    GlobalStore.setChngCurr(currChng);
+    GlobalStore.setChangCurrTotalAmount(changenum);
+    console.log("GlobalStore:GlobalStore save::",totalAmount,currChng,changenum);
+    
     dispatch(saveButtonClick());
 
         let saveLineValueDetails = [
@@ -399,12 +405,14 @@ const saveIntoTable = async () => {
           "/" +
           prepaidfromdateofItem.getFullYear().toString();
  
-        console.log(
-          "SKKKKKKKKKKKKKKK 524 524 524 ",
-          dateofItem,
-          prepaidtoitemdate,
-          prepaidfromitemdate
-        );
+        // console.log(
+        //   "Date-----",
+        //   dateofItem,
+        //   prepaidtoitemdate,
+        //   prepaidfromitemdate
+        // );
+        console.log("cost center SAVE::",lineinfoData.TypeofPurchaseDetailList[i].CostCenter);
+        
         let bodyItem = {
           PKID: GlobalStore.getPrId(),
           ConnectPRID: GlobalStore.getPrId(),
@@ -418,8 +426,7 @@ const saveIntoTable = async () => {
           Unit_Price: nulltypeOfPurchaseInfoList[j].unitPrice,
           Requester_Name: GlobalStore.getName(),
           Requester_LoginName: GlobalStore.getEmail(),
-          TypeOfOrder:
-            lineinfoData.TypeofPurchaseDetailList[i].typeofPurchaseName,
+          TypeOfOrder:lineinfoData.TypeofPurchaseDetailList[i].typeofPurchaseName,
           ItemDescription: nulltypeOfPurchaseInfoList[j].des,
           Manager1: null,
           Manager2: null,
@@ -446,7 +453,7 @@ const saveIntoTable = async () => {
     if (lineinfoData.Finalpage === `view${GlobalStore.getPrId()}`) {
       console.log("-----Update --- lineinfo data 554");
       buttonContxtSave();
-    } else if (lineinfoData.Finalpage === `edit${GlobalStore.getPrId()}`) {
+    } else if (lineinfoData.Finalpage === `edit${GlobalStore.getPrId()}${GlobalStore.getRandomNumber()}`) {
       console.log("-----Update --- lineinfo data 557,", saveList, copySaveList);
       if (saveList.length !== 0) {
         console.log("Insert Here 668 557", saveList);
@@ -514,38 +521,62 @@ const saveIntoTable = async () => {
           <Stack>
             <Stack.Item align="start" style={{ display: "flex" }}>
               <span style={{ marginRight: "10px" }}>Select Currency: </span>
+              
               <Dropdown
-                placeholder="Select Currency"
+                disabled={isViewMode}
                 id="prCurrency"
+                placeholder="Select Currency"
                 onChange={changeDropdownOption}
                 options={PrCurrency}
                 selectedKey={selectedItems["prCurrency"]?.key}
-                // defaultSelectedKey={selectedItems["prCurrency"]?.key}
-                // defaultSelectedKey={GlobalStore.getTitledata().currencyKey}
                 styles={dropdownStyles1}
               />
             </Stack.Item>
-
-            {selectedItems.prCurrency.key !==
-            GlobalStore.getTitledata().currencyKey ? (
+          </Stack>
+{/* //currency value-------------------------------------- */}
+  <div className='button-border-end '>
+    <div className='borderline'>
+      <Stack horizontal horizontalAlign="space-between" 
+      style={{marginBottom: "30px",marginTop: "10px"}} >
+        <Stack.Item  >
+          <Stack horizontal horizontalAlign="baseline">    
+            {selectedItems.prCurrency.key !== GlobalStore.getDefaultCurr() ? (
               <Stack.Item align="end" style={{ display: "flex" }}>
+                <Link  style={{ color: "blue" }}
+                      onClick={linkClickData}
+                >
                 <span style={{ marginRight: "10px" }}>
                   Total Order Amount in (
-                  {GlobalStore.getTitledata().currencyKey}):{" "}
+                  {GlobalStore.getDefaultCurr()}):{" "}
                 </span>
-                <span> ($){totalAmount}</span>
+                <span> {changeCurrencyValue}</span>
+              </Link>
+              {chngCurrData?
+                <div className="linkChngcurrPopup">
+                  <TableChangeCurrencyData 
+                    isModalOpen={chngCurrData} 
+                    showModal={PopupchngCurrData}  
+                    FormCurr={selectedItems.prCurrency.key as string}   
+                  />
+                </div>:null}
               </Stack.Item>
             ) : null}
-
+          </Stack>
+        </Stack.Item>
+      <Stack.Item >
+        <Stack horizontal horizontalAlign="baseline">
             <Stack.Item align="end" style={{ display: "flex" }}>
               <span style={{ marginRight: "10px" }}>
                 Total Order Amount in ({selectedItems.prCurrency.key}):{" "}
               </span>
-              <span> ($){totalAmount}</span>
+              <span> {totalAmount}</span>
             </Stack.Item>
           </Stack>
-
-          <Stack.Item>
+        </Stack.Item>
+      </Stack>
+    </div>
+  </div>
+       <Stack.Item>
             {lineinfoData.TypeofPurchaseDetailList ? (
               <>
                 {lineinfoData.TypeofPurchaseDetailList.map(
@@ -556,6 +587,7 @@ const saveIntoTable = async () => {
                         id={index}
                         addTotalAmount={addTotalAmount}
                         isViewMode={isViewMode}
+                        AmountCurr={selectedItems.prCurrency.key as string}
                       />
                     </>
                   )

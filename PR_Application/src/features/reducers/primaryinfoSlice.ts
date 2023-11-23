@@ -102,7 +102,7 @@ const initialState: PrimaryPageinformation = {
   {"label":"Facilities or Lease","id":"Facilities or Lease","isChecked":false,"isDisable":false,"store":[]},
   {"label":"Computer Equipment","id":"Computer Equipment","isChecked":false,"isDisable":false,"store":[]},
   {"label":"Marketing","id":"Marketing","isChecked":false,"isDisable":false,"store":[]},
-  {"label":"Softwaret","id":"Software","isChecked":false,"isDisable":false,"store":[]},
+  {"label":"Software","id":"Software","isChecked":false,"isDisable":false,"store":[]},
   {"label":"Benefits","id":"Benefits","isChecked":false,"isDisable":false,"store":[]}],
   fileData:[],
   requestfor:{
@@ -115,11 +115,7 @@ const initialState: PrimaryPageinformation = {
   }
   };
 let storeData:PrimaryPageinformation;
-  export const insertContent = createAsyncThunk(
-
-    'insertContent',
-
-    async () => {
+  export const insertContent = createAsyncThunk('insertContent',async() =>{
 
       console.log("------------------------ >> ");
 
@@ -151,7 +147,7 @@ let storeData:PrimaryPageinformation;
       {
         for(let i:number=0;i<state.rightCheckbox.length;i++){
           if(state.rightCheckbox[i].label==="Facilities or Lease"){
-            state.rightCheckbox[i].isDisable=false
+            state.rightCheckbox[i].isDisable=false;
             }
             else{
               state.rightCheckbox[i].isDisable=true
@@ -163,9 +159,9 @@ let storeData:PrimaryPageinformation;
 
       },
       refreshStore(state: PrimaryPageinformation){
-        console.log("166 166666666666666666666666666666666",state.fileData.length)
+        console.log("filelength::",state.fileData.length)
         state.fileData.splice(0,state.fileData.length)
-        console.log("166 166666666666666666666666666666666",state.fileData.length)
+        console.log("filelength2::",state.fileData.length)
 
           // state.radioGroup.prRadio={ key: "yes", text: "Yes" };
           // state.requestfor={

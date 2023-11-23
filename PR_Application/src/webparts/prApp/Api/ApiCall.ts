@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl, getprrequestiteminforesultUrl, getUserDeptUrl, getRegionUrl, getCountryUrl, getUOMUrl, getCurrencyChangeUrl, getExpenseGLUrl, getManagerDetails, getJobLevel, getVacationLeave, InsertApprovalLog, FinanceApprovallog, DelLineItem, delDocItem, getpaginationURL, prApprovaldelete, getApprovalLimit, EHSapprovalURL } from './Config/server_config'
+import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl, getprrequestiteminforesultUrl, getUserDeptUrl, getRegionUrl, getCountryUrl, getUOMUrl, getCurrencyChangeUrl, getExpenseGLUrl, getManagerDetails, getJobLevel, getVacationLeave, InsertApprovalLog, FinanceApprovallog, DelLineItem, delDocItem, getpaginationURL, prApprovaldelete, getApprovalLimit, EHSapprovalURL, getBlnkCmpVenDetails, getauditTrailURL, getapprovallogURL } from './Config/server_config'
 import { EmployeeDetails } from '../Model/employee_details'
 
 export class restApiCall {
@@ -262,6 +262,12 @@ static async InsertApprovalLog(body){
         let res=await this.rest_apiCall(`${getpaginationURL}${companyCode}&offValue=${offset}`,{});
         return res.data;
     }
+    //Get blank comCode Vendor Details
+    static async GetBlnkCmpVenDetails(offset:number){
+        let res=await this.rest_apiCall(`${getBlnkCmpVenDetails}${offset}`,{});
+        return res.data;
+    }
+
     //Approval log delete---
     static async prApprovaldelete(pid:string){
         await this.rest_apiCall(`${prApprovaldelete}${pid}&cT=d`,{})
@@ -279,6 +285,17 @@ static async InsertApprovalLog(body){
         let res=await this.rest_apiCall(`${EHSapprovalURL}`,{});
         return res.data;
     }
+      static async getApprovalLog(pId:string){
+        let approvalRes=await this.rest_apiCall(`${getapprovallogURL}${pId}&cT=X`,{});
+        return approvalRes.data;
+    }
+ 
+    static async getAuditTrail(pId:string){
+       
+        let auditTrailres=await this.rest_apiCall(`${getauditTrailURL}${pId}`,{})
+        return auditTrailres.data;
+    }
+
 
 }
 

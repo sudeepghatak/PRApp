@@ -10,6 +10,8 @@ import { updateFinalPage } from "../../../../features/reducers/lineitemSlice";
 import CopyComponentModel from "./Galary/ModelContent/CopyComponentModel";
 import { useState } from "react";
 import DeleteComponentModel from "./Galary/ModelContent/DeleteComponentModel";
+import { AuditTrailComponent } from "./Galary/ModelContent/AuditTrailComponent";
+import { fetchAuditTrailContent } from "../../../../features/reducers/AuditTrailSlice";
 interface IGBoxCard {
   cardItem: ISearchResult;
 }
@@ -42,9 +44,14 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
   //   cardItem,
   //   cardItem.ConnectPRID
   // );
+    const [showAttatchmentstatus, setshowAttatchmentstatus] = useState(false);
+  const showAttatchmentDialogstatus = () => {
+    setshowAttatchmentstatus(!showAttatchmentstatus);
+  };
+
   const [showDialogstatus, setshowDialogstatus] =
     React.useState<boolean>(false);
-
+  
   const showAlertDialogStatus = () => {
     setshowDialogstatus(!showDialogstatus);
   };
@@ -54,13 +61,20 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
     showAlertDialogStatus();
     dispatch(fetchStatusContent(pId));
   };
-  const galaryEdit = (pId: string) => {
+   const galaryEdit = (pId: string) => {
     GlobalStore.storePrId(pId);
+    GlobalStore.incrementRandomNumber();
     GlobalStore.changeEnterMainpage(true);
     GlobalStore.changeviewmodeOn(false);
     //
-    dispatch(updateFinalPage(`edit${pId}`));
+    dispatch(updateFinalPage(`edit${pId}${GlobalStore.getRandomNumber()}`));
   };
+  
+  const fetchAuditinfo = (pId: string) => {
+    showAttatchmentDialogstatus();
+    dispatch(fetchAuditTrailContent(pId));
+  };
+
   const [isModalOpencopy, setisModalOpencopy] = useState(false);
   const hideModal = () => {
     setisModalOpencopy(!isModalOpencopy);
@@ -80,6 +94,15 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
 
   return (
     <>
+    {showAttatchmentstatus ? (
+        <AuditTrailComponent
+          isModalOpen={showAttatchmentstatus}
+          showModal={showAttatchmentDialogstatus}
+          backgroundcolor="#1E3A2E"
+          title={`[${cardItem.ConnectPRID}] Purchase Request Audit Trail`}
+          connectprID={`${cardItem.ConnectPRID}`}
+        />
+      ) : null}
       <div id="main-galary-box">
         <div className="box-card">
           <div>
@@ -173,6 +196,7 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
           <div style={{ width: "50%" }}>
             <a
               href="#"
+              onClick={() => fetchAuditinfo(cardItem.ConnectPRID)}
               className="galary-button"
               style={{
                 backgroundColor:

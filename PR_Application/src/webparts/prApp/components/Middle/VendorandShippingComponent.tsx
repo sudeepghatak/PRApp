@@ -413,7 +413,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     console.log("otherShippingAdd__otherShippingAdd--", otherShippingAdd);
     if (
       lineintemData.Finalpage === "prsubmit" ||
-      lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`
+      lineintemData.Finalpage === `edit${GlobalStore.getPrId()}${GlobalStore.getRandomNumber()}`
     ) {
       restApiCall.insertPlantLoc(otherShippingAdd).then((insPlat) => {
         console.log("insertPlantLoc--------------------", insPlat);

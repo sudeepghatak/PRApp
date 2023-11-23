@@ -1,0 +1,15 @@
+.linkChngcurrPopup{
+    margin-top: 12%;
+    margin-left: 12%;
+}
+.linkFontDesign{
+    font-size: 17px;
+    color: rgb(255, 255, 255);
+}
+.linkCrossDesign{
+    margin-top: 8px;
+    margin-right: 4px;
+    color: red;
+    background-Color: whitesmoke;
+    max-height: 30px;
+}

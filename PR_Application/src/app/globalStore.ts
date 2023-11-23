@@ -18,6 +18,10 @@ export class GlobalStore{
     private static viewmodeOn=false;
     private static enterMainpage=false;
     private static Totalamount:number;
+    private static currencyChngTotalamount: number;
+    private static changeCurr:string;
+    private static DefaultCurr:string;
+
 
     private static titledata:IPRTitleData={
         name: "",
@@ -28,15 +32,42 @@ export class GlobalStore{
         IsPrepaidCapital: "",
         LegacyCompany:"",
     };
+    private static randomNumber:number=0;
+    static incrementRandomNumber(){
+        this.randomNumber++;
+    }
+    static getRandomNumber(){
+        return this.randomNumber;
+    }
+    //Total amount
     static setTotal(amount:number){
         this.Totalamount=amount;
-
     }
-
     static getTotal(){
         return this.Totalamount;
     }
-    
+
+    //currency change Total amount
+    static setChangCurrTotalAmount(curr:number){
+        this.currencyChngTotalamount=curr;
+    }
+    static getChangCurrTotalAmount(){
+        console.log("currency",this.currencyChngTotalamount);
+        return this.currencyChngTotalamount;     
+    }
+    //currency change Currency
+    static setChngCurr(Curr:string){
+        this.changeCurr=Curr;
+    }
+    static getChngCurr(){
+        return this.changeCurr;
+    }
+    //Default Currency-----------------
+    static getDefaultCurr(){
+        this.DefaultCurr="USD";
+        console.log("DefaultCurr..DefaultCurr:",this.DefaultCurr);  
+        return this.DefaultCurr;
+    }
 
     static changeEnterMainpage(changeMainpage:boolean){
         this.enterMainpage=changeMainpage
@@ -165,7 +196,7 @@ export class GlobalStore{
         console.log(prType,ebuy,toolName)
         console.log(this.Tooldata[prType])
         console.log(this.Tooldata[prType][ebuy])
-        // console.log(this.Tooldata[prType][ebuy][toolName])
+        console.log("toolName::",this.Tooldata[prType][ebuy][toolName])
 
         return this.Tooldata[prType][ebuy][toolName];
     }

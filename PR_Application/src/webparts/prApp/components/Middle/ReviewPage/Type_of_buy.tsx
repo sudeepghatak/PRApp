@@ -32,10 +32,10 @@ const BlockSize: IStackStyles = {
 }
 
 
-useEffect(()=>{
-  dispatch(fetchStatusContent(GlobalStore.getPrId()));
+// useEffect(()=>{
+//   dispatch(fetchStatusContent(GlobalStore.getPrId()));
   
-},[])
+// },[])
 
   return(
     <>
@@ -145,7 +145,7 @@ useEffect(()=>{
                      <Stack.Item >
                      <div className='text-heading'>
                         <Link href="" underline>
-                          Total Order Amount in (USD): {GlobalStore.getTotal()}
+                          Total Order Amount in ({GlobalStore.getChngCurr()}): {GlobalStore.getTotal()}
                        </Link>
                      </div>
                     </Stack.Item>
@@ -155,7 +155,7 @@ useEffect(()=>{
                 <Stack.Item grow={5}>
                   <Stack horizontal horizontalAlign="baseline">
                     <Stack.Item >
-                      <div  className='text-des'>Total Order Amount in (CHF): (CHF)80.00 </div>
+                      {/* <div  className='text-des'>Total Order Amount in (CHF): (CHF)80.00 </div> */}
                     </Stack.Item>
                   </Stack>
                 </Stack.Item>

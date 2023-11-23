@@ -381,7 +381,13 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
   // }, [vendorNameselector.vendorNameList.length]);
 
   const callVendorApi = async (companyCode: string, offset: number) => {
-    let vendorData = await restApiCall.getPaginationData(companyCode, offset);
+    let vendorData=[];
+    if(companyCode!==""){
+       vendorData = await restApiCall.getPaginationData(companyCode, offset);
+    }
+    else{
+       vendorData = await restApiCall.GetBlnkCmpVenDetails(offset)
+    }
     if (vendorData.length === 0) {
       return;
     }
@@ -411,11 +417,12 @@ export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
     if (fromLandingpage) {
       restApiCall.getCompanycode().then((value) => {
         for (let i: number = 0; i < value.data.length; i++) {
-          callVendorApi(value.data[i].MappedCompanyCode, 0);
+            callVendorApi(value.data[i].MappedCompanyCode, 0);
         }
       })}
       else{
-        callVendorApi(optionGroupData.companyCode.text, 0);
+          callVendorApi(optionGroupData.companyCode.text, 0);
+        
       }
     
   }, []);
