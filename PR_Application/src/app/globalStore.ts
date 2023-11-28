@@ -22,6 +22,8 @@ export class GlobalStore{
     private static changeCurr:string;
     private static DefaultCurr:string;
 
+    
+
 
     private static titledata:IPRTitleData={
         name: "",
@@ -38,6 +40,15 @@ export class GlobalStore{
     }
     static getRandomNumber(){
         return this.randomNumber;
+    }
+    private static toViewData:string;
+    static storeToViewData(toview:string){
+        this.toViewData=toview;
+
+    }
+    static getToViewData(){
+        return this.toViewData
+
     }
     //Total amount
     static setTotal(amount:number){

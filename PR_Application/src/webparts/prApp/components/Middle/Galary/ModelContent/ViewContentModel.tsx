@@ -3,6 +3,10 @@ import * as React from "react";
 import { Modal, IIconProps, Stack, mergeStyleSets } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { MainPage } from "../../MainPage";
+import { updateFinalPage } from "../../../../../../features/reducers/lineitemSlice";
+import { GlobalStore } from "../../../../../../app/globalStore";
+import { useDispatch } from "react-redux";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
 interface IModalProps {
   isModalOpen: boolean;
@@ -14,6 +18,7 @@ export const ViewContentModel: React.FunctionComponent<IModalProps> = (
   props
 ) => {
   const { isModalOpen, showModal, backgroundcolor, title } = props;
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const background_color = backgroundcolor as string;
   const modal_title = title as string;
   return (
@@ -46,7 +51,10 @@ export const ViewContentModel: React.FunctionComponent<IModalProps> = (
             <IconButton
               style={{ color: "black" }}
               iconProps={cancelIcon}
-              onClick={showModal}
+              onClick={() => {
+                dispatch(updateFinalPage(GlobalStore.getToViewData()));
+                showModal();
+              }}
             />
           </span>
         </Stack>

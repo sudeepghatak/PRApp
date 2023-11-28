@@ -28,6 +28,7 @@ interface IModalProps {
 export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
   const { isModalOpen, showModal, backgroundcolor, title, connectprID } = props;
   const statusInfo = useSelector((state: RootState) => state.statusreducer);
+  const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const [showDialogview, setshowDialogview] = React.useState<boolean>(false);
 
@@ -38,6 +39,8 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
   const viewContent = () => {
     GlobalStore.storePrId(connectprID);
     GlobalStore.changeviewmodeOn(true);
+
+    GlobalStore.storeToViewData(lineintemData.Finalpage);
     //
     dispatch(updateFinalPage(`view${connectprID}`));
     showAlertDialogView();

@@ -2,13 +2,18 @@
   "@microsoft/generator-sharepoint": {
     "plusBeta": false,
     "isCreatingSolution": true,
-    "version": "1.15.0",
-    "libraryName": "pr-application",
-    "libraryId": "bdbe703e-3252-4641-915e-8b345d95c09e",
+    "nodeVersion": "16.20.2",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.12.0"
+    },
+    "version": "1.18.2",
+    "libraryName": "spfxprapp",
+    "libraryId": "a70ca45e-0a55-4f1f-803c-54ad812b4edf",
     "environment": "spo",
     "packageManager": "npm",
-    "solutionName": "pr-application",
-    "solutionShortDescription": "pr-application description",
+    "solutionName": "spfxprapp",
+    "solutionShortDescription": "spfxprapp description",
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
     "componentType": "webpart"
