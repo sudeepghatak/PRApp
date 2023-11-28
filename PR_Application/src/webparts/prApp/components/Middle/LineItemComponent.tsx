@@ -1,5 +1,7 @@
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
+import {
+  //  useContext,
+    useEffect, useState } from "react";
 import {
   Dropdown,
   IDropdownOption,
@@ -12,7 +14,7 @@ import {
 } from "office-ui-fabric-react";
 import { findIndex, map } from "lodash";
 import LineItemTableFormat from "./TypeOfPurchase_TableFormat";
-import { tableBuildContext } from "./MainPage";
+// import { tableBuildContext } from "./MainPage";
 import { RootState } from "../../../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { TypeofPurchaseDetail } from "../../Model/TypePurchases/type_purchases_detail";
@@ -24,6 +26,7 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 import './StyleFourthComponent.css';
 import './File.css';
 import { TableChangeCurrencyData } from "./TableChangeCurrencyData";
+import { IbackApi } from "../Ibackapi";
 
 // interface ThirdProps {
 //   [key: string]: React.FunctionComponent[];
@@ -41,14 +44,14 @@ interface IAmountProps {
 let listOftotalAmount: IAmountProps[] = [];
 
 const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
-  const tableContent = useContext(tableBuildContext);
+  // const tableContent = useContext(tableBuildContext);
   const { buttonContxtSave, buttonContxtBack, isViewMode } = props;
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const lineinfoData = useSelector((state: RootState) => state.lineiteminfo);
-  const vendorPKIDData = useSelector(
-    (state: RootState) => state.vendorandshipping.PKID
-  );
+  // const vendorPKIDData = useSelector(
+  //   (state: RootState) => state.vendorandshipping.PKID
+  // );
   const [selectedItems, setSelectedItems] = React.useState<{
     [key: string]: IDropdownOption;
   }>({
@@ -147,7 +150,7 @@ const LineItemComponent: React.FunctionComponent<IThirdprops> = (props) => {
     let changeCurrVal = [];
     restApiCall
       .GetCurrencyChangeUrl(
-        selectedItems.prCurrency.key,
+        (selectedItems.prCurrency.key as string),
         GlobalStore.getDefaultCurr()
       )
       .then((value) => {
@@ -179,9 +182,9 @@ const saveIntoTable = async () => {
     GlobalStore.setChangCurrTotalAmount(changenum);
     console.log("GlobalStore:GlobalStore save::",totalAmount,currChng,changenum);
     
-    dispatch(saveButtonClick());
+    dispatch(saveButtonClick(1));
 
-        let saveLineValueDetails = [
+        let saveLineValueDetails:IbackApi[] = [
       {
         PKID: GlobalStore.getPrId(),
         ConnectPRID: GlobalStore.getPrId(),
@@ -296,12 +299,12 @@ const saveIntoTable = async () => {
       let notnulltypeOfPurchaseInfoList = lineinfoData.TypeofPurchaseDetailList[
         i
       ].typeOfPurchaseInfoList.filter(
-        (childtypeofPurchases) => childtypeofPurchases.PKID != null
+        (childtypeofPurchases:any) => childtypeofPurchases.PKID != null
       );
  
       let nulltypeOfPurchaseInfoList = lineinfoData.TypeofPurchaseDetailList[
         i].typeOfPurchaseInfoList.filter(
-        (childtypeofPurchases) => childtypeofPurchases.PKID == null
+        (childtypeofPurchases:any) => childtypeofPurchases.PKID == null
       );
  
       for (let k: number = 0; k < notnulltypeOfPurchaseInfoList.length; k++) {

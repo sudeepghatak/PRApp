@@ -19,7 +19,7 @@ export const DelegateModel: React.FunctionComponent<IModalProps> = (props) => {
   const modal_title = title as string;
   const [firstselectedDate, setfirstSelectedDate] = React.useState("");
 
-  const firsthandleChange = (e) => {
+  const firsthandleChange = (e:any) => {
     console.log("First Date is Here ", e.target.value);
     var res = new Date(e.target.value);
     console.log(res.getUTCDate());
@@ -31,13 +31,13 @@ export const DelegateModel: React.FunctionComponent<IModalProps> = (props) => {
   };
   const [secondselectedDate, setsecondSelectedDate] = React.useState("");
 
-  const secondhandleChange = (e) => {
+  const secondhandleChange = (e:any) => {
     var res = new Date(e.target.value);
     secondDate = res.toISOString().replace(".000Z", "");
     setsecondSelectedDate(e.target.value);
   };
-  const [employedetail, setEmployedetail] = React.useState([]);
-  const companyCodeOptionSet = (newItem) => {
+  const [employedetail, setEmployedetail] = React.useState<any[]>([]);
+  const companyCodeOptionSet = (newItem: any) => {
     if (newItem.length !== 0) {
       console.log(newItem[0].companyCode);
 
@@ -52,9 +52,6 @@ export const DelegateModel: React.FunctionComponent<IModalProps> = (props) => {
     }
     console.log("Okkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
     console.log(newItem);
-    // console.log(newItem[0]);
-    // console.log(newItem[0].EmployeeId);
-    // console.log("Do The Best Heer ----");
   };
 
   console.log(firstselectedDate);
@@ -189,8 +186,5 @@ const contentStyles = mergeStyleSets({
     width: 500,
     minHeight: 230,
     height: 230,
-    // textAlign: "center",
-    // flexFlow: "column nowrap",
-    // alignItems: "stretch",
   },
 });

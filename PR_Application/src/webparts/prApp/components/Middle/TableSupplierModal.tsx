@@ -10,7 +10,7 @@ import {
   CheckboxVisibility,
 } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
-import { VendorData } from "../../Api/vendorapi";
+// import { VendorData } from "../../Api/vendorapi";
 import { VendorDetails } from "../../Model/vendor_details";
 import { RootState } from "../../../../app/store";
 import { useSelector } from "react-redux";
@@ -30,7 +30,7 @@ let vendorName: VendorDetails[] = [];
 let vendorNumber: VendorDetails[] = [];
 let vendorNamestring: string = "";
 let vendorNumberstring: string = "";
-let completeSupplierDatafetch: boolean = false;
+// let completeSupplierDatafetch: boolean = false;
 
 export const SupplierModal: React.FunctionComponent<IModalProps> = (props) => {
   const { isModalOpen, showModal, venderItemDatapick,fromLandingpage } = props;

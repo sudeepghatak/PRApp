@@ -1,25 +1,25 @@
 import * as React from "react";
 import {
   IIconProps,
-  getTheme,
+  // getTheme,
   IconButton,
-  Spinner,
-  SpinnerSize,
+  // Spinner,
+  // SpinnerSize,
   mergeStyleSets,
-  FontWeights,
+  // FontWeights,
   DefaultButton,
   DefaultPalette,
 } from "@fluentui/react";
 import { Modal } from "@fluentui/react/lib/Modal";
 import { useState } from "react";
 // import "./Accrodian.css";
-import { Functionality } from "../../../../Utils/Functionality";
-import { fetchSearchContent } from "../../../../../../features/reducers/searchSlice";
-import { savePkid } from "../../../../../../features/reducers/vendorandshippingSlice";
-import { useDispatch } from "react-redux";
-import { ThunkDispatch } from "@reduxjs/toolkit";
-import { updateFinalPage } from "../../../../../../features/reducers/lineitemSlice";
-import { GlobalStore } from "../../../../../../app/globalStore";
+// import { Functionality } from "../../../../Utils/Functionality";
+// import { fetchSearchContent } from "../../../../../../features/reducers/searchSlice";
+// import { savePkid } from "../../../../../../features/reducers/vendorandshippingSlice";
+// import { useDispatch } from "react-redux";
+// import { ThunkDispatch } from "@reduxjs/toolkit";
+// import { updateFinalPage } from "../../../../../../features/reducers/lineitemSlice";
+// import { GlobalStore } from "../../../../../../app/globalStore";
 import { RecallComponentModel } from "./RecallComponentModel";
 interface ICallRecallComponent {
   isModalOpen: boolean;
@@ -32,7 +32,7 @@ const CallRecallComponent: React.FunctionComponent<ICallRecallComponent> = (
   const { isModalOpen, hideModal, ConnectprId } = props;
 
   const [openNewRecall, setopenNewRecall] = useState(false);
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  // const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const ConfirmRecall = () => {
     setopenNewRecall(!openNewRecall);

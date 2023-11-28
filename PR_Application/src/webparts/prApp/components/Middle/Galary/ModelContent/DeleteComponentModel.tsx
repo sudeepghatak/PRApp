@@ -1,12 +1,12 @@
 import * as React from "react";
 import {
   IIconProps,
-  getTheme,
+  // getTheme,
   IconButton,
   Spinner,
   SpinnerSize,
   mergeStyleSets,
-  FontWeights,
+  // FontWeights,
   DefaultButton,
   DefaultPalette,
 } from "@fluentui/react";
@@ -15,11 +15,11 @@ import { useState } from "react";
 // import "./Accrodian.css";
 import { Functionality } from "../../../../Utils/Functionality";
 import { fetchSearchContent } from "../../../../../../features/reducers/searchSlice";
-import { savePkid } from "../../../../../../features/reducers/vendorandshippingSlice";
+// import { savePkid } from "../../../../../../features/reducers/vendorandshippingSlice";
 import { useDispatch } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { updateFinalPage } from "../../../../../../features/reducers/lineitemSlice";
-import { GlobalStore } from "../../../../../../app/globalStore";
+// import { GlobalStore } from "../../../../../../app/globalStore";
 interface ICopyComponentModel {
   isModalOpen: boolean;
   hideModal: () => void;

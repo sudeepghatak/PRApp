@@ -4,7 +4,7 @@ import {
   IColumn,
   CheckboxVisibility,
 } from "@fluentui/react/lib/DetailsList";
-import { Icon } from "@fluentui/react/lib/Icon";
+// import { Icon } from "@fluentui/react/lib/Icon";
 import { RootState } from "../../../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,9 +18,9 @@ import {
   deleteFileDoc,
   fileInformation,
   modifyFileData,
-  saveFileDoc,
+  // saveFileDoc,
 } from "../../../../features/reducers/primaryinfoSlice";
-import { log } from "sp-pnp-js";
+// import { log } from "sp-pnp-js";
 import { GlobalStore } from "../../../../app/globalStore";
 import { restApiCall } from "../../Api/ApiCall";
 interface ITableComponent {
@@ -34,11 +34,10 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
     (state: RootState) => state.primaryinfo.fileData
   );
 
-  const DeleteDoc = () =>
-  {
-      
+  // const DeleteDoc = () =>
+  // {
 
-  }
+  // }
 
   const changeDropdownOption = (
     event: React.FormEvent<HTMLDivElement>,
@@ -46,20 +45,20 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
     index: number,
     fileContent: fileInformation
   ): void => {
-    console.log("item++:", item);
-    console.log("item++....:", item.text);
+    // console.log("item++:", item);
+    // console.log("item++....:", item.text);
     console.log(fileContent);
     let sowDoc = {
-      docType: item.text,
+      docType: (item as IDropdownOption).text,
     };
     let fileProperty = { ...fileContent, ...sowDoc };
     console.log(fileProperty);
     console.log("KKKKKKKKKKKKKKKK");
     dispatch(modifyFileData(fileProperty));
     //
-    const { id } = event.target as HTMLDivElement;
-    let newSelectedItem: IDropdownOption = { key: "", text: "" };
-    newSelectedItem = { key: item?.key as string, text: item?.text as string };
+    // const { id } = event.target as HTMLDivElement;
+    // let newSelectedItem: IDropdownOption = { key: "", text: "" };
+    // newSelectedItem = { key: item?.key as string, text: item?.text as string };
     // let fileData: fileInformation = {
     //   key:randomKey,
     //   fileName: acceptedFiles[0].name,
@@ -253,16 +252,22 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
   ];
   // const items=
   for (let i = 0; i < fileData.length; i++) {
-    let DelDoc=()=>{
-      console.log("GlobalStore.getPrId()!==null::",GlobalStore.getPrId()!==null);
-     if (GlobalStore.getPrId()!==null) 
-      {
-         console.log("GlobalStore.getPrId()!==null::",GlobalStore.getPrId()!==null,fileData[i].fileName,GlobalStore.getPrId());
-        restApiCall.deleleDocItem(GlobalStore.getPrId(),fileData[i].fileName);
+    let DelDoc = () => {
+      console.log(
+        "GlobalStore.getPrId()!==null::",
+        GlobalStore.getPrId() !== null
+      );
+      if (GlobalStore.getPrId() !== null) {
+        console.log(
+          "GlobalStore.getPrId()!==null::",
+          GlobalStore.getPrId() !== null,
+          fileData[i].fileName,
+          GlobalStore.getPrId()
+        );
+        restApiCall.deleleDocItem(GlobalStore.getPrId(), fileData[i].fileName);
       }
-      dispatch(deleteFileDoc(fileData[i].key))
+      dispatch(deleteFileDoc(fileData[i].key));
     };
-
 
     let newItem = {
       key: fileData[i].key,
@@ -289,7 +294,7 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
               index: number
             ) => changeDropdownOption(event, item, index, fileData[i])}
             options={DocTypeOption}
-            style={{ width: "100px", fontSize:"12px"}}
+            style={{ width: "100px", fontSize: "12px" }}
             selectedKey={fileData[i].docType}
             styles={dropdownStyles}
           />
@@ -303,8 +308,8 @@ const TableComponent: React.FunctionComponent<ITableComponent> = (props) => {
           disabled={isViewMode}
           title="Delete"
           ariaLabel="Delete"
-          onClick={() =>
-            DelDoc()
+          onClick={
+            () => DelDoc()
             // dispatch(deleteFileDoc(fileData[i].key))
           }
         />

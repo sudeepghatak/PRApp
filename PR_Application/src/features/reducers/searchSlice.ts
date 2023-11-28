@@ -15,7 +15,7 @@ export interface ISearchResult{
 }
 
 const initialState={
-    listSearchResult:[],
+    listSearchResult:[] as ISearchResult[],
     isLoading:false
 }
 export const fetchSearchContent = createAsyncThunk(

@@ -3,7 +3,7 @@ import { apiEndpoint, getVendorNameUrl,getProjectCodeResultUrl, postPRAllRequest
 import { EmployeeDetails } from '../Model/employee_details'
 
 export class restApiCall {
-   static  async rest_apiCall(url,body){
+   static  async rest_apiCall(url:string,body:any){
     console.log("This is Api EndPont ")
     console.log(` ${apiEndpoint}${url}`)
     console.log(body)
@@ -13,17 +13,17 @@ export class restApiCall {
         return res;
 
     }
-    static async vendorDataApi(companyCode) {
+    static async vendorDataApi(companyCode:string) {
         let res=await this.rest_apiCall(`${getVendorNameUrl}${companyCode}`,{});
         return res.data;
     }
 
-    static async getProjetCodeList(projectName){
+    static async getProjetCodeList(projectName:string){
         let res=await this.rest_apiCall(`${getProjectCodeResultUrl}${projectName}`,{});
         return res.data;
     }
     
-    static async getCostCenterList(comCode){
+    static async getCostCenterList(comCode:string){
         let res=await this.rest_apiCall(`${getCostCenterUrl}${comCode}`,{});
         return res.data;
     }
@@ -32,17 +32,17 @@ export class restApiCall {
         // console.log("getUserDeptList== ",res);   
         return res.data;
     }
-    static async getShipToAddList(comCode){
+    static async getShipToAddList(comCode:string){
         let res=await this.rest_apiCall(`${getPlantCodeUrl}${comCode}`,{});
         return res.data;
     }
 
-    static async getPlantLoc(loc){
+    static async getPlantLoc(loc:string){
         let res=await this.rest_apiCall(`${getLocPlantUrl}${loc}`,{});
         return res.data;
     }
 
-    static async getShippingAddress(companyCode){
+    static async getShippingAddress(companyCode:string){
         let getShippingList=[];
         let companyCodeList=await this.getShipToAddList(companyCode);
         for(let i:number=0;i<companyCodeList.length;i++){
@@ -92,20 +92,20 @@ export class restApiCall {
         return res.data;
     }
 
-    static async getCIPcode(comcode){
+    static async getCIPcode(comcode:string){
         
         let resCIPcode=await this.rest_apiCall(`${getCIPUrl}${comcode}`,{});
         console.log(resCIPcode);
         return resCIPcode.data;
     }
-     static async getDocTypeurl(pID){
+     static async getDocTypeurl(pID:string){
         
         let res=await this.rest_apiCall(`${getDocItems}${pID}&cT=X`,{});
         console.log("getDocTypeurl----",res);
         return res.data;
     }
 
-    static async GetRegionUrl(cKey){
+    static async GetRegionUrl(cKey:string){
         
         let res=await this.rest_apiCall(`${getRegionUrl}${cKey}`,{});
         return res.data;
@@ -121,7 +121,7 @@ export class restApiCall {
         let res=await this.rest_apiCall(`${getUOMUrl}`,{});
         return res.data;
     }
-     static async GetCurrencyChangeUrl(fromCurr,toCurr){
+     static async GetCurrencyChangeUrl(fromCurr: string,toCurr: string){
         let res=await this.rest_apiCall(`${getCurrencyChangeUrl}${fromCurr}&to=${toCurr}`,{});
         return res.data;
     }
@@ -146,7 +146,7 @@ export class restApiCall {
 
 
 
-    static async insertPrimaryInfoData(body,type:boolean){
+    static async insertPrimaryInfoData(body:any,type:boolean){
         console.log("Data entry .......")
         console.log(body)
         console.log("............")
@@ -159,7 +159,7 @@ export class restApiCall {
        return res.data
        
     }
-    static async insertVendorDetails(body){
+    static async insertVendorDetails(body:any){
         
         let res=await this.rest_apiCall(`${updatePRAllRequestUrl}`,body);
         console.log("Modify Success .........")
@@ -168,7 +168,7 @@ export class restApiCall {
         console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
     }
 
-    static async insertLineItem(body){
+    static async insertLineItem(body:any){
         
         let res=await this.rest_apiCall(`${postLineItemUrl}?cT=i`,body);
         console.log("Modify Success  insertLineItem Here ...........")
@@ -176,10 +176,10 @@ export class restApiCall {
         console.log(res)
         console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
     }
-    static async updateLineItem(body){
-        let res=await this.rest_apiCall(`${postLineItemUrl}?cT=u`,body);
+    static async updateLineItem(body:any){
+        await this.rest_apiCall(`${postLineItemUrl}?cT=u`,body);
     }
-    static async insertPlantLoc(body){
+    static async insertPlantLoc(body:any){
         let res= await this.rest_apiCall(`${insertPlantLocUrl}`,body);
         console.log("PlantLoc---PlantLoc---PlantLoc :::",res,res.data);
         
@@ -187,21 +187,21 @@ export class restApiCall {
 
     // static async
 
-    static async storeDelegateTask(body){
+    static async storeDelegateTask(body:any){
         
         let res=await this.rest_apiCall(`${insertDelegateUrl}`,body);
         console.log("Degelate Insert Succefully --- ",res)
         return res;
     }
 
-    static async getPrbasicInfoContent(cId){
+    static async getPrbasicInfoContent(cId:string){
     
         let res=await this.rest_apiCall(`${getprrequestresultUrl}${cId}`,{});
         console.log("This is basicInfo data Here ----",res.data)
         return res.data[0];
     }
 
-    static async getPrlineItemContent(cId){
+    static async getPrlineItemContent(cId:any){
         
         let res=await this.rest_apiCall(`${getprrequestiteminforesultUrl}${cId}`,{});
         return res.data;
@@ -239,7 +239,7 @@ static async GetempEmail(emp:string){
         let res=await this.rest_apiCall(`${getVacationLeave}${emp}`,{})
         return res.data;
     }
-static async InsertApprovalLog(body){
+static async InsertApprovalLog(body:any){
         let res= await this.rest_apiCall(`${InsertApprovalLog}`,body);
         console.log("-----",res,res.data);
         
@@ -248,11 +248,11 @@ static async InsertApprovalLog(body){
         let res=await this.rest_apiCall(`${FinanceApprovallog}`,{});
         return res.data;
     }
-    static async DeleleLineItem(body){
+    static async DeleleLineItem(body:any){
         let res = await this.rest_apiCall(`${DelLineItem}`,body)
         return res.data;
     }
-    static async deleleDocItem(CnnectPrid,flName){
+    static async deleleDocItem(CnnectPrid:string,flName:string){
         let res = await this.rest_apiCall(`${delDocItem}${CnnectPrid}&flName=${flName}`,{})
         return res.data;
     }

@@ -5,7 +5,6 @@ import { CapitalExpenseModel } from "../ModelContent/CapitalExpenseModel";
 import { VendorSupplierModel } from "../ModelContent/VendorSupplierModel";
 import { useState } from "react";
 import { SupplierModal } from "../../TableSupplierModal";
-import { VendorDetails } from "../../../../Model/vendor_details";
 interface IPoliciesProceduresProps {
   title: string;
 }

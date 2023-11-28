@@ -1,4 +1,4 @@
-import { log } from "sp-pnp-js";
+
 import { IPRPrepaidGLLoc } from "../webparts/prApp/Model/IPrGLAccountLoc";
 import { IPRTitleData } from "../webparts/prApp/Model/IprTitleData";
 
@@ -11,10 +11,10 @@ export class GlobalStore{
     private static mainEmail:string;
     private static mainName:string;
     private static connetPrId:string;
-    private static Tooldata={};
+    private static Tooldata:{ [key: string]: any }={};
 
-    private static uishowmode:string;
-    private static connectPRID:string;
+    // private static uishowmode:string;
+    // private static connectPRID:string;
     private static viewmodeOn=false;
     private static enterMainpage=false;
     private static Totalamount:number;
@@ -91,19 +91,20 @@ export class GlobalStore{
 
     // }
 
-    static storeUishowMode(uimode:string){
-        localStorage.setItem("uimode",uimode);
-        this.uishowmode=uimode;
-    }
-    static getUishowMode(){
-        let uishowmode:string;
-        if(localStorage.getItem('uimode')==null){
-            uishowmode=null;
-        }else{
-            uishowmode=localStorage.getItem('uimode')
-        }
-        return uishowmode;
-    }
+    // static storeUishowMode(uimode:string){
+    //     localStorage.setItem("uimode",uimode);
+    //     this.uishowmode=uimode;
+    // }
+    // static getUishowMode(){
+    //     let uishowmode:string;
+    //     if(localStorage.getItem('uimode')==null){
+    //         uishowmode=null;
+    //     }else{
+    //         uishowmode=localStorage.getItem('uimode')
+    //     }
+    //     return uishowmode;
+    // }
+
     static storeEmail(email:string,status:boolean){
          console.log("email",email);
          
@@ -126,7 +127,7 @@ export class GlobalStore{
         }
         
     }
-    static storePrId(connetPrId){
+    static storePrId(connetPrId:any){
         this.connetPrId=connetPrId;
         console.log("storePrId--storePrId ;;",connetPrId);
     }
@@ -152,7 +153,7 @@ export class GlobalStore{
     static getmainName(){
         return this.mainName;
     }
-    static storeTitledata(titleData){
+    static storeTitledata(titleData:IPRTitleData){
         this.titledata=titleData,
         console.log("storeTitledata titledata-- ",this.titledata);
     }

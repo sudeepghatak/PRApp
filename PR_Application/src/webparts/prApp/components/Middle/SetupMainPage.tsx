@@ -6,12 +6,12 @@ import { GalaryMain } from "./Galary/galary_box/GalaryMain";
 import "./MainPage.css";
 import GalaryDashboard from "./GalaryDashboard";
 import { GlobalStore } from "../../../../app/globalStore";
+
 const SetupMainPage: React.FunctionComponent = () => {
   const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
-  console.log(
-    "I Am Here So I Just Check This Topic Here --- ",
-    lineintemData.Finalpage
-  );
+
+
+
   return (
     <>
       <div id="main-row">

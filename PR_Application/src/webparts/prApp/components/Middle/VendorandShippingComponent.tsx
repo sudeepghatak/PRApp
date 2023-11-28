@@ -4,7 +4,11 @@ import { DefaultButton } from "@fluentui/react/lib/Button";
 import { DefaultPalette } from "@fluentui/react/lib/Styling";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { ITextFieldStyles, TextField } from "@fluentui/react/lib/TextField";
-import { useState, useEffect, useMemo } from "react";
+import {
+  useState,
+  useEffect,
+  //  useMemo
+} from "react";
 // import styles from "../Style/style.scss";
 import {
   Dropdown,
@@ -14,8 +18,8 @@ import {
 import { Link } from "@fluentui/react";
 import { SupplierModal } from "./TableSupplierModal";
 import { VendorDetails } from "../../Model/vendor_details";
-import { ConnectPr } from "../../Api/api";
-import { ShipAddressChecking } from "../../Utils/ShipAddressChecking";
+// import { ConnectPr } from "../../Api/api";
+// import { ShipAddressChecking } from "../../Utils/ShipAddressChecking";
 import OtherShippingAddComponent from "./TableOtherShippingComponent";
 import { IPROtherShippingLoc } from "../../Model/IPrOtherShippingLoc";
 import { saveVendorandShippingData } from "../../../../features/reducers/vendorandshippingSlice";
@@ -23,10 +27,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import { restApiCall } from "../../Api/ApiCall";
 import TooltipShow from "./TooltipShow";
-import { insertOtherVendor } from "../../Model/InsertotherVendor";
+// import { insertOtherVendor } from "../../Model/InsertotherVendor";
 import { GlobalStore } from "../../../../app/globalStore";
 import { fetchSearchContent } from "../../../../features/reducers/searchSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
+import { IbackApi } from "../Ibackapi";
 
 // import SupplierModal from "./SupplierModal";
 interface ISecondprops {
@@ -93,7 +98,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
           text: PrCountry[i].Title,
         };
         if (GlobalStore.getTitledata().countryKey === newObjCountry.key) {
-          setdefaultCountry(newObjCountry.text);
+          // setdefaultCountry(newObjCountry.text);
         }
         listDataCountry.push(newObjCountry);
       }
@@ -135,9 +140,9 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
   );
   //insertOtherVendor api....
 
-  const [otherLocInsert, setotherLocInsert] = useState<insertOtherVendor>(
-    new insertOtherVendor(" ", 0, " ", " ", " ", true, true, true, " ")
-  );
+  // const [otherLocInsert, setotherLocInsert] = useState<insertOtherVendor>(
+  //   new insertOtherVendor(" ", 0, " ", " ", " ", true, true, true, " ")
+  // );
 
   const venderItemDatapick = (vendor: VendorDetails) => {
     console.log(vendor);
@@ -145,21 +150,21 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     setvendorItem(vendor);
   };
 
-  const [shippingItem, setShippingItem] = useState<IPROtherShippingLoc>(
-    new IPROtherShippingLoc(" ", " ", 0, " ")
-  );
+  // const [shippingItem, setShippingItem] = useState<IPROtherShippingLoc>(
+  //   new IPROtherShippingLoc(" ", " ", 0, " ")
+  // );
 
   const ShippingDataPick = (otheradd: IPROtherShippingLoc) => {
     console.log(otheradd);
-    setShippingItem(otheradd);
+    // setShippingItem(otheradd);
   };
 
   //this is for all dropdown option....................
-  const [selectedItemsvendor, setSelectedItemsvendor] = useState<{
-    [key: string]: IDropdownOption;
-  }>({
-    VendorPlantMatch: { key: "", text: "" },
-  });
+  // const [selectedItemsvendor, setSelectedItemsvendor] = useState<{
+  //   [key: string]: IDropdownOption;
+  // }>({
+  //   VendorPlantMatch: { key: "", text: "" },
+  // });
 
   const [newshipAddress, setnewshipAddress] = useState<IDropdownOption>({
     key: " ",
@@ -199,10 +204,11 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     console.log("----", option);
     setnewshipAddress(option as IDropdownOption);
   };
-  const [defaultCountry, setdefaultCountry] = useState("");
-  const [shipAddress, setshipAddress] = useState([]);
-  const [countryOptions, setCountryOptions] = useState([]);
-  const [regionOptions, setRegionOptions] = useState([]);
+  // const [defaultCountry, setdefaultCountry] = useState("");
+
+  const [shipAddress, setshipAddress] = useState<any[]>([]);
+  const [countryOptions, setCountryOptions] = useState<any[]>([]);
+  const [regionOptions, setRegionOptions] = useState<any[]>([]);
 
   useEffect(() => {
     if (newshipAddress.text === "Other Shipping Location") {
@@ -264,13 +270,12 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
         vendorOtherDetails: {
           justificatiOnOrder: textvalue.justificatiOnOrder,
           downPaymentDetails: textvalue.downPaymentDetails,
-          Name:textvalue.Name,
-          HouseNumber:textvalue.HouseNumber,
-          StreetName:textvalue.StreetName,
-          PostalCode:textvalue.PostalCode,
-          City:textvalue.City,
-          ContactName:textvalue.ContactName,
-
+          Name: textvalue.Name,
+          HouseNumber: textvalue.HouseNumber,
+          StreetName: textvalue.StreetName,
+          PostalCode: textvalue.PostalCode,
+          City: textvalue.City,
+          ContactName: textvalue.ContactName,
         },
 
         ship_to_address: {
@@ -287,7 +292,7 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
         },
       })
     );
-    let saveDetails = [
+    let saveDetails: IbackApi[] = [
       {
         PKID: GlobalStore.getPrId(),
         ConnectPRID: GlobalStore.getPrId(),
@@ -300,13 +305,13 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
         Order_Amount: null,
         CIP_Number: null,
         UFID: null,
-        Supplier_Account_Number: vendorItem.vendorNumber,
-        Supplier_Name: vendorItem.vendorName,
-        Supplier_Address: vendorItem.vendorAddress,
-        Supplier_City: vendorItem.vendorCity,
-        Supplier_State: vendorItem.vendorState,
-        Supplier_Zip: vendorItem.vendorZip,
-        Supplier_Country: vendorItem.vendorCountry,
+        Supplier_Account_Number: vendorItem.vendorNumber as string,
+        Supplier_Name: vendorItem.vendorName as string,
+        Supplier_Address: vendorItem.vendorAddress as string,
+        Supplier_City: vendorItem.vendorCity as string,
+        Supplier_State: vendorItem.vendorState as string,
+        Supplier_Zip: vendorItem.vendorZip as string,
+        Supplier_Country: vendorItem.vendorCountry as string,
         Manager: null,
         Manager1: null,
         Manager2: null,
@@ -413,7 +418,8 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
     console.log("otherShippingAdd__otherShippingAdd--", otherShippingAdd);
     if (
       lineintemData.Finalpage === "prsubmit" ||
-      lineintemData.Finalpage === `edit${GlobalStore.getPrId()}${GlobalStore.getRandomNumber()}`
+      lineintemData.Finalpage ===
+        `edit${GlobalStore.getPrId()}${GlobalStore.getRandomNumber()}`
     ) {
       restApiCall.insertPlantLoc(otherShippingAdd).then((insPlat) => {
         console.log("insertPlantLoc--------------------", insPlat);
@@ -998,6 +1004,6 @@ const VendorandShippingComponent: React.FunctionComponent<ISecondprops> = (
 };
 
 export default VendorandShippingComponent;
-function listDataSupplierComCode(): any {
-  throw new Error("Function not implemented.");
-}
+// function listDataSupplierComCode(): any {
+//   throw new Error("Function not implemented.");
+// }

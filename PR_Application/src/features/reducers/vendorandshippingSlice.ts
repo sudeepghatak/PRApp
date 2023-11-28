@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { VendorDetails } from "../../webparts/prApp/Model/vendor_details";
-import { AnyAsyncThunk } from "@reduxjs/toolkit/dist/matchers";
+// import { AnyAsyncThunk } from "@reduxjs/toolkit/dist/matchers";
 
 
 interface otherDetails{

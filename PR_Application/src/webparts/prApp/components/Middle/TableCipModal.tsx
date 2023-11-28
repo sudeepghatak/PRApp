@@ -4,31 +4,28 @@ import {
   Modal,
   IIconProps,
   Stack,
-  TextField,
+  // TextField,
   DetailsList,
-  Link,
+  // Link,
   CheckboxVisibility,
 } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { VendorDetails } from "../../Model/vendor_details";
-import { CipData } from "../../Api/cip_api";
-import { Label } from "@fluentui/react/lib/Label";
+// import { CipData } from "../../Api/cip_api";
+// import { Label } from "@fluentui/react/lib/Label";
 import { Spinner } from "@fluentui/react/lib/Spinner";
 import { restApiCall } from "../../Api/ApiCall";
 interface IModalProps {
   isModalOpen: boolean;
   showModal: () => void;
-  companyCode:string;
+  companyCode: string;
 }
-let Allitems: VendorDetails[] = [];
-let completeDatafetch:boolean=false;
+// let Allitems: VendorDetails[] = [];
+let completeDatafetch: boolean = false;
 export const CipModal: React.FunctionComponent<IModalProps> = (props) => {
-  const { isModalOpen, showModal,companyCode } = props;
+  const { isModalOpen, showModal, companyCode } = props;
   const [items, setitems] = useState<VendorDetails[]>([]);
   // const [dataStatus, setdataStatus] = useState<boolean>(false);
-
-
-
 
   let columns = [
     {
@@ -109,16 +106,11 @@ export const CipModal: React.FunctionComponent<IModalProps> = (props) => {
   ];
 
   React.useEffect(() => {
-    CipData.fetchCpiDetails(companyCode).then((Allitems) => {
-      completeDatafetch=true;
-      setitems(Allitems);
-      
-    })
-  //  restApiCall.getCIPcode(companyCode).then((values:any)=>{
-  //     console.log("getCIPcode(companyCode)::  ",values);
-  //     completeDatafetch=true;
-  //     setitems(values);
-  //   });
+    restApiCall.getCIPcode(companyCode).then((values: any) => {
+      console.log("getCIPcode(companyCode)::  ", values);
+      completeDatafetch = true;
+      setitems(values);
+    });
   }, []);
 
   return (
@@ -157,20 +149,19 @@ export const CipModal: React.FunctionComponent<IModalProps> = (props) => {
       <div style={{ paddingLeft: 15, paddingRight: 15 }}>
         <div>
           <Stack>
-            {! completeDatafetch ? (
+            {!completeDatafetch ? (
               <div>
-                  <Spinner label="Please wait .." />
+                <Spinner label="Please wait .." />
               </div>
-            ) :
-            (items.length == 0)? 
-            ("No Data Found"):(
+            ) : items.length == 0 ? (
+              "No Data Found"
+            ) : (
               <DetailsList
                 items={items}
                 columns={columns}
                 checkboxVisibility={CheckboxVisibility.hidden}
               />
-            )
-            }
+            )}
           </Stack>
         </div>
       </div>

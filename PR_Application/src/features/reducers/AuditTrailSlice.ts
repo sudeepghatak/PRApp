@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { restApiCall } from "../../webparts/prApp/Api/ApiCall";
-import { fileInformation } from "./primaryinfoSlice";
-import { BasicInfoObj, basicInfoitem } from "../../webparts/prApp/Model/BasicInfoline";
-import { first } from "lodash";
+// import { fileInformation } from "./primaryinfoSlice";
+// import { BasicInfoObj, basicInfoitem } from "../../webparts/prApp/Model/BasicInfoline";
 
 
 interface IApprovalHistory{

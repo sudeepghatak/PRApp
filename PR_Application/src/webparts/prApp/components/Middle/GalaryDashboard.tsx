@@ -9,7 +9,10 @@ import GalaryBoxCard from "./GalaryBoxCard";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
-import { fetchSearchContent } from "../../../../features/reducers/searchSlice";
+import {
+  ISearchResult,
+  fetchSearchContent,
+} from "../../../../features/reducers/searchSlice";
 import { RootState } from "../../../../app/store";
 import { Spinner } from "office-ui-fabric-react/lib/Spinner";
 import { IIconProps, IconButton } from "@fluentui/react";
@@ -102,9 +105,11 @@ const GalaryDashboard = () => {
 
         <div className="childshadow" style={{ minHeight: "50rem" }}>
           {!searchResultInfo.isLoading ? (
-            searchResultInfo.listSearchResult.map((searchItem) => {
-              return <GalaryBoxCard cardItem={searchItem} />;
-            })
+            searchResultInfo.listSearchResult.map(
+              (searchItem: ISearchResult) => {
+                return <GalaryBoxCard cardItem={searchItem} />;
+              }
+            )
           ) : (
             <div>
               <Spinner label="Please wait .." />

@@ -4,20 +4,20 @@ import {
   Modal,
   IIconProps,
   Stack,
-  TextField,
+  // TextField,
   DetailsList,
-  Link,
+  // Link,
   CheckboxVisibility,
 } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
-import { VendorDetails } from "../../Model/vendor_details";
-import { CipData } from "../../Api/cip_api";
-import { Label } from "@fluentui/react/lib/Label";
+// import { VendorDetails } from "../../Model/vendor_details";
+// import { CipData } from "../../Api/cip_api";
+// import { Label } from "@fluentui/react/lib/Label";
 import { Spinner } from "@fluentui/react/lib/Spinner";
 import { restApiCall } from "../../Api/ApiCall";
 import { IprChngCurrency } from "../../Model/IPrChngCurrency";
 import { GlobalStore } from "../../../../app/globalStore";
-import { values } from "lodash";
+// import { values } from "lodash";
 import './File.css';
 
 interface IModalProps {
@@ -26,14 +26,14 @@ interface IModalProps {
   FormCurr:string;
 //   companyCode:string;
 }
-let Allitems: VendorDetails[] = [];
-let completeDatafetch:boolean=false;
+// let Allitems: VendorDetails[] = [];
+// let completeDatafetch:boolean=false;
 export const TableChangeCurrencyData: React.FunctionComponent<IModalProps > = (props) => {
   const { isModalOpen, showModal,FormCurr} = props;
   const [items, setitems] = useState<IprChngCurrency[]>([]);
 
 useEffect(()=>{
-    let ChangeCurrValue=[]
+    let ChangeCurrValue:any=[]
     console.log("FormCurr::",GlobalStore.getDefaultCurr(),FormCurr);
     
     restApiCall.GetCurrencyChangeUrl(FormCurr,

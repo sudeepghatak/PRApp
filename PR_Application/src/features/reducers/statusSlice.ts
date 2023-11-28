@@ -26,19 +26,19 @@ interface ISupplier{
 
 }
 
-interface ILineItemInfo{
-    "description":string;
-    "prepaid_to_date":string;
-    "prepaid_from_date":string;
-    "cost_center":string;
-    "date_required":string;
-    "gl_account":string;
-    "qty":string;
-    "uom":string;
-    "unit_price":string;
-    "unit_price_per":string;
-    "total_amount":string;
-}
+// interface ILineItemInfo{
+//     "description":string;
+//     "prepaid_to_date":string;
+//     "prepaid_from_date":string;
+//     "cost_center":string;
+//     "date_required":string;
+//     "gl_account":string;
+//     "qty":string;
+//     "uom":string;
+//     "unit_price":string;
+//     "unit_price_per":string;
+//     "total_amount":string;
+// }
 interface IBasicInfo{
     "PR_Type":string;
     "Total_Order_Amount":string;
@@ -211,7 +211,11 @@ export const statusSlice=createSlice({
                     unitpriceper:action.payload.lineinfo[i].UnitPricePer,
                     totalAmount:action.payload.lineinfo[i].Amount
                 }
-                let baiscItem:BasicInfoObj;
+                
+                let baiscItem
+                // :BasicInfoObj
+                ;
+
                 if(state.basicInfo.lineInfoList.length ===0){
                     baiscItem=new BasicInfoObj(action.payload.lineinfo[i].TypeOfOrder)
                     ;

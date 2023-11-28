@@ -1,5 +1,5 @@
 import {
-  Button,
+  // Button,
   CheckboxVisibility,
   DetailsList,
   IIconProps,
@@ -8,46 +8,42 @@ import {
   Stack,
 } from "@fluentui/react";
 import * as React from "react";
-import { ConnectPr } from "../../Api/api";
-import { BaseButton } from "office-ui-fabric-react";
+// import { ConnectPr } from "../../Api/api";
+// import { BaseButton } from "office-ui-fabric-react";
 import { restApiCall } from "../../Api/ApiCall";
 
-
 interface IPGLAcoountCode {
-  isGLAccountOpen: boolean ;
-  showGLAccount: ()=> void ;
-   GlPRType:string | number;
+  isGLAccountOpen: boolean;
+  showGLAccount: () => void;
+  GlPRType: string | number;
   // showGLAccount: React.Dispatch<React.SetStateAction<boolean>> |
   GLAccountType: string;
- 
 }
 
-export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (props) => {
-
-  const { isGLAccountOpen, showGLAccount, GLAccountType,GlPRType } = props;
-  const [items,setitems]=React.useState([])
-  React.useEffect(()=>{
-      let expense=[]
-      let newGlPRType=GlPRType as string;
-      restApiCall.getGLAccountValue(newGlPRType,GLAccountType).then((expValue)=>{
-      
-        for(let i=0;i<expValue.length;i++){
-          let newItemExp={
-            key: expValue[i] ,
+export const GLAccountComponent: React.FunctionComponent<IPGLAcoountCode> = (
+  props
+) => {
+  const { isGLAccountOpen, showGLAccount, GLAccountType, GlPRType } = props;
+  const [items, setitems] = React.useState<any[]>([]);
+  React.useEffect(() => {
+    let expense: any[] = [];
+    let newGlPRType = GlPRType as string;
+    restApiCall
+      .getGLAccountValue(newGlPRType, GLAccountType)
+      .then((expValue) => {
+        for (let i = 0; i < expValue.length; i++) {
+          let newItemExp = {
+            key: expValue[i],
             TypeOfPurchase: expValue[i].OrderType,
             GLCode: expValue[i].GL_Code,
             GLCodeDescription: expValue[i].Dscription,
-            DocumentsNeeded: expValue[i].DocNeeded
-          }
-          expense.push(newItemExp)
-
+            DocumentsNeeded: expValue[i].DocNeeded,
+          };
+          expense.push(newItemExp);
         }
-          setitems([...expense])
-    })
-
-
-  },[])
-  
+        setitems([...expense]);
+      });
+  }, []);
 
   const columns = [
     {
@@ -99,7 +95,8 @@ export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (pr
           },
         },
       },
-    },{
+    },
+    {
       key: "column3",
       name: "GL Code Description",
       fieldName: "GLCodeDescription",
@@ -148,7 +145,7 @@ export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (pr
           },
         },
       },
-    }
+    },
   ];
   return (
     <div>
@@ -195,9 +192,4 @@ export const GLAccountComponent : React.FunctionComponent<IPGLAcoountCode> = (pr
   );
 };
 
-
-
 const cancelIcon: IIconProps = { iconName: "Cancel" };
-
-
-

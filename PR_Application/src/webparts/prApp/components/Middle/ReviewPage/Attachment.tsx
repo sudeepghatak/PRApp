@@ -1,12 +1,9 @@
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { CheckboxVisibility, DetailsList, IColumn } from "@fluentui/react";
 import { useEffect, useState } from "react";
 import { RootState } from "../../../../../app/store";
-import '../StyleFourthComponent.css';
-import { fetchStatusContent } from "../../../../../features/reducers/statusSlice";
-import { GlobalStore } from "../../../../../app/globalStore";
-import { ThunkDispatch } from "@reduxjs/toolkit";
+import "../StyleFourthComponent.css";
 
 interface IAttatchment {
   fileName: string;
@@ -16,14 +13,10 @@ interface IAttatchment {
   content: string;
 }
 
-const  Attachment: React.FunctionComponent = () => {
+const Attachment: React.FunctionComponent = () => {
   const attatchmentInfo = useSelector(
     (state: RootState) => state.statusreducer.attatchmentInfo
   );
-
-const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-
-  
 
   const [attatchmentItem, setattatchmentItem] = useState<IAttatchment[]>([
     {
@@ -74,7 +67,7 @@ const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
         );
         return <span>{attatchmentItem[rowIndex].fileName}</span>;
       },
-       styles: {
+      styles: {
         root: {
           backgroundColor: "green",
           color: "white",
@@ -99,7 +92,7 @@ const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
       onRender: (item: IAttatchment, rowIndex: number) => {
         return <span>{attatchmentItem[rowIndex].fileType}</span>;
       },
-       styles: {
+      styles: {
         root: {
           backgroundColor: "green",
           color: "white",
@@ -124,7 +117,7 @@ const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
       onRender: (item: IAttatchment, rowIndex: number) => {
         return <span>{attatchmentItem[rowIndex].modifiedBy}</span>;
       },
-       styles: {
+      styles: {
         root: {
           backgroundColor: "green",
           color: "white",
@@ -155,7 +148,7 @@ const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
           borderRightStyle: "solid",
         },
       },
-      
+
       onRender: (item: IAttatchment, rowIndex: number) => {
         return <span>{attatchmentItem[rowIndex].fileModifiedTime}</span>;
       },
@@ -166,7 +159,7 @@ const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
       fieldName: "Delete",
       minWidth: 10,
       maxWidth: 20,
-       styles: {
+      styles: {
         root: {
           backgroundColor: "green",
           color: "white",

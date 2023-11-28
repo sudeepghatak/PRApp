@@ -11,11 +11,6 @@ interface choiceGroup{
   key:string,
   text:string
  }
-interface ActionType {
-  radioGroup:{[key: string]: choiceGroup}[];
-  optionGroup:{[key: string]: dropdownOption}[];
-}
-
 
 export interface CheckboxItem {
   label: string;
@@ -162,16 +157,6 @@ let storeData:PrimaryPageinformation;
         console.log("filelength::",state.fileData.length)
         state.fileData.splice(0,state.fileData.length)
         console.log("filelength2::",state.fileData.length)
-
-          // state.radioGroup.prRadio={ key: "yes", text: "Yes" };
-          // state.requestfor={
-          //   EmployeeId: "",
-          //   email: "",
-          //   text: "",
-          //   companyCode: "",
-          //   costCenter: ""
-          // };
-
       },
       ChangeDisableToEdit(state: PrimaryPageinformation, 
         action: PayloadAction<boolean>){
@@ -190,14 +175,25 @@ let storeData:PrimaryPageinformation;
         storeData=initialState;
         console.log("This is The Fresh Data Here --- 182",storeData)
         for(let i=0;i<action.payload.optionGroup.length;i++){
+          const keyy=Object.keys(action.payload.optionGroup[i])[0];
+
+          if(keyy in state.optionGroup){
+
+            state.optionGroup[keyy as keyof optionGroup]=action.payload.optionGroup[i][keyy];
+          }
           
-          state.optionGroup[Object.keys(action.payload.optionGroup[i])[0]]=action.payload.optionGroup[i][Object.keys(action.payload.optionGroup[i])[0]]
+          // state.optionGroup[Object.keys(action.payload.optionGroup[i])[0]]=action.payload.optionGroup[i][Object.keys(action.payload.optionGroup[i])[0]]
 
         }
        
         for(let i=0;i<action.payload.radioGroup.length;i++){
-          
-          state.radioGroup[Object.keys(action.payload.radioGroup[i])[0]]=action.payload.radioGroup[i][Object.keys(action.payload.radioGroup[i])[0]]
+          const key = Object.keys(action.payload.radioGroup[i])[0];
+          if (key in state.radioGroup) {
+         
+            state.radioGroup[key as keyof radioGroup] = action.payload.radioGroup[i][key];
+          }
+
+          // state.radioGroup[Object.keys(action.payload.radioGroup[i])[0]]=action.payload.radioGroup[i][Object.keys(action.payload.radioGroup[i])[0]]
 
         }
         state.dataInsert=!state.dataInsert
@@ -270,19 +266,12 @@ let storeData:PrimaryPageinformation;
           }else{
 
             for(let i=0;i<state.fileData.length;i++){
-              console.log("277 277 277 277 2777 277 277 277 277 277 277 ",state.fileData[i],)
+              console.log("277 277 277 277 2777 277 277 277 277 277 277 ",action.payload.key,action.payload)
             }
-
-            
-            let lengthofFileData=state.fileData.length;
-            
-            for(let i=0;i<lengthofFileData;i++){
-              console.log("Save File Content Here 275275275",action.payload.key,state.fileData[i].key)
-              if(state.fileData[i].key!==action.payload.key){
-                console.log("This is The PrimaryinfoSlice 277 277 277 klklk kl kl klkl",action.payload.key,state.fileData[i].key)
-                state.fileData.push(action.payload);
-                break;
-              }
+            let fileItemKey=state.fileData.filter((newfileItem)=>newfileItem.key==action.payload.key)
+            console.log("283 283 283 ------------------ Sample thi scontent here  ",action.payload,fileItemKey,fileItemKey.length)
+            if(fileItemKey.length ==0){
+              state.fileData.push(action.payload);
             }
            
           }

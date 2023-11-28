@@ -2,7 +2,7 @@ import { GlobalStore } from "../../../app/globalStore";
 import { restApiCall } from "../Api/ApiCall";
 
 export class Functionality{
-    static async copynewConnetPrId(ConnectPRIDvalue){
+    static async copynewConnetPrId(ConnectPRIDvalue:string){
         let prbasicInfo=await restApiCall.getPrbasicInfoContent(ConnectPRIDvalue);
         console.log("Data Here ",prbasicInfo);
         let lineinfo= await restApiCall.getPrlineItemContent(ConnectPRIDvalue)

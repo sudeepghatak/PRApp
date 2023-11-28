@@ -2,6 +2,7 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../../../app/store";
 import Basicinfolineitem from "./Basicinfolineitem";
+import { BasicInfoObj } from "../../../../../Model/BasicInfoline";
 
 const BasicInformationContent: React.FunctionComponent = () => {
   const basicInfo = useSelector(
@@ -56,9 +57,14 @@ const BasicInformationContent: React.FunctionComponent = () => {
         <div>
           {basicInfo.lineInfoList.length !== 0 ? (
             <>
-              {basicInfo.lineInfoList.map((lineinfoItem) => {
+              {basicInfo.lineInfoList.map((lineinfoItem: BasicInfoObj) => {
                 console.log("oooooooo  ---- 60 60 60 60", lineinfoItem);
-                return <Basicinfolineitem newlineinfoItem={lineinfoItem} isPrepaidorExpense={basicInfo.Prepaid_or_Capital_buy} />;
+                return (
+                  <Basicinfolineitem
+                    newlineinfoItem={lineinfoItem}
+                    isPrepaidorExpense={basicInfo.Prepaid_or_Capital_buy}
+                  />
+                );
               })}
             </>
           ) : null}

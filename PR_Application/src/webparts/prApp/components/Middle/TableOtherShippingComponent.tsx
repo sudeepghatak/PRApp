@@ -3,54 +3,53 @@ import {
   DetailsList,
   IIconProps,
   IconButton,
-  Link,
+  // Link,
   Modal,
   Stack,
 } from "@fluentui/react";
 import * as React from "react";
-import { ConnectPr } from "../../Api/api";
+// import { ConnectPr } from "../../Api/api";
 
 interface IPROtherShippingLoc {
   isShippingAddOpen: boolean;
   showShippingAdd: () => void;
-  ShippingDataPick:any
+  ShippingDataPick: any;
 }
 
-const OtherShippingAddComponent:
- React.FunctionComponent<IPROtherShippingLoc> = (props) => {
-  const { isShippingAddOpen, showShippingAdd,ShippingDataPick} = props;
-  const [shippingitems,setShippingitems]=React.useState([])
+const OtherShippingAddComponent: React.FunctionComponent<
+  IPROtherShippingLoc
+> = (props) => {
+  const { isShippingAddOpen, showShippingAdd, ShippingDataPick } = props;
+  const [shippingitems, setShippingitems] = React.useState<any[]>([]);
 
-const otherSelectItem=((item:IPROtherShippingLoc)=>{
-  console.log("data enter...");
-  ShippingDataPick(item);
-  showShippingAdd();
-  console.log(item);
-  
-})
+  const otherSelectItem = (item: IPROtherShippingLoc) => {
+    console.log("data enter...");
+    ShippingDataPick(item);
+    showShippingAdd();
+    console.log(item);
+  };
 
-  React.useEffect(()=>{
-    let OtherShippingLoc=[]
-      ConnectPr.getInstance().GetPROtherShippingLoc().then((OtherShippingLocValue)=>{
-        console.log(OtherShippingLocValue)
-        for(let i=0;i<OtherShippingLocValue.length;i++){
-          let newItemOtherShippingLoc={
-            key:i,
-            Title:OtherShippingLocValue[i].Title,
-            HouseNumber:OtherShippingLocValue[i].HouseNumber,
-            PostalCode:OtherShippingLocValue[i].PostalCode,
-            City:OtherShippingLocValue[i].City,
-            // Region:OtherShippingLocValue[i].Region
-          }
-          OtherShippingLoc.push(newItemOtherShippingLoc)
-        }
-         setShippingitems([...OtherShippingLoc])  
-      }) 
-    },[])
+  React.useEffect(() => {
+    // let OtherShippingLoc: any[] = [];
+    // ConnectPr.getInstance().GetPROtherShippingLoc().then((OtherShippingLocValue)=>{
+    //   console.log(OtherShippingLocValue)
+    //   for(let i=0;i<OtherShippingLocValue.length;i++){
+    //     let newItemOtherShippingLoc={
+    //       key:i,
+    //       Title:OtherShippingLocValue[i].Title,
+    //       HouseNumber:OtherShippingLocValue[i].HouseNumber,
+    //       PostalCode:OtherShippingLocValue[i].PostalCode,
+    //       City:OtherShippingLocValue[i].City,
+    //       // Region:OtherShippingLocValue[i].Region
+    //     }
+    //     OtherShippingLoc.push(newItemOtherShippingLoc)
+    //   }
+    //    setShippingitems([...OtherShippingLoc])
+    // }
+    // )
+    setShippingitems([]);
+  }, []);
 
-    
-
- 
   const columns = [
     {
       key: "column1",
@@ -58,7 +57,7 @@ const otherSelectItem=((item:IPROtherShippingLoc)=>{
       fieldName: "Title",
       minWidth: 150,
       maxWidth: 200,
-      isResizable: true,  
+      isResizable: true,
       styles: {
         root: {
           backgroundColor: "green", // Replace with your desired color
@@ -151,15 +150,11 @@ const otherSelectItem=((item:IPROtherShippingLoc)=>{
           borderRightWidth: "1px", // Optional: Adjust the border width if needed
           borderRightStyle: "solid", // Replace with your desired text color
         },
-      }, 
-      onRender: ((item:any) => {
-        return(
-          <button onClick={()=>otherSelectItem(item)}>Select</button>
-          
-        )    
-      })
-      
-    }
+      },
+      onRender: (item: any) => {
+        return <button onClick={() => otherSelectItem(item)}>Select</button>;
+      },
+    },
   ];
   return (
     <div>
@@ -176,17 +171,16 @@ const otherSelectItem=((item:IPROtherShippingLoc)=>{
             border: "3px solid #fff",
           }}
         >
-          
           <span
             style={{
               marginTop: 5,
               marginBottom: 5,
               marginLeft: 990,
               backgroundColor: "whitesmoke",
-              maxHeight: 30
+              maxHeight: 30,
             }}
           >
-          {/* <span> 
+            {/* <span> 
              button= {{
               cursor: "pointer",
               color: "white",
@@ -213,7 +207,6 @@ const otherSelectItem=((item:IPROtherShippingLoc)=>{
   );
 };
 
-const cancelIcon: IIconProps = { iconName: "Cancel" }
-
+const cancelIcon: IIconProps = { iconName: "Cancel" };
 
 export default OtherShippingAddComponent;

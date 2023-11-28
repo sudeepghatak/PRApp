@@ -21,9 +21,7 @@ interface TableRow {
   totalAmount: number;
 }
 
-const LineDetails: React.FunctionComponent<IBasicinfolineitem> = (
-  props
-) => {
+const LineDetails: React.FunctionComponent<IBasicinfolineitem> = (props) => {
   const { newlineinfoItem, isPrepaidorExpense } = props;
   console.log("I am at Basicinfolineitem here ---", newlineinfoItem);
   const [tableItem, settableItem] = useState<TableRow[]>([
@@ -373,7 +371,7 @@ const LineDetails: React.FunctionComponent<IBasicinfolineitem> = (
       },
     },
   ];
-  let newColumns = [];
+  let newColumns: any = [];
   console.log("isPrepaidorExpense and also 190", isPrepaidorExpense);
   if (isPrepaidorExpense == "Expense") {
     newColumns = columns.filter(

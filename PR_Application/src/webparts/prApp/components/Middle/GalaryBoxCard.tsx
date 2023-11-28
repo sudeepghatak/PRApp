@@ -15,7 +15,17 @@ import { fetchAuditTrailContent } from "../../../../features/reducers/AuditTrail
 interface IGBoxCard {
   cardItem: ISearchResult;
 }
-const statusDoc = {
+type StatusInfo = {
+  backgroundColor: string;
+  color: string;
+  isShow: boolean;
+};
+
+type StatusDoc = {
+  [key in string]: StatusInfo;
+};
+
+const statusDoc: StatusDoc = {
   Draft: {
     backgroundColor: "#E46a53",
     color: "#fff",
@@ -39,19 +49,15 @@ const statusDoc = {
 };
 const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
   const { cardItem } = props;
-  // console.log(
-  //   "i am Here of CardItem In GalaryBoxCard",
-  //   cardItem,
-  //   cardItem.ConnectPRID
-  // );
-    const [showAttatchmentstatus, setshowAttatchmentstatus] = useState(false);
+
+  const [showAttatchmentstatus, setshowAttatchmentstatus] = useState(false);
   const showAttatchmentDialogstatus = () => {
     setshowAttatchmentstatus(!showAttatchmentstatus);
   };
 
   const [showDialogstatus, setshowDialogstatus] =
     React.useState<boolean>(false);
-  
+
   const showAlertDialogStatus = () => {
     setshowDialogstatus(!showDialogstatus);
   };
@@ -61,7 +67,7 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
     showAlertDialogStatus();
     dispatch(fetchStatusContent(pId));
   };
-   const galaryEdit = (pId: string) => {
+  const galaryEdit = (pId: string) => {
     GlobalStore.storePrId(pId);
     GlobalStore.incrementRandomNumber();
     GlobalStore.changeEnterMainpage(true);
@@ -69,7 +75,7 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
     //
     dispatch(updateFinalPage(`edit${pId}${GlobalStore.getRandomNumber()}`));
   };
-  
+
   const fetchAuditinfo = (pId: string) => {
     showAttatchmentDialogstatus();
     dispatch(fetchAuditTrailContent(pId));
@@ -91,10 +97,9 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
   const deleteConnectprId = () => {
     setisModalOpendelete(true);
   };
-
   return (
     <>
-    {showAttatchmentstatus ? (
+      {showAttatchmentstatus ? (
         <AuditTrailComponent
           isModalOpen={showAttatchmentstatus}
           showModal={showAttatchmentDialogstatus}
@@ -118,8 +123,7 @@ const GalaryBoxCard: React.FunctionComponent<IGBoxCard> = (props) => {
                 connectprID={`${cardItem.ConnectPRID}`}
               />
             ) : null}
-            {statusDoc[cardItem.Status] !== undefined &&
-            statusDoc[cardItem.Status].isShow ? (
+            {statusDoc[cardItem.Status] !== undefined && statusDoc[cardItem.Status].isShow ? (
               <span>
                 <IconButton
                   iconProps={{ iconName: "Edit" }}

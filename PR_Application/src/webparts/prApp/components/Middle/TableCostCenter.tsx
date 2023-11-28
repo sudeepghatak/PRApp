@@ -28,7 +28,7 @@ interface IPCostCenter {
 export const CostCenterComponent : React.FunctionComponent<IPCostCenter> = (props) => {
 
   const { isCostCenterOpen, showCostCenter, companyCode} = props;
-  const [items,setitems]=useState([])
+  const [items,setitems]=useState<any[]>([])
   const [pickCostCenter,setpickCostCenter]=useState("")
   const [pickCompanyCode,setpickCompanyCode]=useState("")
     
@@ -46,7 +46,7 @@ export const CostCenterComponent : React.FunctionComponent<IPCostCenter> = (prop
   };
 
   React.useEffect(()=>{
-      let costcenter=[]
+      let costcenter:any[]=[]
     //   let newGlPRType=GlPRType as string;
       restApiCall.getCostCenterList(companyCode).then((Value)=>{
       

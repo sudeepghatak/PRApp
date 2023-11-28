@@ -14,8 +14,8 @@ export const ModalComponent: React.FunctionComponent<IModalProps> = (props) => {
   const { isModalOpen, showModal, backgroundcolor, title,content } = props;
   const background_color = backgroundcolor as string;
   const modal_title = title as string;
-  console.log("Show content",content.split("\n"));
-  let splitContent:string[]=content.split("\n");
+  console.log("Show content",(content as string).split("\n"));
+  let splitContent:string[]=(content as string).split("\n");
 
   //loop for warning
   let splitwarning=[];

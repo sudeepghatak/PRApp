@@ -5,14 +5,19 @@ import { mergeStyles,DefaultPalette} from '@fluentui/react/lib/Styling';
 import './StyleFourthComponent.css';
 import { FuncApprovalLog } from '../../Utils/FuncApprovalLog';
 import { GlobalStore } from '../../../../app/globalStore';
-import { RootState } from '../../../../app/store';
-import { useDispatch, useSelector } from 'react-redux/es/exports';
+// import { RootState } from '../../../../app/store';
+import { useDispatch
+  // ,
+  //  useSelector 
+  } from 'react-redux/es/exports';
 import { Type_of_buy } from './ReviewPage/Type_of_buy';
 import { SupplierDetails } from './ReviewPage/SupplierDetails';
 import { updateFinalPage } from "../../../../features/reducers/lineitemSlice";
-import PrimaryInfoComponent from './PrimaryInfoComponent';
-import { ITableBuildProps } from './MainPage';
-import { ISearchResult, fetchSearchContent } from '../../../../features/reducers/searchSlice';
+// import PrimaryInfoComponent from './PrimaryInfoComponent';
+// import { ITableBuildProps } from './MainPage';
+import {
+  //  ISearchResult,
+   fetchSearchContent } from '../../../../features/reducers/searchSlice';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { restApiCall } from '../../Api/ApiCall';
 import { useEffect, useState } from 'react';
@@ -28,9 +33,9 @@ interface IFourthprops {
 const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
  
 
-  const basicInfo = useSelector(
-    (state: RootState) => state.statusreducer.basicInfo
-  );
+  // const basicInfo = useSelector(
+  //   (state: RootState) => state.statusreducer.basicInfo
+  // );
 
   const {buttonContxtBack,isViewMode} = props;
     const stackItemStyles = mergeStyles({
@@ -51,37 +56,37 @@ const FourthComponent: React.FunctionComponent<IFourthprops> = (props) => {
     },
   };
 
-    const col2Style: IStackStyles = {
-    root: {
-      padding: "0px",
-      textAlign: "left",
-      width: "70%",
-      color:'Black',
-      fontsize: "10px",
-      marginTop: "10px",
-      blocksize: "10px"
-    },
-  };
-   const col1Style: IStackStyles = {
-    root: {
-      padding: "10px",
-      textAlign: "left",
-      width: "30%",
-      fontsize: "10px",
-      color:'green',
-      blocksize: "10px"
-    },
-  };
-  const col1StyleSingleLine : IStackStyles = {
-    root: {
-      padding: "10px",
-      textAlign: "left",
-      fontsize: "10px",
-      marginRight:" 0px",
-      color:'green',
-      width: "18%"
-    },
-  };
+  //   const col2Style: IStackStyles = {
+  //   root: {
+  //     padding: "0px",
+  //     textAlign: "left",
+  //     width: "70%",
+  //     color:'Black',
+  //     fontsize: "10px",
+  //     marginTop: "10px",
+  //     blocksize: "10px"
+  //   },
+  // };
+  //  const col1Style: IStackStyles = {
+  //   root: {
+  //     padding: "10px",
+  //     textAlign: "left",
+  //     width: "30%",
+  //     fontsize: "10px",
+  //     color:'green',
+  //     blocksize: "10px"
+  //   },
+  // };
+  // const col1StyleSingleLine : IStackStyles = {
+  //   root: {
+  //     padding: "10px",
+  //     textAlign: "left",
+  //     fontsize: "10px",
+  //     marginRight:" 0px",
+  //     color:'green',
+  //     width: "18%"
+  //   },
+  // };
   const[btnDisable,setbtnDisable]=useState(false)
 
   const SaveandNext= async ()=>{

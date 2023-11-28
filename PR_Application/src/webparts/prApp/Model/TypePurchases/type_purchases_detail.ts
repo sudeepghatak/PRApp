@@ -1,4 +1,4 @@
-import { DropdownMenuItemType, IDropdownOption } from "@fluentui/react";
+import { IDropdownOption } from "@fluentui/react";
 
 export class TypeofPurchaseDetail{
     CFID: string;
@@ -25,7 +25,7 @@ export class TypeofPurchaseDetail{
 
 }
 export class TypeLineItem{
-    PKID:string;
+    PKID:string|null;
     CFID: string;
     projectCode:string;
     des:string;

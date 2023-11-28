@@ -3,7 +3,7 @@ import {
   DetailsList,
   IIconProps,
   IconButton,
-  Link,
+  // Link,
   Modal,
   Stack,
 } from "@fluentui/react";
@@ -21,9 +21,9 @@ interface IPDeptUserDetails {
 export const DepartmentUserComponent : React.FunctionComponent<IPDeptUserDetails> = (props) => {
 
 const { isDeptUseropen, showDeptUserModal,pickCostCenter, pickCompanyCode} = props;
-const [items,setitems]=useState([])
+const [items,setitems]=useState<any[]>([])
   React.useEffect(()=>{
-      let DeptUser=[]
+      let DeptUser:any[]=[]
       
      restApiCall.getUserDeptList(pickCostCenter,pickCompanyCode).then((Value)=>{
        for(let i=0;i<Value.length;i++){

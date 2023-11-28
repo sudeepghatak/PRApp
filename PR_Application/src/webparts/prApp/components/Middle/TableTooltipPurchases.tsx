@@ -1,19 +1,19 @@
 import {
-  Button,
+  // Button,
   CheckboxVisibility,
   DetailsList,
-  IIconProps,
-  IconButton,
-  Modal,
-  Stack,
+  // IIconProps,
+  // IconButton,
+  // Modal,
+  // Stack,
 } from "@fluentui/react";
 import * as React from "react";
-import { ConnectPr } from "../../Api/api";
-import { BaseButton } from "office-ui-fabric-react";
-import { restApiCall } from "../../Api/ApiCall";
-import { useDispatch } from "react-redux";
-import { tableToolinterface, toolTipUpdate } from "../../../../features/reducers/primaryinfoSlice";
-import { IPRPrepaidGLLoc } from "../../Model/IPrGLAccountLoc";
+// import { ConnectPr } from "../../Api/api";
+// import { BaseButton } from "office-ui-fabric-react";
+// import { restApiCall } from "../../Api/ApiCall";
+// import { useDispatch } from "react-redux";
+// import { tableToolinterface, toolTipUpdate } from "../../../../features/reducers/primaryinfoSlice";
+// import { IPRPrepaidGLLoc } from "../../Model/IPrGLAccountLoc";
 
 
 
@@ -27,7 +27,7 @@ const TableTooltipPurchases  : React.FunctionComponent<InterTableTooltip> = (pro
 //   const {prType,ebuy,toolName  } = props;
 //   console.log(data)
 //   console.log("====================>> ",toolName)
-   const dispatch = useDispatch();
+  //  const dispatch = useDispatch();
 //   const [items,setitems]=React.useState([])
   React.useEffect(()=>{
     // console.log("In sert Here -------------------------",prType,ebuy,toolName)
@@ -169,6 +169,6 @@ const TableTooltipPurchases  : React.FunctionComponent<InterTableTooltip> = (pro
 
 
 
-const cancelIcon: IIconProps = { iconName: "Cancel" };
+// const cancelIcon: IIconProps = { iconName: "Cancel" };
 
 export default TableTooltipPurchases

@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@fluentui/react";
 import { IconButton } from "@fluentui/react/lib/Button";
-import { GlobalStore } from "../../../../../../app/globalStore";
+// import { GlobalStore } from "../../../../../../app/globalStore";
 import { restApiCall } from "../../../../Api/ApiCall";
 import { fetchSearchContent } from "../../../../../../features/reducers/searchSlice";
 import { updateFinalPage } from "../../../../../../features/reducers/lineitemSlice";

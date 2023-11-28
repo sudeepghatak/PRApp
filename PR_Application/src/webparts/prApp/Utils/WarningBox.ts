@@ -1,6 +1,15 @@
-import { log } from "sp-pnp-js";
+
 import { GlobalStore } from "../../../app/globalStore";
 import { restApiCall } from "../Api/ApiCall";
+
+export interface Iwarning{
+    name:string,
+    CountryKey:string,
+    CurrencyKey:string,
+    CostCenter:string,
+    LegacyCompany:string,
+    warningMsg:string
+}
 
 export class WarningMessage{
     static  firstWarningCheck=async()=>{
@@ -22,13 +31,12 @@ export class WarningMessage{
             // "AssignmentCategory": "Regular (Employee)"
             if(nameRes[i].AssignmentCategory!=="Regular (Employee)")
             {
-                let warningMsg={
+                let warningMsg:Iwarning={
                     name:GlobalStore.getName(),
                     CountryKey:nameRes[i].CountryKey,
                     CurrencyKey:nameRes[i].CurrencyKey,
                     CostCenter:nameRes[i].CostCenter,
                     LegacyCompany:nameRes[i].LegacyCompany,
-                    // warningMsg:`${GlobalStore.getName()} has no company code `
                     warningMsg:"Temporary Employees and Contractors are not allowed to submit Purchase Requests!"
 
                 };
@@ -62,7 +70,7 @@ export class WarningMessage{
     //     },
     // loginName:"Shohini Chattergee"
     // ]
-    static async  accept(data){
+    static async  accept(data:any){
         //call api for check ...........this name 
         let warningList=[];
         for(let value  in data){

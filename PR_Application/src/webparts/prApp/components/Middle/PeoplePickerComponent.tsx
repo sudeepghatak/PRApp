@@ -1,19 +1,21 @@
 import * as React from "react";
 import { useEffect, useState, memo } from "react";
-import { IPersonaProps, Persona } from "@fluentui/react/lib/Persona";
+import { IPersonaProps, 
+  // Persona 
+} from "@fluentui/react/lib/Persona";
 import {
-  IPeoplePickerItemSelectedProps,
+  // IPeoplePickerItemSelectedProps,
   NormalPeoplePicker,
-  PeoplePickerItem,
+  // PeoplePickerItem,
 } from "@fluentui/react/lib/Pickers";
-import { EmployeeData } from "../../Api/employee_api";
+// import { EmployeeData } from "../../Api/employee_api";
 import { EmployeeDetails } from "../../Model/employee_details";
 import { restApiCall } from "../../Api/ApiCall";
 import { GlobalStore } from "../../../../app/globalStore";
-import { DefaultButton } from "@fluentui/react";
+// import { DefaultButton } from "@fluentui/react";
 
 interface IPeoplPickerProps {
-  companyCodeOptionSet: (item) => void;
+  companyCodeOptionSet: (item:any) => void;
   defaultValue?: EmployeeDetails;
   isViewMode?: boolean;
   // content?: string;
@@ -25,7 +27,8 @@ const PeoplePickerComponent: React.FunctionComponent<IPeoplPickerProps> = (
   const [data, setdata] = useState("");
 
   const { companyCodeOptionSet, defaultValue, isViewMode } = props;
-  const [delayResults, setDelayResults] = useState(false);
+  // const [delayResults, setDelayResults] = useState(false);
+  const delayResults=false;
 
   const [currentSelectedItems, setCurrentSelectedItems] = React.useState<
     IPersonaProps[]
@@ -38,7 +41,7 @@ const PeoplePickerComponent: React.FunctionComponent<IPeoplPickerProps> = (
     defaultValue,
     defaultValue == undefined
   );
-  const picker = React.useRef(null);
+  const picker = React.useRef<any>(null);
 
   const myDebounce = (callback: () => void, time: number) => {
     let timer: any;
@@ -77,11 +80,10 @@ const PeoplePickerComponent: React.FunctionComponent<IPeoplPickerProps> = (
   ): IPersonaProps[] | Promise<IPersonaProps[]> => {
     console.log("filterText", filterText, currentPersonas);
     setdata(filterText);
-    // setCurrentSelectedItems(currentPersonas);
-    console.log("filterText", currentPersonas);
-    if (picker.current.items.length !== 0) {
-      GlobalStore.storeName(picker.current.items[0]["text"], false);
-      GlobalStore.storeEmail(picker.current.items[0]["email"], false);
+     
+    if (picker.current && picker.current.items && picker.current.items.length !== 0) {
+      GlobalStore.storeName(picker.current.items[0].text, false);
+      GlobalStore.storeEmail(picker.current.items[0].email, false);
     }
     console.log("This is Picker here ", picker.current.items);
 

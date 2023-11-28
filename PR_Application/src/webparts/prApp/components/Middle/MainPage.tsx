@@ -2,20 +2,28 @@ import * as React from "react";
 import { useState, createContext, useEffect } from "react";
 import { Stack, IStackTokens } from "@fluentui/react/lib/Stack";
 import { DefaultButton } from "@fluentui/react/lib/Button";
-import { Spinner, mergeStyles } from "@fluentui/react";
+import {
+  // Spinner,
+  mergeStyles,
+} from "@fluentui/react";
+
 import ComponentHeader from "../ComponentHeader";
 import { DefaultPalette } from "@fluentui/react/lib/Styling";
 import { escape } from "@microsoft/sp-lodash-subset";
 import PrimaryInfoComponent from "./PrimaryInfoComponent";
 import VendorandShippingComponent from "./VendorandShippingComponent";
 import LineItemComponent from "./LineItemComponent";
-import { WebPartContext } from "@microsoft/sp-webpart-base";
+// import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { lazy, Suspense } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  //  useDispatch,
+
+  useSelector,
+} from "react-redux";
 import { RootState } from "../../../../app/store";
 import { GlobalStore } from "../../../../app/globalStore";
-import { refreshStore } from "../../../../features/reducers/primaryinfoSlice";
-import { ThunkDispatch } from "@reduxjs/toolkit";
+// import { refreshStore } from "../../../../features/reducers/primaryinfoSlice";
+// import { ThunkDispatch } from "@reduxjs/toolkit";
 
 const LazyFourth = lazy(() => import("./FourthComponent"));
 
@@ -35,16 +43,24 @@ export const tableDeleteContext = createContext<
   IPDeleteTableContent | undefined
 >(undefined);
 
-interface IPMainComponent {
-  context: WebPartContext;
-}
+// interface IPMainComponent {
+//   context: WebPartContext;
+// }
 interface IMainPage {
   isViewMode: boolean;
+}
+export interface ImainTitle {
+  name: string;
+  countryKey: string;
+  currencyKey: string;
+  costCenter: string;
+  TypeofbuyOption: string;
+  IsPrepaidCapital: string;
 }
 export const MainPage: React.FunctionComponent<IMainPage> = (props) => {
   const { isViewMode } = props;
   let userDisplayName: string = " Blank";
-  const [title, settitle] = useState({
+  const [title, settitle] = useState<ImainTitle>({
     name: "",
     countryKey: "",
     currencyKey: "",
@@ -54,7 +70,7 @@ export const MainPage: React.FunctionComponent<IMainPage> = (props) => {
   });
   const lineintemData = useSelector((state: RootState) => state.lineiteminfo);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  // const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const [tableCreate, settableCreate] = useState<ITableBuildProps[]>([]);
   const setTableCreate = (newtableName: ITableBuildProps) => {
     let copytableCreate = [...tableCreate];
@@ -62,7 +78,10 @@ export const MainPage: React.FunctionComponent<IMainPage> = (props) => {
     settableCreate(copytableCreate);
   };
   useEffect(() => {
-    if (lineintemData.Finalpage === `edit${GlobalStore.getPrId()}`) {
+    if (
+      lineintemData.Finalpage ===
+      `edit${GlobalStore.getPrId()}${GlobalStore.getRandomNumber()}`
+    ) {
       setPageNumber(1);
     }
   }, [lineintemData.Finalpage]);
@@ -96,7 +115,7 @@ export const MainPage: React.FunctionComponent<IMainPage> = (props) => {
     }
   };
 
-  const setTile = (value) => {
+  const setTile = (value: ImainTitle) => {
     settitle(value);
   };
 
@@ -108,9 +127,11 @@ export const MainPage: React.FunctionComponent<IMainPage> = (props) => {
     width: "250px", // Adjust the width to your desired value
   });
 
-let pkid=(GlobalStore.getPrId()!==undefined)?"[PR ID -"+GlobalStore.getPrId()+"]":""
-// console.log("prid::",pkid);
-
+  let pkid =
+    GlobalStore.getPrId() !== undefined
+      ? "[PR ID -" + GlobalStore.getPrId() + "]"
+      : "";
+  // console.log("prid::",pkid);
 
   return (
     <>
@@ -124,7 +145,7 @@ let pkid=(GlobalStore.getPrId()!==undefined)?"[PR ID -"+GlobalStore.getPrId()+"]
         <Stack tokens={sectionStackTokens}>
           <ComponentHeader
             title={
-              pkid+
+              pkid +
               "[" +
               title.TypeofbuyOption +
               "][" +
@@ -248,8 +269,9 @@ let pkid=(GlobalStore.getPrId()!==undefined)?"[PR ID -"+GlobalStore.getPrId()+"]
               <>
                 <Suspense fallback={"Loading .."}>
                   {/* <Spinner label= "Please wait .."> */}
-                  <LazyFourth buttonContxtBack={buttonContxtBack}  
-                  isViewMode={isViewMode}
+                  <LazyFourth
+                    buttonContxtBack={buttonContxtBack}
+                    isViewMode={isViewMode}
                   />
                   {/* </Spinner> */}
                 </Suspense>

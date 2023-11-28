@@ -1,12 +1,12 @@
 import * as React from "react";
 import {
   IIconProps,
-  getTheme,
+  // getTheme,
   IconButton,
   Spinner,
   SpinnerSize,
   mergeStyleSets,
-  FontWeights,
+  // FontWeights,
   DefaultButton,
   DefaultPalette,
 } from "@fluentui/react";
@@ -38,7 +38,10 @@ const CopyComponentModel: React.FunctionComponent<ICopyComponentModel> = (
       dispatch(fetchSearchContent("MyOrder"));
       dispatch(savePkid(newConnectprId));
 
-      dispatch(updateFinalPage(`edit${newConnectprId}`));
+      GlobalStore.incrementRandomNumber();
+      dispatch(
+        updateFinalPage(`edit${newConnectprId}${GlobalStore.getRandomNumber()}`)
+      );
       GlobalStore.storePrId(newConnectprId);
       // GlobalStore.storeconnectPRID(ConnectprId);
       hideModal();
@@ -124,7 +127,7 @@ const CopyComponentModel: React.FunctionComponent<ICopyComponentModel> = (
     </>
   );
 };
-const theme = getTheme();
+// const theme = getTheme();
 const contentStyles = mergeStyleSets({
   container: {
     minWidth: 400,

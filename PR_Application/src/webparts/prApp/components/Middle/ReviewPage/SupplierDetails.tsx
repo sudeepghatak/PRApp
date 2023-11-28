@@ -1,12 +1,9 @@
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {useSelector } from "react-redux";
 import { RootState } from "../../../../../app/store";
 import { IStackStyles, Stack } from "office-ui-fabric-react";
 import '../StyleFourthComponent.css';
-import { useEffect } from "react";
-import { fetchStatusContent } from "../../../../../features/reducers/statusSlice";
-import { GlobalStore } from "../../../../../app/globalStore";
-import { ThunkDispatch } from "@reduxjs/toolkit";
+
 
 export const SupplierDetails: React.FunctionComponent = () => {
   const supplierInfo = useSelector(
@@ -14,14 +11,6 @@ export const SupplierDetails: React.FunctionComponent = () => {
   );
   console.log("supplierInfo:: ", supplierInfo);
 
-const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-
-// useEffect(()=>{
-//   dispatch(fetchStatusContent(GlobalStore.getPrId()));
-  
-// },[])
-
-  
   const BlockSize: IStackStyles = {
     root: {
         blocksize: "12px",
