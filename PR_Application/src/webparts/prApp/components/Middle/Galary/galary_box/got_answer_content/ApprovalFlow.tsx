@@ -50,6 +50,7 @@ const ApprovalFlow: React.FunctionComponent = () => {
       key: "approval_date",
       name: "Approval Date",
       fieldName: "approval_date",
+      data: "number",
       onRender: (item: IApprovalFlow, rowIndex: number) => {
         return <span>{item.approver_date}</span>;
       },
