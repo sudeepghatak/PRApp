@@ -59,23 +59,24 @@ const innerStackTokens: IStackTokens = {
     padding: 2,
 };
 
-interface RequestHeaderParams{
-    PrId: string, 
-    Message: string
-}
 
-export const RequestHeader: React.FunctionComponent<RequestHeaderParams> = (props) => {
 
-    const{PrId,Message}=props;
+export const RequestHeader: React.FunctionComponent<{ PrId: string }> = (props) => {
+
+   // const{PrId}=props;
    
     const [prRow, setPrRow] = React.useState<any>({});
-    ;
+    
 
     useEffect(() => {
         (async () => {
-            let value = await restApiCall.getPrbasicInfoContent(PrId);
-            console.log("This is the message",Message)
+            
+
+
+            let value = await restApiCall.getPrbasicInfoContent(props.PrId);
+            console.log("This is the message")
             console.log("This is PR Info", value);
+            
 
             setPrRow(value);
         })();

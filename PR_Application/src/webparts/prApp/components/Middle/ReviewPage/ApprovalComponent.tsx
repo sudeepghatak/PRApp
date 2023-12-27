@@ -3,21 +3,35 @@ import * as React from "react";
 import { ApprovalLog } from "./ApprovalLog";
 import { RequestHeader } from "./RequestHeader";
 import { LineItemDetails } from "./LineItemDetails";
-
-
+import { useEffect } from "react";
 
 export const ApprovalComponent: React.FunctionComponent = (props) => {
+   // const [connectPrId, setPrId] = React.useState<string>("");
 
-    const  prId= "490";
-    const message="Hello!"
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const prId = queryParams.get('PrId');
+        const approvalId = queryParams.get('ApprovalId');
 
-    return (<Stack>
-        <Stack><RequestHeader Message={message} PrId={prId} /></Stack>
-        <Stack><LineItemDetails PrId={prId} /></Stack>
-        <Stack><ApprovalLog PrId={prId} />
+        // Do something with the parameters
+        console.log('param1:', prId);
+        console.log('param2:', approvalId);
+        if (prId !== null) {
+    //        setPrId(prId);
+        }
+
+    }, []);
+
+    return (
+        <Stack verticalAlign="start">
+            {/* Request Header */}
+            <RequestHeader PrId={"490"} />
+
+            {/* Line Item Details */}
+            <LineItemDetails PrId={"490"} />
+
+            {/* Approval Log */}
+            <ApprovalLog PrId={"490"} />
         </Stack>
-    </Stack>
-
     );
-
-}
+};
