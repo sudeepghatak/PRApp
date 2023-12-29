@@ -46,16 +46,16 @@ import { restApiCall } from "../Api/ApiCall";
 export class FuncApprovalLog {
   //   static TotalAmount: number = 12000;
   static levelEnter: boolean = false;
-  static ManagerList:any[] = [];
-  static FinanceList:any[] = [];
-  static listEHSApproval:any[] = [];
-  static FinanceDirectorList:any[] = [];
+  static ManagerList: any[] = [];
+  static FinanceList: any[] = [];
+  static listEHSApproval: any[] = [];
+  static FinanceDirectorList: any[] = [];
 
   //delegate Check Here ------
-  static async delegateCheck(testEmail: string): Promise<any[]>  {
+  static async delegateCheck(testEmail: string): Promise<any[]> {
     let findDelegateList = [];
     let VacationLeaveDetails = await restApiCall.GetVacationLeave();
-    let delegateMang = VacationLeaveDetails.filter((vactionRes:any) => {
+    let delegateMang = VacationLeaveDetails.filter((vactionRes: any) => {
       return vactionRes.Requester == testEmail;
     });
     console.log(
@@ -226,7 +226,7 @@ export class FuncApprovalLog {
     //get delegates if approval on leave API
     let VacationLeaveDetails = await restApiCall.GetVacationLeave();
     let levelAmountCheck: number = 0;
-    let empdetail:any;
+    let empdetail: any;
 
     for (let i: number = 0; i < jobleveldetails.length; i++) {
       if (jobleveldetails[i].JobName === requstRes[0].JobLevel) {
@@ -247,10 +247,10 @@ export class FuncApprovalLog {
       if (this.levelEnter) {
         return;
       }
-      let upperManager:any[] = [];
+      let upperManager: any[] = [];
 
       if (empdetail != undefined) {
-        upperManager = ManagerLevelDetails.filter((newItem:any) => {
+        upperManager = ManagerLevelDetails.filter((newItem: any) => {
           return newItem.EmployeeID == empdetail.ManagerID;
         });
       }
@@ -261,7 +261,7 @@ export class FuncApprovalLog {
         upperManager[0].Email
       );
       if (upperManager.length !== 0) {
-        let delegateMang = VacationLeaveDetails.filter((vactionRes:any) => {
+        let delegateMang = VacationLeaveDetails.filter((vactionRes: any) => {
           return vactionRes.Requester == upperManager[0].Email;
         });
         console.log("Manager Name Find --- 163", delegateMang);
@@ -278,16 +278,16 @@ export class FuncApprovalLog {
     } else {
       this.levelEnter = true;
       console.log("Manager Name Find ------------------ ", TotalAmount);
-      let upperManager:any[] = [];
+      let upperManager: any[] = [];
       if (empdetail != undefined) {
-        upperManager = ManagerLevelDetails.filter((newItem:any) => {
+        upperManager = ManagerLevelDetails.filter((newItem: any) => {
           return newItem.EmployeeID == empdetail.ManagerID;
         });
       }
 
       console.log("287 287 287 287 287 287 ", upperManager);
       if (upperManager.length !== 0) {
-        let delegateMang = VacationLeaveDetails.filter((vactionRes:any) => {
+        let delegateMang = VacationLeaveDetails.filter((vactionRes: any) => {
           return vactionRes.Requester == upperManager[0].Email;
         });
         console.log("Manager Name Find --- 146", delegateMang);
@@ -317,6 +317,7 @@ export class FuncApprovalLog {
     const isoDate = currentDate.toISOString();
     const datePart = isoDate.split("T")[0];
     const formattedDate = `${datePart}T00:00:00`;
+    console.log("Save and COntinue --------------------320", formattedDate)
 
     //check EHS approval Here ...
     let ehsApprovalList = await this.ehsApproval();

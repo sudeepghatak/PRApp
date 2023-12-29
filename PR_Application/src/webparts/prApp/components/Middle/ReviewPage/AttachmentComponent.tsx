@@ -6,6 +6,7 @@ import { Stack } from "@fluentui/react";
 import { DetailsList } from "office-ui-fabric-react";
 
 
+
 let columns = [
     {
         key: "column1",
@@ -140,12 +141,13 @@ let columns = [
 
 
 
-export const AttachmentComponent: React.FunctionComponent = (props) => {
+export const AttachmentComponent: React.FunctionComponent<{ConnectPrId:string}> = (props) => {
     const [attachments, setAttachments] = React.useState<any[]>([]);
+
 
     useEffect(() => {
         (async () => {
-            let value = await restApiCall.getDocTypeurl("490");
+            let value = await restApiCall.getDocTypeurl(props.ConnectPrId);
 
             // Convert ApprovalDate to MM/DD/YYYY format
             const formattedData = value.map((item: {
@@ -169,7 +171,7 @@ export const AttachmentComponent: React.FunctionComponent = (props) => {
     }, []);
 
 
-    return (<Stack><DetailsList items={attachments} columns={columns}></DetailsList></Stack>
+    return (<Stack><Stack><h2>Attachments</h2></Stack><DetailsList items={attachments} columns={columns}></DetailsList></Stack>
 
 
 

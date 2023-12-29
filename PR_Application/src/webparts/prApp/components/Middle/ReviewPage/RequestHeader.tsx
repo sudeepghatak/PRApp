@@ -63,7 +63,7 @@ const innerStackTokens: IStackTokens = {
 
 export const RequestHeader: React.FunctionComponent<{ PrId: string }> = (props) => {
 
-   // const{PrId}=props;
+    const {PrId}=props;
    
     const [prRow, setPrRow] = React.useState<any>({});
     
@@ -73,7 +73,7 @@ export const RequestHeader: React.FunctionComponent<{ PrId: string }> = (props) 
             
 
 
-            let value = await restApiCall.getPrbasicInfoContent(props.PrId);
+            let value = await restApiCall.getPrbasicInfoContent(PrId);
             console.log("This is the message")
             console.log("This is PR Info", value);
             
