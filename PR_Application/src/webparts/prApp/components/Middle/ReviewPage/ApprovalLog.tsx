@@ -3,7 +3,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import { restApiCall } from "../../../Api/ApiCall";
 import {  Stack } from "@fluentui/react";
-import { DetailsList, IStackItemStyles } from "office-ui-fabric-react";
+import { DetailsList, IStackItemStyles, SelectionMode } from "office-ui-fabric-react";
 
 
 const stackH1Styles: IStackItemStyles = {
@@ -145,7 +145,7 @@ export const ApprovalLog: React.FunctionComponent<{PrId:string}> = (props) => {
     }, []);
 
 
-    return (<Stack styles={stackH1Styles}><h2>Approval Log</h2><DetailsList items={approvalLogData} columns={columns}></DetailsList></Stack>
+    return (<Stack styles={stackH1Styles}><h2>Approval Log</h2><DetailsList compact={true} selectionMode={SelectionMode.none} items={approvalLogData} columns={columns}></DetailsList></Stack>
         
 
 

@@ -40,9 +40,10 @@ const stackH1Styles: IStackItemStyles = {
 const stackItemValueStyles: IStackItemStyles = {
     root: {
         alignItems: 'center',
-        background: DefaultPalette.red,
+        background: DefaultPalette.white,
         color: DefaultPalette.black,
         display: 'flex',
+        height: 50,
         paddingLeft: 5
     },
 };
@@ -63,96 +64,70 @@ const innerStackTokens: IStackTokens = {
 
 export const RequestHeader: React.FunctionComponent<{ PrId: string }> = (props) => {
 
-    const {PrId}=props;
-   
+    const { PrId } = props;
+
     const [prRow, setPrRow] = React.useState<any>({});
-    
+
 
     useEffect(() => {
         (async () => {
-            
+
 
 
             let value = await restApiCall.getPrbasicInfoContent(PrId);
             console.log("This is the message")
             console.log("This is PR Info", value);
-            
+
 
             setPrRow(value);
         })();
-    }, []);
+    }, [props.PrId]);
 
 
     return (<Stack enableScopedSelectors tokens={outerStackTokens}>
         <Stack enableScopedSelectors styles={stackStyles} tokens={innerStackTokens}>
-            <Stack styles={stackH1Styles}>  <h2>PR Info</h2></Stack>
-            <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens} >
-                <Stack.Item grow={1} styles={stackItemStyles}>
-                    Connect PRID
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemStyles}>
-                    Requester
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemStyles}>
-                    Total Order Amount
-                </Stack.Item>
-            </Stack>
-            <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                <Stack.Item grow={1} styles={stackItemValueStyles}>
-                    {prRow.ConnectPRID}
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemValueStyles}>
-                    {prRow.RequestFor}
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemValueStyles}>
-                    ({prRow.RequesterCurrency}) {prRow.Order_Amount}
-                </Stack.Item>
-            </Stack>
-            <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                <Stack.Item grow={1} styles={stackItemStyles}>
-                    Company Code
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemStyles}>
-                    Cost Center
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemStyles}>
-                    CIP Number
-                </Stack.Item>
-            </Stack>
-            <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                <Stack.Item grow={1} styles={stackItemValueStyles}>
-                    {prRow.CompanyCode}
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemValueStyles}>
-                    {prRow.Cost_Center}
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemValueStyles}>
-                    {prRow.CIP_Number}
-                </Stack.Item>
-            </Stack>
-            <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                <Stack.Item grow={1} styles={stackItemStyles}>
-                    Type of Buy
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemStyles}>
-                    Prepaid or Capital Equipment Buy?
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemStyles}>
-                    Type of Purchase
-                </Stack.Item>
-            </Stack>
-            <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                <Stack.Item grow={1} styles={stackItemValueStyles}>
-                    {prRow.Type_Of_Buy}
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemValueStyles}>
-                    {prRow.PrepaidOrCapitalEquipment}
-                </Stack.Item>
-                <Stack.Item grow={1} styles={stackItemValueStyles}>
-                    {prRow.Type_Of_Order}
-                </Stack.Item>
+            <Stack styles={stackH1Styles}>
+                <h2>Procurement Request Details</h2>
             </Stack>
 
+            {/* Horizontal Stack for Groups */}
+            <Stack horizontal styles={{ root: { width: '100%' } }}>
+                {/* Group 1 */}
+                <Stack grow={1}>
+                    <Stack.Item styles={stackItemStyles}>Connect PRID</Stack.Item>
+                    <Stack.Item styles={stackItemValueStyles}>{prRow.ConnectPRID || 'N/A'}</Stack.Item>
+
+                    <Stack.Item styles={stackItemStyles}>Company Code</Stack.Item>
+                    <Stack.Item styles={stackItemValueStyles}>{prRow.CompanyCode || 'N/A'}</Stack.Item>
+
+                    <Stack.Item styles={stackItemStyles}>Type of Buy</Stack.Item>
+                    <Stack.Item styles={stackItemValueStyles}>{prRow.Type_Of_Buy || 'N/A'}</Stack.Item>
+                </Stack>
+
+                {/* Group 2 */}
+                <Stack grow={1}>
+                    <Stack.Item styles={stackItemStyles}>Requester</Stack.Item>
+                    <Stack.Item styles={stackItemValueStyles}>{prRow.RequestFor || 'N/A'}</Stack.Item>
+
+                    <Stack.Item styles={stackItemStyles}>Cost Center</Stack.Item>
+                    <Stack.Item styles={stackItemValueStyles}>{prRow.Cost_Center || 'N/A'}</Stack.Item>
+
+                    <Stack.Item styles={stackItemStyles}>Prepaid or Capital Equipment Buy?</Stack.Item>
+                    <Stack.Item styles={stackItemValueStyles}>{prRow.PrepaidOrCapitalEquipment || 'N/A'}</Stack.Item>
+                </Stack>
+
+                {/* Group 3 */}
+                <Stack grow={1}>
+                    <Stack.Item styles={stackItemStyles}>Total Order Amount</Stack.Item>
+                    <Stack.Item styles={stackItemValueStyles}>{prRow.Order_Amount || 'N/A'}</Stack.Item>
+
+                    <Stack.Item styles={stackItemStyles}>CIP Number</Stack.Item>
+                    <Stack.Item styles={stackItemValueStyles}>{prRow.CIP_Number || 'N/A'}</Stack.Item>
+
+                    <Stack.Item styles={stackItemStyles}>Type of Purchase</Stack.Item>
+                    <Stack.Item styles={stackItemValueStyles}>{prRow.Type_Of_Order || 'N/A'}</Stack.Item>
+                </Stack>
+            </Stack>
         </Stack>
 
 
@@ -161,60 +136,37 @@ export const RequestHeader: React.FunctionComponent<{ PrId: string }> = (props) 
         <Stack styles={stackH1Styles}><h1>Additional Info</h1>
             <Stack enableScopedSelectors styles={stackStyles} tokens={innerStackTokens}>
                 <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                    <Stack.Item grow={1} styles={stackItemStyles}>
+                    <Stack grow={1}><Stack.Item  styles={stackItemStyles}>
                         Is This Project Related?
-                    </Stack.Item>
-                    <Stack.Item grow={1} styles={stackItemStyles}>
+                    </Stack.Item> <Stack.Item  styles={stackItemValueStyles}>
+                            {prRow.IsProjectPR ? "Yes" : "No"}
+                        </Stack.Item> <Stack.Item  styles={stackItemStyles}>
+                            Vendor Number
+                        </Stack.Item><Stack.Item  styles={stackItemValueStyles}>
+                            {prRow.Supplier_Account_Number || 'N/A'}
+                        </Stack.Item><Stack.Item  styles={stackItemStyles}>
+                            Justification/Reason for Order
+                        </Stack.Item> <Stack.Item  styles={stackItemValueStyles}>
+                            {prRow.Title || 'N/A'}
+                        </Stack.Item></Stack>
+                    <Stack ><Stack.Item  styles={stackItemStyles}>
                         Project Department (Project Code)
-                    </Stack.Item>
-
-                </Stack>
-                <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                    <Stack.Item grow={1} styles={stackItemValueStyles}>
-                        {prRow.IsProjectPR ? "Yes" : "No"}
-                    </Stack.Item>
-
-                    <Stack.Item grow={1} styles={stackItemValueStyles}>
-                        {prRow.ProjectCode}
-                    </Stack.Item>
-
-                </Stack>
-                <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                    <Stack.Item grow={1} styles={stackItemStyles}>
-                        Vendor Number
-                    </Stack.Item>
-                    <Stack.Item grow={1} styles={stackItemStyles}>
+                    </Stack.Item><Stack.Item  styles={stackItemValueStyles}>
+                            {prRow.ProjectCode || 'N/A'}
+                    </Stack.Item><Stack.Item  styles={stackItemStyles}>
                         Vendor Name
-                    </Stack.Item>
+                        </Stack.Item><Stack.Item styles={stackItemValueStyles}>
+                            {prRow.Supplier_Name || 'N/A'}
+                        </Stack.Item><Stack.Item styles={stackItemStyles}>
+                            Special Instructions
+                        </Stack.Item><Stack.Item styles={stackItemValueStyles}>
+                            {prRow.Comments || 'N/A'}
+                        </Stack.Item></Stack>
+
+                    
 
                 </Stack>
-                <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                    <Stack.Item grow={3} styles={stackItemValueStyles}>
-                        {prRow.Supplier_Account_Number}
-                    </Stack.Item>
-                    <Stack.Item grow={2} styles={stackItemValueStyles}>
-                        {prRow.Supplier_Name}
-                    </Stack.Item>
-
-                </Stack>
-                <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                    <Stack.Item grow={3} styles={stackItemStyles}>
-                        Justification/Reason for Order
-                    </Stack.Item>
-                    <Stack.Item grow={2} styles={stackItemStyles}>
-                        Special Instructions
-                    </Stack.Item>
-
-                </Stack>
-                <Stack enableScopedSelectors horizontal styles={stackStyles} tokens={stackTokens}>
-                    <Stack.Item grow={3} styles={stackItemValueStyles}>
-                        {prRow.Title}
-                    </Stack.Item>
-                    <Stack.Item grow={2} styles={stackItemValueStyles}>
-                        {prRow.Comments}
-                    </Stack.Item>
-
-                </Stack>
+                
 
             </Stack>
         </Stack>

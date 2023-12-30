@@ -4,9 +4,8 @@ import type { IPrAppProps } from "./IPrAppProps";
 //import PrMainPage from "./Middle/PrMainPage";
 import * as pnp from "sp-pnp-js";
 import { GlobalStore } from "../../../app/globalStore";
-//import { ApprovalComponent } from "./Middle/ReviewPage/ApprovalComponent";
 //import PrMainPage from "./Middle/PrMainPage";
-import { ApprovalComponent } from "./Middle/ReviewPage/ApprovalComponent";
+import { RequestAndApprovalComponent } from "./Middle/ReviewPage/RequestAndApprovalComponent";
 
 export default class PrApp extends React.Component<IPrAppProps, {}> {
   public async getEmail(siteURL: string) {
@@ -29,7 +28,7 @@ export default class PrApp extends React.Component<IPrAppProps, {}> {
         className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ""}`}
       >
         <div className={styles.welcome}>
-          <ApprovalComponent />
+          <RequestAndApprovalComponent />
         </div>
       </section>
     );

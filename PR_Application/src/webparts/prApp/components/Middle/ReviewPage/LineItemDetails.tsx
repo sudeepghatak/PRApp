@@ -1,7 +1,7 @@
 import * as React from "react";
 import { restApiCall } from "../../../Api/ApiCall";
 import { Stack } from "@fluentui/react";
-import { DetailsList, IStackItemStyles } from "office-ui-fabric-react";
+import { DetailsList, IStackItemStyles, SelectionMode } from "office-ui-fabric-react";
 import { useEffect } from "react";
 
 const stackH1Styles: IStackItemStyles = {
@@ -299,7 +299,7 @@ const {PrId}=props;
     }, []);
 
 
-    return (<Stack styles={stackH1Styles}><h2>Line Item Details</h2><DetailsList items={lineItemData} columns={columns}></DetailsList></Stack>
+    return (<Stack styles={stackH1Styles}><h2>Line Item Details</h2><DetailsList selectionMode={SelectionMode.none} compact={true} items={lineItemData} columns={columns}></DetailsList></Stack>
     )
 
 }
