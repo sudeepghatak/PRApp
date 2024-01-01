@@ -118,6 +118,7 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
           </span>
         </Stack>
         <div style={{ paddingLeft: 15, paddingRight: 15 }}>
+          
           <div>
             {!statusInfo.isLoading ? (
               <>
@@ -235,6 +236,7 @@ export const StatusModel: React.FunctionComponent<IModalProps> = (props) => {
               </div>
             )}
           </div>
+
         </div>
       </Modal>
     </div>

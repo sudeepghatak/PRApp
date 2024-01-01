@@ -5,7 +5,9 @@ import type { IPrAppProps } from "./IPrAppProps";
 import * as pnp from "sp-pnp-js";
 import { GlobalStore } from "../../../app/globalStore";
 //import PrMainPage from "./Middle/PrMainPage";
-import { RequestAndApprovalComponent } from "./Middle/ReviewPage/RequestAndApprovalComponent";
+//import { RequestAndApprovalComponent } from "./Middle/ReviewPage/RequestAndApprovalComponent";
+import { PendingApprovals } from "./Middle/ReviewPage/PendingApprovals";
+//import { PendingApprovals } from "./Middle/ReviewPage/PendingApprovals";
 
 export default class PrApp extends React.Component<IPrAppProps, {}> {
   public async getEmail(siteURL: string) {
@@ -20,15 +22,18 @@ export default class PrApp extends React.Component<IPrAppProps, {}> {
   }
   public render(): React.ReactElement<IPrAppProps> {
     const { hasTeamsContext, siteUrl } = this.props;
-
+    
     this.getEmail(siteUrl);
+  
 
     return (
       <section
         className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ""}`}
       >
         <div className={styles.welcome}>
-          <RequestAndApprovalComponent />
+          {/* <RequestAndApprovalComponent isModalOpen={true}  ApprovalId="-1" PrId="0000000645" />*/}
+          <PendingApprovals Email="sourav.dutta@omnicell.com"/> 
+          
         </div>
       </section>
     );

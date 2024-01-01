@@ -7,7 +7,7 @@ import PoliciesProceduresBox from "./PoliciesProceduresBox";
 import LegalDocumentBox from "./LegalDocumentBox";
 import DelegatePrBox from "./DelegatePrBox";
 //import PendingApproval from "./PendingApproval";
-import { PendingApprovals } from "../../ReviewPage/PendingApprovals";
+//import { PendingApprovals } from "../../ReviewPage/PendingApprovals";
 
 const stackTokens: IStackTokens = {
   childrenGap: 5,
@@ -37,7 +37,7 @@ export const GalaryMain: React.FunctionComponent = () => {
               {/* <GalaryBox title={"Create a Purchase Requistion"} /> */}
             </Stack.Item>
             <Stack.Item className="child-stack">
-              <PendingApprovals/>
+              
               {/* <GalaryBox title={"Create a Purchase Requistion"} /> */}
             </Stack.Item>
           </Stack>

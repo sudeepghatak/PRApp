@@ -1,4 +1,4 @@
-import { DefaultPalette, Stack } from "office-ui-fabric-react";
+import { DefaultPalette, IIconProps, IconButton, Modal, Stack, mergeStyleSets } from "office-ui-fabric-react";
 import * as React from "react";
 import { ApprovalLog } from "./ApprovalLog";
 import { RequestHeader } from "./RequestHeader";
@@ -6,10 +6,25 @@ import { LineItemDetails } from "./LineItemDetails";
 import { useEffect } from "react";
 import { DefaultButton } from "@fluentui/react";
 import { restApiCall } from "../../../Api/ApiCall";
+import { AttachmentComponent } from "./AttachmentComponent";
+import { GlobalStore } from "../../../../../app/globalStore";
+
 //import { AttachmentComponent } from "./AttachmentComponent";
 
+interface IModalProps {
+    isModalOpen: boolean;
+    showModal: () => void;
+    backgroundcolor?: string;
+    title?: string;
+    content?: string;
+    PrId: string, ApprovalId: string
+}
 
-export const RequestAndApprovalComponent: React.FunctionComponent<{ PrId: string, ApprovalId: string }> = (props) => {
+const modal_title = "ApprovalsInfo";
+export const RequestAndApprovalComponent: React.FunctionComponent<IModalProps> = (props) => {
+    console.log("23 23 -----------------------")
+
+
     const [connectPrId, setPrId] = React.useState<string>("");
     const [hideApproval, setHideApproval] = React.useState<boolean>(true);
     const [approvalLogItems, setApprovalLogItem] = React.useState<any[]>([]);
@@ -32,8 +47,8 @@ export const RequestAndApprovalComponent: React.FunctionComponent<{ PrId: string
             }
             if (prId != "-1") {
                 setPrId(prId);
-            } 
-            
+            }
+            console.log("GlobalStore:", GlobalStore.getmainEmail())
             console.log("This is Approval Log item", approvalLogItems);
 
         })();
@@ -70,72 +85,126 @@ export const RequestAndApprovalComponent: React.FunctionComponent<{ PrId: string
 
 
     return (
-        <Stack verticalAlign="start">
-            {!hideApproval &&
-                <Stack horizontal horizontalAlign="end"><DefaultButton
-                    style={{
-                        background: DefaultPalette.greenDark,
-                        color: DefaultPalette.white,
-                        borderRadius: 5,
-                        height: "40px",
-                        margin: 5
-                    }}
-                    onClick={() => ApproveOrReject("Approved")}
-                >
-                    <Stack horizontal>
-                        <span style={{ marginRight: 10, marginTop: 2 }}>
-                            Approve
-                        </span>
+        
+            
+        <div style={{ maxWidth: 500 }}>
+      <Modal
+        isOpen={props.isModalOpen}
+        onDismiss={props.showModal}
+        isBlocking={false}
+        containerClassName={contentStyles.container}
+      >
+        <Stack
+          horizontal
+          horizontalAlign="space-between"
+          style={{
+            backgroundColor: `white`,
+            border: "3px solid #fff",
+          }}
+        >
+          <span style={{ marginTop: -5, paddingLeft: 15 }}>
+            <h2 style={{ color: "#fff" }}>{modal_title}</h2>
+          </span>
+          <span
+            style={{
+              marginTop: 15,
+              marginRight: 15,
+              backgroundColor: "whitesmoke",
+              maxHeight: 30,
+            }}
+          >
+            <IconButton
+              style={{ color: "red" }}
+              iconProps={cancelIcon}
+              onClick={props.showModal}
+            />
+          </span>
+        </Stack>
+        <div style={{ paddingLeft: 15, paddingRight: 15 }}>
+          
+                    <Stack verticalAlign="start">
+                        {!hideApproval &&
+                            <Stack horizontal horizontalAlign="end"><DefaultButton
+                                style={{
+                                    background: DefaultPalette.greenDark,
+                                    color: DefaultPalette.white,
+                                    borderRadius: 5,
+                                    height: "40px",
+                                    margin: 5
+                                }}
+                                onClick={() => ApproveOrReject("Approved")}
+                            >
+                                <Stack horizontal>
+                                    <span style={{ marginRight: 10, marginTop: 2 }}>
+                                        Approve
+                                    </span>
+
+                                </Stack>
+                            </DefaultButton>
+                                <DefaultButton
+                                    style={{
+                                        background: DefaultPalette.red,
+                                        color: DefaultPalette.white,
+                                        borderRadius: 5,
+                                        height: "40px",
+                                        margin: 5
+                                    }}
+                                    onClick={() => ApproveOrReject("Rejected")}
+                                >
+                                    <Stack horizontal>
+                                        <span style={{ marginRight: 10, marginTop: 2 }}>
+                                            Reject
+                                        </span>
+
+                                    </Stack>
+                                </DefaultButton>
+                                <DefaultButton
+                                    style={{
+                                        background: DefaultPalette.blue,
+                                        color: DefaultPalette.white,
+                                        borderRadius: 5,
+                                        height: "40px",
+                                        margin: 5
+                                    }}
+                                    onClick={() => ApproveOrReject("Resend")}
+                                >
+                                    <Stack horizontal>
+                                        <span style={{ marginRight: 10, marginTop: 2 }}>
+                                            Resend
+                                        </span>
+
+                                    </Stack>
+                                </DefaultButton></Stack>}
+                        {/* Request Header */}
+
+                        {connectPrId !== "" && <RequestHeader PrId={connectPrId} />}
+
+                        {/* Line Item Details */}
+                        {connectPrId !== "" && <LineItemDetails PrId={connectPrId} />}
+                        {/* Approval Log */}
+                        {connectPrId !== "" && <ApprovalLog PrId={connectPrId} />}
+
+                        {connectPrId !== "" && <AttachmentComponent ConnectPrId={connectPrId} />}
+
+
 
                     </Stack>
-                </DefaultButton>
-                    <DefaultButton
-                        style={{
-                            background: DefaultPalette.red,
-                            color: DefaultPalette.white,
-                            borderRadius: 5,
-                            height: "40px",
-                            margin: 5
-                        }}
-                        onClick={() => ApproveOrReject("Rejected")}
-                    >
-                        <Stack horizontal>
-                            <span style={{ marginRight: 10, marginTop: 2 }}>
-                                Reject
-                            </span>
 
-                        </Stack>
-                    </DefaultButton>
-                    <DefaultButton
-                        style={{
-                            background: DefaultPalette.blue,
-                            color: DefaultPalette.white,
-                            borderRadius: 5,
-                            height: "40px",
-                            margin: 5
-                        }}
-                        onClick={() => ApproveOrReject("Resend")}
-                    >
-                        <Stack horizontal>
-                            <span style={{ marginRight: 10, marginTop: 2 }}>
-                                Resend
-                            </span>
-
-                        </Stack>
-                    </DefaultButton></Stack>}
-            {/* Request Header */}
-
-            {connectPrId !== "" && <RequestHeader PrId={connectPrId} />}
-
-            {/* Line Item Details */}
-            {connectPrId !== "" && <LineItemDetails PrId={connectPrId} />}
-            {/* Approval Log */}
-            {connectPrId !== "" && <ApprovalLog PrId={connectPrId} />}
-
-            {/* <AttachmentComponent ConnectPrId={connectPrId}/> */}
-
-
-
-        </Stack>
+        </div>
+      </Modal>
+    </div>
     );
 };
+const contentStyles = mergeStyleSets({
+    container: {
+        display: "flex",
+        minWidth: 800,
+        width: 800,
+        minHeight: 400,
+        height: 500,
+        textAlign: "center",
+        flexFlow: "column nowrap",
+        alignItems: "stretch",
+    },
+});
+const cancelIcon: IIconProps = { iconName: "Cancel" };

@@ -87,7 +87,7 @@ export const RequestHeader: React.FunctionComponent<{ PrId: string }> = (props) 
     return (<Stack enableScopedSelectors tokens={outerStackTokens}>
         <Stack enableScopedSelectors styles={stackStyles} tokens={innerStackTokens}>
             <Stack styles={stackH1Styles}>
-                <h2>Procurement Request Details</h2>
+                <h2>Purchase Request Details</h2>
             </Stack>
 
             {/* Horizontal Stack for Groups */}

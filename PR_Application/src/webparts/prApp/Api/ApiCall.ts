@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { apiEndpoint, ApprovalsForApprovalIdUrl, getVendorNameUrl, getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl, getprrequestiteminforesultUrl, getUserDeptUrl, getRegionUrl, getCountryUrl, getUOMUrl, getCurrencyChangeUrl, getExpenseGLUrl, getManagerDetails, getJobLevel, getVacationLeave, InsertApprovalLog, FinanceApprovallog, DelLineItem, delDocItem, getpaginationURL, prApprovaldelete, getApprovalLimit, EHSapprovalURL, getBlnkCmpVenDetails, getauditTrailURL, getapprovallogURL } from './Config/server_config'
+import { apiEndpoint, ApprovalsForApprovalIdUrl, getapprovallogbyEmail, getVendorNameUrl, getProjectCodeResultUrl, postPRAllRequestUrl, getCostCenterUrl, getExpenseGLAccountUrl, updatePRAllRequestUrl, getPlantCodeUrl, getLocPlantUrl, postLineItemUrl, RequestForUrl, CompanyCodeUrl, getCIPUrl, GLAccountUrl, getTypeOfPurGLCodeOdrTypeUrl, getDocItems, insertPlantLocUrl, insertDelegateUrl, getprrequestresultUrl, getsearchprrequestresultUrl, getprrequestiteminforesultUrl, getUserDeptUrl, getRegionUrl, getCountryUrl, getUOMUrl, getCurrencyChangeUrl, getExpenseGLUrl, getManagerDetails, getJobLevel, getVacationLeave, InsertApprovalLog, FinanceApprovallog, DelLineItem, delDocItem, getpaginationURL, prApprovaldelete, getApprovalLimit, EHSapprovalURL, getBlnkCmpVenDetails, getauditTrailURL, getapprovallogURL } from './Config/server_config'
 import { EmployeeDetails } from '../Model/employee_details'
 
 export class restApiCall {
@@ -297,6 +297,11 @@ export class restApiCall {
     }
     static async getApprovalLog(pId: string) {
         let approvalRes = await this.rest_apiCall(`${getapprovallogURL}${pId}&cT=X`, {});
+        return approvalRes.data;
+    }
+
+    static async getPendingApprovalsByEmail(pId: string) {
+        let approvalRes = await this.rest_apiCall(`${getapprovallogbyEmail}${pId}`, {});
         return approvalRes.data;
     }
 
