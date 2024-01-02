@@ -1,5 +1,8 @@
+import axios from "axios";
 import { DefaultButton, DefaultPalette, Stack } from "office-ui-fabric-react";
 import * as React from "react";
+import { flowApprovalAPI } from "../../../Api/Config/server_config";
+import { ModalComments } from "./ModalComments";
 
 interface ApproveRejectButtonsProps {
     ApprovalId: string;
@@ -9,14 +12,24 @@ interface ApproveRejectButtonsProps {
 
 export const ApproveRejectButtons: React.FunctionComponent<ApproveRejectButtonsProps> = (props) => {
     const [hideButtons, setHideButton] = React.useState<boolean>(true);
+    const [isModalOpen, setIsModelOpen] = React.useState<boolean>(false);
+
+    const showModal = () => {
+        setIsModelOpen(!isModalOpen);
+    };
 
     React.useEffect(() => {
         setHideButton(props.HideButtons);
     }, [props.HideButtons]);
 
 
-    function ApproveOrReject(outcome: string): void {
-       //Call Flow API
+    async function ApproveTask(): Promise<void> {
+        let triggerRes = await axios.post(flowApprovalAPI,
+            {
+                PrId: props.PrId, Outcome: "Approved", Comments:""
+            }
+        );
+        console.log("triggerRes: ", triggerRes)
         setHideButton(true)
     }
 
@@ -29,7 +42,7 @@ export const ApproveRejectButtons: React.FunctionComponent<ApproveRejectButtonsP
                 height: "40px",
                 margin: 5
             }}
-            onClick={() => ApproveOrReject("Approved")}
+            onClick={() => ApproveTask()}
         >
             <Stack horizontal>
                 <span style={{ marginRight: 10, marginTop: 2 }}>
@@ -46,7 +59,7 @@ export const ApproveRejectButtons: React.FunctionComponent<ApproveRejectButtonsP
                     height: "40px",
                     margin: 5
                 }}
-                onClick={() => ApproveOrReject("Rejected")}
+                onClick={() => showModal()}
             >
                 <Stack horizontal>
                     <span style={{ marginRight: 10, marginTop: 2 }}>
@@ -55,7 +68,7 @@ export const ApproveRejectButtons: React.FunctionComponent<ApproveRejectButtonsP
 
                 </Stack>
             </DefaultButton>
-            <DefaultButton
+            {/* <DefaultButton
                 style={{
                     background: DefaultPalette.blue,
                     color: DefaultPalette.white,
@@ -71,9 +84,12 @@ export const ApproveRejectButtons: React.FunctionComponent<ApproveRejectButtonsP
                     </span>
 
                 </Stack>
-            </DefaultButton></Stack> : ( hideButtons && (
+            </DefaultButton>*/}
+            </Stack> : ( hideButtons && ( 
                 <Stack>
                     <h4>This task has already been processed, or you may not have been assigned to it</h4>
                 </Stack>
-            )) }</Stack>)
+            )) }
+            {isModalOpen && <ModalComments isModalOpen={isModalOpen} showModal={showModal} PRId={props.PrId} ApprovalId={props.ApprovalId}/>}
+            </Stack>)
 }

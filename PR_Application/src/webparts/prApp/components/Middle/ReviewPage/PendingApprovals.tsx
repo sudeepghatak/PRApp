@@ -108,7 +108,7 @@ export const PendingApprovals: React.FunctionComponent<{ Email: string }> = (pro
     };
 
     return <>
-        {isModalOpen ? (<RequestAndApprovalComponent isModalOpen={isModalOpen} showModal={showModal} PrId={launchApprovalScreenParams.PRId} ApprovalId={launchApprovalScreenParams.ApprovalId} />) : null}
+        {isModalOpen ? (<RequestAndApprovalComponent userEmail={""} isModalOpen={isModalOpen} showModal={showModal} PrId={launchApprovalScreenParams.PRId} ApprovalId={launchApprovalScreenParams.ApprovalId} />) : null}
         <List items={approvalLogData} onRenderCell={renderItem} /></>;
 };
 

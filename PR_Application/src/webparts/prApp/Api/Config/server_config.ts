@@ -65,3 +65,8 @@ export const getBlnkCmpVenDetails = "getVendorName_Result?offValue=";
 export const getapprovallogURL = "getPR_Approval_Log_Result?pID=";
 export const getapprovallogbyEmail = "getPR_Approval_Log_Result?cT=f&&pID=";
 export const getauditTrailURL = "PR_AuditTrail?pID=";
+
+//Flow triggers
+export const flowInitiateApprovalAPI="";
+export const flowApprovalAPI="";
+
