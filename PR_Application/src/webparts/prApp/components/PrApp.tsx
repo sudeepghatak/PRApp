@@ -4,10 +4,9 @@ import type { IPrAppProps } from "./IPrAppProps";
 //import PrMainPage from "./Middle/PrMainPage";
 import * as pnp from "sp-pnp-js";
 import { GlobalStore } from "../../../app/globalStore";
-//import PrMainPage from "./Middle/PrMainPage";
-//import { RequestAndApprovalComponent } from "./Middle/ReviewPage/RequestAndApprovalComponent";
-import { PendingApprovals } from "./Middle/ReviewPage/PendingApprovals";
-//import { PendingApprovals } from "./Middle/ReviewPage/PendingApprovals";
+import PrMainPage from "./Middle/PrMainPage";
+import { RequestAndApprovalComponent } from "./Middle/ReviewPage/RequestAndApprovalComponent";
+
 
 export default class PrApp extends React.Component<IPrAppProps, {}> {
   public async getEmail(siteURL: string) {
@@ -22,19 +21,48 @@ export default class PrApp extends React.Component<IPrAppProps, {}> {
   }
   public render(): React.ReactElement<IPrAppProps> {
     const { hasTeamsContext, siteUrl } = this.props;
-    
+    let connectPrId:string, approvalId:string, isModalOpen:boolean=true
+ 
+    const showModal = () => {
+      isModalOpen = !isModalOpen;
+    };
     this.getEmail(siteUrl);
-  
+    const queryString = window.location.search;
+
+    // Parse the query string using URLSearchParams
+    const params = new URLSearchParams(queryString);
+
+    // Get the value of a specific parameter
+    const queryStrPRId = params.get('PRId');
+    const queryStrApprId = params.get('ApprId');
+    if (queryStrPRId !== null) {
+      // Call function when the parameter has a value
+      connectPrId = queryStrPRId;
+    } else {
+      // Call function when the parameter is null
+       connectPrId = "-1";
+    }
+    if (queryStrApprId !== null) {
+      // Call function when the parameter has a value
+      approvalId = queryStrApprId;
+    } else {
+      // Call function when the parameter is null
+      approvalId ="-1";
+    }
+
+    // Log the parameter value to the console
+    console.log('Query String PRId:', connectPrId);
+    console.log('Query String ApprovalId:', approvalId);
 
     return (
       <section
         className={`${styles.prApp} ${hasTeamsContext ? styles.teams : ""}`}
       >
         <div className={styles.welcome}>
-          {/* <RequestAndApprovalComponent isModalOpen={true}  ApprovalId="-1" PrId="0000000645" />*/}
-          <PendingApprovals Email="sourav.dutta@omnicell.com"/> 
-          
+          <PrMainPage/>
+          {(approvalId !== "-1" || connectPrId !== "-1") &&<RequestAndApprovalComponent isModalOpen={isModalOpen} showModal={showModal} ApprovalId={approvalId} PrId={connectPrId}/> }
         </div>
+        
       </section>
     );
   }
