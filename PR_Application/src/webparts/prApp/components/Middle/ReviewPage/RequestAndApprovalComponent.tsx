@@ -35,7 +35,7 @@ export const RequestAndApprovalComponent: React.FunctionComponent<IModalProps> =
                 value = await restApiCall.getApprovalsForApprovalId(approvalId);
                 console.log("This is Approval Log item", value);
                 setApprovalLogItems(value);
-
+                setIsModalOpen(true);
                 if (value[0]?.ApprovalStatus?.toLowerCase() === "waiting for approval" && value[0]?.ApproverEmail?.toLowerCase() === props.userEmail?.toLowerCase()) {
                     setHideApproval(false);
                 } else {

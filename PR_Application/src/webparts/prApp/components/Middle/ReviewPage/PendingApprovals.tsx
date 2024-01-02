@@ -6,6 +6,7 @@ import { List } from '@fluentui/react/lib/List';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { RequestAndApprovalComponent } from "./RequestAndApprovalComponent";
 import { Link } from "office-ui-fabric-react";
+import { GlobalStore } from "../../../../../app/globalStore";
 
 
 
@@ -108,7 +109,7 @@ export const PendingApprovals: React.FunctionComponent<{ Email: string }> = (pro
     };
 
     return <>
-        {isModalOpen ? (<RequestAndApprovalComponent userEmail={""} isModalOpen={isModalOpen} showModal={showModal} PrId={launchApprovalScreenParams.PRId} ApprovalId={launchApprovalScreenParams.ApprovalId} />) : null}
+        {isModalOpen ? (<RequestAndApprovalComponent userEmail={GlobalStore.getmainEmail()} isModalOpen={isModalOpen} showModal={showModal} PrId={launchApprovalScreenParams.PRId} ApprovalId={launchApprovalScreenParams.ApprovalId} />) : null}
         <List items={approvalLogData} onRenderCell={renderItem} /></>;
 };
 
