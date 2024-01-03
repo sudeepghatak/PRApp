@@ -85,67 +85,17 @@ export const AttachmentComponent: React.FunctionComponent<{ ConnectPrId: string 
 
     function openBase64ContentInNewTab(
         base64String: string,
-
-        contentType: string
+        contentType: string,
+        fileName: string
     ) {
         console.log("Here Content Type is ", contentType, base64String);
+        const linkSource = "data:application/png;base64," + base64String;
+        const downloadLink = document.createElement("a");
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
 
-        // Create a new window or tab
-
-        let newTab = window.open();
-
-        newTab = newTab as Window;
-
-        // Decode the Base64 string to binary data
-
-        const binaryData = atob(base64String);
-
-        // Create a Uint8Array from the binary data
-
-        const uint8Array = new Uint8Array(binaryData.length);
-
-        for (let i = 0; i < binaryData.length; i++) {
-            uint8Array[i] = binaryData.charCodeAt(i);
-        }
-
-        // Create a Blob from the binary data
-
-        const blob = new Blob([uint8Array], { type: contentType });
-        // Create a URL for the Blob
-
-        const blobURL = URL.createObjectURL(blob);
-        // console.log("---------------->>> ", blobURL);
-        // console.log(contentType);
-        // console.log(contentType.match("image/"))
-
-        // Create an HTML template to display the content
-
-        const htmlTemplate = `
-
-      <!DOCTYPE html>
-
-      <html>
-      <body>
-
-          <div>
-            ${contentType.match("image/")
-                ? `<img src="${blobURL}" alt="Base64 Content" />`
-                : ""
-            }
-            <pre>${binaryData}</pre>
-          </div>
-      </body>
-      </html>
-
-    `;
-
-        // Write the HTML template to the new tab
-
-        newTab.document.open();
-
-        newTab.document.write(htmlTemplate);
-
-        newTab.document.close();
+       
     }
 
     useEffect(() => {
@@ -165,7 +115,7 @@ export const AttachmentComponent: React.FunctionComponent<{ ConnectPrId: string 
                 }),
                 File_Name: (
                     <Link
-                        onClick={() => openBase64ContentInNewTab(item.Content, item.Doc_Type)}
+                        onClick={() => openBase64ContentInNewTab(item.Content, item.Doc_Type, item.Filename)}
                         disabled={false}
                     >
                         <b>{item.Filename}</b>

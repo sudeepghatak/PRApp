@@ -3,6 +3,8 @@ import * as React from "react";
 import { flowApprovalAPI } from "../../../Api/Config/server_config";
 import axios from "axios";
 import { useState } from "react";
+import { GlobalStore } from "../../../../../app/globalStore";
+
 
 interface IModalProps {
     isModalOpen: boolean;
@@ -13,13 +15,20 @@ interface IModalProps {
 export const ModalComments: React.FunctionComponent<IModalProps> = (props) => {
     const { isModalOpen, showModal } = props;
     const [comments, setComments] = useState<string>("");
+    const [flowMessage, setFlowMessage] = useState<string>("");
+
     async function RejectTask(comments: string): Promise<void> {
+        console.log("GlobalStore:", GlobalStore); // Log the GlobalStore object
+        console.log("mainEmail:", GlobalStore.getmainEmail()); // Log the result of getmainEmail()
+
+        let loggedInUserEmail = GlobalStore.getmainEmail();
         let triggerRes = await axios.post(
             flowApprovalAPI,
             {
-                PrId: props.PRId, Outcome: "Rejected", Comments: comments
+                ApprovalId: props.ApprovalId, ApprovalStatus: "Rejected", ApproverEmail: loggedInUserEmail, Comments: comments
             }
         );
+        setFlowMessage(triggerRes.data.Message);
         console.log("triggerRes: ", triggerRes)
     }
 
@@ -88,6 +97,7 @@ export const ModalComments: React.FunctionComponent<IModalProps> = (props) => {
                                     </span>
                                     <span>Submit</span>
                                 </Stack></DefaultButton></Stack.Item>
+                                <Stack.Item>{flowMessage}</Stack.Item>
                     </Stack>
 
 

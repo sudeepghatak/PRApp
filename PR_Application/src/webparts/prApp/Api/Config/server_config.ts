@@ -67,6 +67,6 @@ export const getapprovallogbyEmail = "getPR_Approval_Log_Result?cT=f&&pID=";
 export const getauditTrailURL = "PR_AuditTrail?pID=";
 
 //Flow triggers
-export const flowInitiateApprovalAPI="";
-export const flowApprovalAPI="";
+export const flowInitiateApprovalAPI ="https://prod-128.westus.logic.azure.com:443/workflows/285280455e04490faedf6fd3ffe48d23/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4E2jstWBRJhlIQG1ZBhY1dV91htB-zEy8vJy1J5oUW8";
+export const flowApprovalAPI ="https://prod-165.westus.logic.azure.com:443/workflows/ebb2b4c7bc3d4f40aae411e285b2b539/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QRwX4zVtSimvCOcf1eTjQRZAndtsuaKbv_IIUe6iNzg";
 
