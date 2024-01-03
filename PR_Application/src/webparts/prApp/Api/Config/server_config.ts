@@ -69,4 +69,5 @@ export const getauditTrailURL = "PR_AuditTrail?pID=";
 //Flow triggers
 export const flowInitiateApprovalAPI ="https://prod-128.westus.logic.azure.com:443/workflows/285280455e04490faedf6fd3ffe48d23/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4E2jstWBRJhlIQG1ZBhY1dV91htB-zEy8vJy1J5oUW8";
 export const flowApprovalAPI ="https://prod-165.westus.logic.azure.com:443/workflows/ebb2b4c7bc3d4f40aae411e285b2b539/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QRwX4zVtSimvCOcf1eTjQRZAndtsuaKbv_IIUe6iNzg";
+export const flowResendAPI = "https://prod-87.westus.logic.azure.com:443/workflows/c2598305db0940379db0855bdabb872f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PKwOh8yG1kF2YaeOJzpBPvRsMQf1BVjVFFFvJf5e4qg";
 
